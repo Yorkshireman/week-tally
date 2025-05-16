@@ -1,23 +1,31 @@
+import { ListItemProps } from './indexTypes';
+import { useSQLiteContext } from 'expo-sqlite';
 import { useState } from 'react';
 import uuid from 'react-native-uuid';
 import { Button, FlatList, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
-export default function Index() {
-  const [listData, setListData] = useState<{ id: string; title: string }[]>([]);
-  const [text, onChangeText] = useState('');
+const ListItem = ({ id, setListData, title }: ListItemProps) => {
+  const db = useSQLiteContext();
 
-  const ListItem = ({ id, title }: { id: string; title: string }) => (
+  return (
     <View style={{ alignItems: 'center', flexDirection: 'row' }}>
       <Text style={styles.text}>{title}</Text>
       <Button
-        onPress={() => {
+        onPress={async () => {
           setListData(prev => prev.filter(item => item.id !== id));
+          await db.runAsync('DELETE FROM things WHERE id = ?', id);
         }}
         title='Delete'
       />
     </View>
   );
+};
+
+export default function Index() {
+  const db = useSQLiteContext();
+  const [listData, setListData] = useState<{ id: string; title: string }[]>([]);
+  const [text, onChangeText] = useState('');
 
   return (
     <SafeAreaProvider>
@@ -31,17 +39,21 @@ export default function Index() {
           </Text>
           <FlatList
             data={listData}
-            renderItem={({ item: { id, title } }) => <ListItem key={id} id={id} title={title} />}
+            renderItem={({ item: { id, title } }) => (
+              <ListItem key={id} id={id} setListData={setListData} title={title} />
+            )}
             ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
             style={{ marginBottom: 20 }}
           />
           <TextInput
             style={styles.input}
             onChangeText={onChangeText}
-            onSubmitEditing={() => {
+            onSubmitEditing={async () => {
               if (text.trim()) {
-                setListData(prev => [...prev, { id: uuid.v4() as string, title: text }]);
+                const id = uuid.v4() as string;
+                setListData(prev => [...prev, { id, title: text }]);
                 onChangeText('');
+                await db.runAsync('INSERT INTO things (id, title) VALUES (?, ?)', id, text);
               }
             }}
             value={text}
