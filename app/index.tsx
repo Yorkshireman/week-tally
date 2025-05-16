@@ -18,7 +18,13 @@ const ListItem = ({ id, setListData, title }: ListItemProps) => {
   const db = useSQLiteContext();
 
   return (
-    <View style={{ alignItems: 'center', flexDirection: 'row' }}>
+    <View
+      style={{
+        alignItems: 'center',
+        flexDirection: 'row',
+        justifyContent: 'center'
+      }}
+    >
       <Text style={styles.text}>{title}</Text>
       <Button
         onPress={async () => {
@@ -85,7 +91,8 @@ export default function Index() {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#D0FEF5',
-    flex: 1
+    flex: 1,
+    justifyContent: 'center'
   },
   content: {
     alignItems: 'center',
