@@ -27,7 +27,7 @@ export default function Index() {
             1. Enter the things you would like to track
           </Text>
           <Text style={{ ...styles.text, marginBottom: 20 }}>
-            For best results, write what fits the sentence, "Have you (something) today?"
+            For best results, write what fits the sentence, &quot;Have you (something) today?&quot;
           </Text>
           <FlatList
             data={listData}
