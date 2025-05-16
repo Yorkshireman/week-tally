@@ -43,6 +43,17 @@ export default function Index() {
   const [listData, setListData] = useState<{ id: string; title: string }[]>([]);
   const [text, onChangeText] = useState('');
 
+  const onSubmitEditing = async () => {
+    if (text.trim() === '') {
+      return;
+    }
+
+    const id = uuid.v4();
+    setListData(prev => [...prev, { id, title: text.trim() }]);
+    onChangeText('');
+    await db.runAsync('INSERT INTO things (id, title) VALUES (?, ?)', id, text);
+  };
+
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
@@ -73,16 +84,7 @@ export default function Index() {
           <TextInput
             style={styles.input}
             onChangeText={onChangeText}
-            onSubmitEditing={async () => {
-              if (text.trim() === '') {
-                return;
-              }
-
-              const id = uuid.v4();
-              setListData(prev => [...prev, { id, title: text.trim() }]);
-              onChangeText('');
-              await db.runAsync('INSERT INTO things (id, title) VALUES (?, ?)', id, text);
-            }}
+            onSubmitEditing={onSubmitEditing}
             value={text}
             placeholder={`Thing ${listData.length + 1}`}
           />
@@ -106,6 +108,7 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,
+    fontSize: 20,
     height: 40,
     minWidth: 200,
     padding: 10
