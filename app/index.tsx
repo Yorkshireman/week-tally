@@ -88,6 +88,10 @@ export default function Index() {
             value={text}
             placeholder={`Thing ${listData.length + 1}`}
           />
+          <View>
+            <Text style={styles.text}>Finished?</Text>
+            <Button title='Go to next step' onPress={() => {}} />
+          </View>
         </KeyboardAvoidingView>
       </SafeAreaView>
     </SafeAreaProvider>
@@ -109,7 +113,7 @@ const styles = StyleSheet.create({
   input: {
     borderWidth: 1,
     fontSize: 20,
-    height: 40,
+    marginBottom: 20,
     minWidth: 200,
     padding: 10
   },
