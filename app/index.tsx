@@ -1,6 +1,5 @@
 import { ListItemProps } from './indexTypes';
 import { useSQLiteContext } from 'expo-sqlite';
-import { useState } from 'react';
 import uuid from 'react-native-uuid';
 import {
   Button,
@@ -13,6 +12,7 @@ import {
   View
 } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { useRef, useState } from 'react';
 
 const ListItem = ({ id, setListData, title }: ListItemProps) => {
   const db = useSQLiteContext();
@@ -33,6 +33,7 @@ const ListItem = ({ id, setListData, title }: ListItemProps) => {
 
 export default function Index() {
   const db = useSQLiteContext();
+  const flatListRef = useRef<FlatList>(null);
   const [listData, setListData] = useState<{ id: string; title: string }[]>([]);
   const [text, onChangeText] = useState('');
 
@@ -51,22 +52,26 @@ export default function Index() {
           </Text>
           <FlatList
             data={listData}
+            ref={flatListRef}
             renderItem={({ item: { id, title } }) => (
               <ListItem key={id} id={id} setListData={setListData} title={title} />
             )}
             ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
-            style={{ marginBottom: 20 }}
+            onContentSizeChange={() => {
+              if (listData.length > 0) {
+                flatListRef.current?.scrollToEnd({ animated: true });
+              }
+            }}
+            style={styles.list}
           />
           <TextInput
             style={styles.input}
             onChangeText={onChangeText}
             onSubmitEditing={async () => {
-              if (text.trim()) {
-                const id = uuid.v4() as string;
-                setListData(prev => [...prev, { id, title: text }]);
-                onChangeText('');
-                await db.runAsync('INSERT INTO things (id, title) VALUES (?, ?)', id, text);
-              }
+              const id = uuid.v4() as string;
+              setListData(prev => [...prev, { id, title: text.trim() }]);
+              onChangeText('');
+              await db.runAsync('INSERT INTO things (id, title) VALUES (?, ?)', id, text);
             }}
             value={text}
             placeholder={`Thing ${listData.length + 1}`}
@@ -93,6 +98,11 @@ const styles = StyleSheet.create({
     height: 40,
     minWidth: 200,
     padding: 10
+  },
+  list: {
+    alignSelf: 'stretch',
+    marginBottom: 20,
+    maxHeight: '80%'
   },
   text: {
     color: '#2D2A32',
