@@ -68,7 +68,7 @@ export default function Index() {
             style={styles.input}
             onChangeText={onChangeText}
             onSubmitEditing={async () => {
-              const id = uuid.v4() as string;
+              const id = uuid.v4();
               setListData(prev => [...prev, { id, title: text.trim() }]);
               onChangeText('');
               await db.runAsync('INSERT INTO things (id, title) VALUES (?, ?)', id, text);
