@@ -2,7 +2,16 @@ import { ListItemProps } from './indexTypes';
 import { useSQLiteContext } from 'expo-sqlite';
 import { useState } from 'react';
 import uuid from 'react-native-uuid';
-import { Button, FlatList, StyleSheet, Text, TextInput, View } from 'react-native';
+import {
+  Button,
+  FlatList,
+  KeyboardAvoidingView,
+  Platform,
+  StyleSheet,
+  Text,
+  TextInput,
+  View
+} from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 const ListItem = ({ id, setListData, title }: ListItemProps) => {
@@ -30,7 +39,10 @@ export default function Index() {
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
-        <View style={styles.content}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={styles.content}
+        >
           <Text style={{ ...styles.text, fontWeight: 'bold', marginBottom: 20 }}>
             1. Enter the things you would like to track
           </Text>
@@ -59,7 +71,7 @@ export default function Index() {
             value={text}
             placeholder={`Thing ${listData.length + 1}`}
           />
-        </View>
+        </KeyboardAvoidingView>
       </SafeAreaView>
     </SafeAreaProvider>
   );
