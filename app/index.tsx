@@ -1,5 +1,4 @@
 import { Link } from 'expo-router';
-import { ListItemProps } from '../types/indexTypes';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSQLiteContext } from 'expo-sqlite';
 import uuid from 'react-native-uuid';
@@ -13,7 +12,8 @@ import {
   TextInput,
   View
 } from 'react-native';
-import { useRef, useState } from 'react';
+import { ListItemProps, Thing } from '../types';
+import { useEffect, useRef, useState } from 'react';
 
 const ListItem = ({ id, setListData, title }: ListItemProps) => {
   const db = useSQLiteContext();
@@ -41,8 +41,21 @@ const ListItem = ({ id, setListData, title }: ListItemProps) => {
 export default function Index() {
   const db = useSQLiteContext();
   const flatListRef = useRef<FlatList>(null);
-  const [listData, setListData] = useState<{ id: string; title: string }[]>([]);
+  const [listData, setListData] = useState<Thing[]>([]);
   const [text, onChangeText] = useState('');
+
+  useEffect(() => {
+    async function setup() {
+      try {
+        const result: Thing[] = await db.getAllAsync('SELECT * from things');
+        setListData(result.map(({ id, title }) => ({ id, title })));
+      } catch (e) {
+        console.error('DB error: ', e);
+      }
+    }
+
+    setup();
+  }, [db]);
 
   const onSubmitEditing = async () => {
     if (text.trim() === '') {
