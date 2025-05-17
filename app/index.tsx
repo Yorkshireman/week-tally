@@ -26,7 +26,7 @@ const ListItem = ({ id, setListData, title }: ListItemProps) => {
         justifyContent: 'center'
       }}
     >
-      <Text style={styles.text}>{title}</Text>
+      <Text style={{ ...styles.text, fontWeight: 'bold' }}>{title}</Text>
       <Button
         onPress={async () => {
           setListData(prev => prev.filter(item => item.id !== id));
