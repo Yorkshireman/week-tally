@@ -1,6 +1,6 @@
-import { Picker } from '@react-native-picker/picker';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Setting } from '../types';
+import { TimePicker } from '../components';
 import { useSQLiteContext } from 'expo-sqlite';
 import { KeyboardAvoidingView, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 import { Link, useRouter } from 'expo-router';
@@ -38,7 +38,7 @@ export default function DateTimeChooserScreen() {
     setup();
   }, [db]);
 
-  const onPickerValueChange = async (itemValue: string) => {
+  const onTimePickerValueChange = async (itemValue: string) => {
     setSelectedTime(itemValue);
     await db.runAsync(
       'INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)',
@@ -60,25 +60,7 @@ export default function DateTimeChooserScreen() {
           The app will send you a notification at a set time of your choosing each day to ask you if
           you have done your Thing that day.
         </Text>
-        <Picker
-          selectedValue={selectedTime}
-          style={{ alignSelf: 'stretch' }}
-          onValueChange={onPickerValueChange}
-        >
-          {/* values are no. of minutes after midnight */}
-          <Picker.Item label='6pm' value='1080' />
-          <Picker.Item label='6:30pm' value='1110' />
-          <Picker.Item label='7pm' value='1140' />
-          <Picker.Item label='7:30pm' value='1170' />
-          <Picker.Item label='8pm' value='1200' />
-          <Picker.Item label='8:30pm' value='1230' />
-          <Picker.Item label='9pm' value='1260' />
-          <Picker.Item label='9:30pm' value='1270' />
-          <Picker.Item label='10pm' value='1320' />
-          <Picker.Item label='10:30pm' value='1350' />
-          <Picker.Item label='11pm' value='1380' />
-          <Picker.Item label='11:30pm' value='1410' />
-        </Picker>
+        <TimePicker selectedTime={selectedTime} onValueChange={onTimePickerValueChange} />
         <View>
           <Text style={{ ...styles.text, marginBottom: 10 }}>Finished?</Text>
           <Link href='/dateTimeChooser' style={{ ...styles.navigationButton, marginBottom: 20 }}>
