@@ -4,7 +4,10 @@ import { SQLiteDatabase, SQLiteProvider } from 'expo-sqlite';
 export default function RootLayout() {
   return (
     <SQLiteProvider databaseName='things.db' onInit={migrateDbIfNeeded}>
-      <Stack screenOptions={{ headerShown: false }} />
+      <Stack>
+        <Stack.Screen options={{ headerShown: false }} />
+        <Stack.Screen name='DateTimeChooser' options={{ headerShown: false }} />
+      </Stack>
     </SQLiteProvider>
   );
 }

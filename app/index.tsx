@@ -88,10 +88,12 @@ export default function Index() {
             value={text}
             placeholder={`Thing ${listData.length + 1}`}
           />
-          <View>
-            <Text style={styles.text}>Finished?</Text>
-            <Button title='Go to next step' onPress={() => {}} />
-          </View>
+          {listData.length ? (
+            <View>
+              <Text style={styles.text}>Finished?</Text>
+              <Button title='Go to next step' onPress={() => {}} />
+            </View>
+          ) : null}
         </KeyboardAvoidingView>
       </SafeAreaView>
     </SafeAreaProvider>
