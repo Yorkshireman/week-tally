@@ -1,13 +1,16 @@
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Stack } from 'expo-router';
 import { SQLiteDatabase, SQLiteProvider } from 'expo-sqlite';
 
 export default function RootLayout() {
   return (
     <SQLiteProvider databaseName='things.db' onInit={migrateDbIfNeeded}>
-      <Stack>
-        <Stack.Screen options={{ headerShown: false }} />
-        <Stack.Screen name='DateTimeChooser' options={{ headerShown: false }} />
-      </Stack>
+      <SafeAreaProvider>
+        <Stack>
+          <Stack.Screen name='index' options={{ headerShown: false }} />
+          <Stack.Screen name='dateTimeChooser' options={{ headerShown: false }} />
+        </Stack>
+      </SafeAreaProvider>
     </SQLiteProvider>
   );
 }
