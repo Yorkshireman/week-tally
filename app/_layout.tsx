@@ -24,17 +24,24 @@ export default function RootLayout() {
 }
 
 const migrateDbIfNeeded = async (db: SQLiteDatabase) => {
-  const DATABASE_VERSION = 1;
+  const DATABASE_VERSION = 2;
   const row = await db.getFirstAsync<{ user_version: number }>('PRAGMA user_version');
   let currentDbVersion = row?.user_version ?? 0;
+
   console.log('currentDbVersion: ', currentDbVersion);
   console.log('DATABASE_VERSION: ', DATABASE_VERSION);
 
   await db.execAsync(`
     PRAGMA journal_mode = 'wal';
+
     CREATE TABLE IF NOT EXISTS things (
       id TEXT PRIMARY KEY NOT NULL,
       title TEXT NOT NULL
+    );
+
+    CREATE TABLE IF NOT EXISTS settings (
+      key TEXT PRIMARY KEY NOT NULL,
+      value TEXT
     );
   `);
 
@@ -43,12 +50,8 @@ const migrateDbIfNeeded = async (db: SQLiteDatabase) => {
   }
 
   if (currentDbVersion === 0) {
-    currentDbVersion = 1;
+    currentDbVersion = DATABASE_VERSION;
   }
-
-  // if (currentDbVersion === 1) {
-  //   Add more migrations
-  // }
 
   await db.execAsync(`PRAGMA user_version = ${DATABASE_VERSION}`);
 };
