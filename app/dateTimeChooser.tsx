@@ -39,7 +39,6 @@ export default function DateTimeChooserScreen() {
           <Picker.Item label='10:30pm' value='1350' />
           <Picker.Item label='11pm' value='1380' />
           <Picker.Item label='11:30pm' value='1410' />
-          <Picker.Item label='midnight' value='0' />
         </Picker>
         <View>
           <Text style={{ ...styles.text, marginBottom: 10 }}>Finished?</Text>
