@@ -24,15 +24,16 @@ export default function DateTimeChooserScreen() {
         <Picker
           selectedValue={selectedTime}
           style={{ alignSelf: 'stretch' }}
-          onValueChange={(itemValue, itemIndex) => setSelectedTime(itemValue)}
+          onValueChange={itemValue => setSelectedTime(itemValue)}
         >
-          <Picker.Item label='6pm' value='6pm' />
-          <Picker.Item label='7pm' value='7pm' />
-          <Picker.Item label='8pm' value='8pm' />
-          <Picker.Item label='9pm' value='9pm' />
-          <Picker.Item label='10pm' value='10pm' />
-          <Picker.Item label='11pm' value='11pm' />
-          <Picker.Item label='midnight' value='midnight' />
+          {/* values are no. of minutes after midnight */}
+          <Picker.Item label='6pm' value='1080' />
+          <Picker.Item label='7pm' value='1140' />
+          <Picker.Item label='8pm' value='1200' />
+          <Picker.Item label='9pm' value='1260' />
+          <Picker.Item label='10pm' value='1320' />
+          <Picker.Item label='11pm' value='1380' />
+          <Picker.Item label='midnight' value='0' />
         </Picker>
         <View>
           <Text style={{ ...styles.text, marginBottom: 10 }}>Finished?</Text>
