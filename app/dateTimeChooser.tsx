@@ -1,9 +1,9 @@
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Setting } from '../types';
 import { TimePicker } from '../components';
+import { useRouter } from 'expo-router';
 import { useSQLiteContext } from 'expo-sqlite';
 import { KeyboardAvoidingView, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
-import { Link, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 
 export default function DateTimeChooserScreen() {
@@ -63,9 +63,14 @@ export default function DateTimeChooserScreen() {
         <TimePicker selectedTime={selectedTime} onValueChange={onTimePickerValueChange} />
         <View>
           <Text style={{ ...styles.text, marginBottom: 10 }}>Finished?</Text>
-          <Link href='/dateTimeChooser' style={{ ...styles.navigationButton, marginBottom: 20 }}>
-            Go to next step
-          </Link>
+          <Pressable
+            onPress={() => {
+              // trigger notifications permission request
+              // navigate to the next screen
+            }}
+          >
+            <Text style={{ ...styles.navigationButton, marginBottom: 20 }}>Go to next step</Text>
+          </Pressable>
           <Pressable onPress={() => router.dismissTo('/')}>
             <Text style={styles.navigationButton}>Go back</Text>
           </Pressable>
