@@ -1,10 +1,38 @@
+import * as Notifications from 'expo-notifications';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Setting } from '../types';
 import { TimePicker } from '../components';
 import { useRouter } from 'expo-router';
 import { useSQLiteContext } from 'expo-sqlite';
-import { KeyboardAvoidingView, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
+import {
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  StyleSheet,
+  Text,
+  View
+} from 'react-native';
 import { useEffect, useState } from 'react';
+
+const ensurePermissions = async () => {
+  const { status } = await Notifications.getPermissionsAsync();
+
+  if (status !== 'granted') {
+    const result = await Notifications.requestPermissionsAsync();
+
+    if (result.status !== 'granted') {
+      Alert.alert(
+        'Notifications Disabled',
+        'Enable notifications in Settings to get your daily check-ins.'
+      );
+
+      return false;
+    }
+  }
+
+  return true;
+};
 
 export default function DateTimeChooserScreen() {
   const db = useSQLiteContext();
@@ -13,6 +41,8 @@ export default function DateTimeChooserScreen() {
 
   useEffect(() => {
     async function setup() {
+      await ensurePermissions();
+
       const result: Setting | null = await db.getFirstAsync(
         'SELECT value FROM settings WHERE key = ?',
         'askTime'
@@ -70,8 +100,17 @@ export default function DateTimeChooserScreen() {
         <View>
           <Text style={{ ...styles.text, marginBottom: 10 }}>Finished?</Text>
           <Pressable
-            onPress={() => {
-              // trigger notifications permission request
+            onPress={async () => {
+              // await Notifications.scheduleNotificationAsync({
+              //   content: {
+              //     body: 'This is a test notification to check if everything is working.',
+              //     title: 'Test Notification'
+              //   },
+              //   trigger: {
+              //     seconds: 1,
+              //     type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL
+              //   }
+              // });
               // navigate to the next screen
             }}
           >
