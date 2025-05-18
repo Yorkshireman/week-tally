@@ -39,12 +39,18 @@ export default function DateTimeChooserScreen() {
   }, [db]);
 
   const onTimePickerValueChange = async (itemValue: string) => {
-    setSelectedTime(itemValue);
-    await db.runAsync(
-      'INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)',
-      'askTime',
-      itemValue
-    );
+    const oldValue = selectedTime;
+    try {
+      setSelectedTime(itemValue);
+      await db.runAsync(
+        'INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)',
+        'askTime',
+        itemValue
+      );
+    } catch (e) {
+      console.error('Error updating askTime value: ', e);
+      setSelectedTime(oldValue);
+    }
   };
 
   return (
