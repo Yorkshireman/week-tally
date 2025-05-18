@@ -1,3 +1,9 @@
+export type LogEntry = {
+  id: string;
+  thingId: string;
+  timestamp: string;
+};
+
 export type Setting = {
   key: string;
   value: string;
