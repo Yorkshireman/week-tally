@@ -2,7 +2,6 @@ import * as Notifications from 'expo-notifications';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Setting } from '../types';
 import { TimePicker } from '../components';
-import { useRouter } from 'expo-router';
 import { useSQLiteContext } from 'expo-sqlite';
 import {
   Alert,
@@ -13,6 +12,7 @@ import {
   Text,
   View
 } from 'react-native';
+import { Link, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 
 const ensurePermissions = async () => {
@@ -99,23 +99,9 @@ export default function DateTimeChooserScreen() {
         <TimePicker selectedTime={selectedTime} onValueChange={onTimePickerValueChange} />
         <View>
           <Text style={{ ...styles.text, marginBottom: 10 }}>Finished?</Text>
-          <Pressable
-            onPress={async () => {
-              // await Notifications.scheduleNotificationAsync({
-              //   content: {
-              //     body: 'This is a test notification to check if everything is working.',
-              //     title: 'Test Notification'
-              //   },
-              //   trigger: {
-              //     seconds: 1,
-              //     type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL
-              //   }
-              // });
-              // navigate to the next screen
-            }}
-          >
-            <Text style={{ ...styles.navigationButton, marginBottom: 20 }}>Go to next step</Text>
-          </Pressable>
+          <Link href='/confirmation' style={{ ...styles.navigationButton, marginBottom: 20 }}>
+            Go to next step
+          </Link>
           <Pressable onPress={() => router.dismissTo('/')}>
             <Text style={styles.navigationButton}>Go back</Text>
           </Pressable>
