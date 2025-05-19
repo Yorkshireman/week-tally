@@ -48,3 +48,19 @@ Join our community of developers creating universal apps.
 
 - [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
 - [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+
+## Project Dev Notes
+
+### How to manually add a log entry to the database
+
+```typescript
+import uuid from 'react-native-uuid';
+...
+const firstThing = await db.getFirstAsync<Thing>('SELECT * FROM things');
+const nowIso = new Date().toISOString();
+const entryId = uuid.v4();
+
+await db.execAsync(
+   `INSERT INTO entries (id, thingId, timestamp) VALUES ('${entryId}', '${firstThing?.id}', '${nowIso}');`
+);
+```
