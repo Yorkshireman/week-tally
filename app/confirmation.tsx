@@ -50,8 +50,8 @@ export default function ConfirmationScreen() {
         </Text>
         <Text style={{ ...styles.text, marginBottom: 20 }}>
           You&apos;ll get daily notifications at {notificationTime} asking you to say whether or not
-          you have done your Thing, and on Sunday you&apos;ll get a notification inviting you to
-          view your weekly totals.
+          you have done your Thing, and on Sunday at the same time you&apos;ll get a notification
+          inviting you to view your weekly totals.
         </Text>
         <Text style={{ ...styles.text, marginBottom: 20 }}>
           Come back here anytime to view your running totals or update a total if you missed a
