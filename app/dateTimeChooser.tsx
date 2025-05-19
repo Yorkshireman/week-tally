@@ -2,6 +2,7 @@ import * as Notifications from 'expo-notifications';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Setting } from '../types';
 import { TimePicker } from '../components';
+import { useDbLogger } from '@/hooks';
 import { useSQLiteContext } from 'expo-sqlite';
 import {
   Alert,
@@ -36,6 +37,7 @@ const ensurePermissions = async () => {
 
 export default function DateTimeChooserScreen() {
   const db = useSQLiteContext();
+  const logDbContents = useDbLogger();
   const [selectedTime, setSelectedTime] = useState<string>('1080');
   const router = useRouter();
 
@@ -57,6 +59,8 @@ export default function DateTimeChooserScreen() {
             'askTime',
             '1080'
           );
+
+          logDbContents();
         } catch (e) {
           console.error('Error inserting default askTime value: ', e);
         }
@@ -66,7 +70,7 @@ export default function DateTimeChooserScreen() {
     }
 
     setup();
-  }, [db]);
+  }, [db, logDbContents]);
 
   const onTimePickerValueChange = async (itemValue: string) => {
     const oldValue = selectedTime;
@@ -77,6 +81,8 @@ export default function DateTimeChooserScreen() {
         'askTime',
         itemValue
       );
+
+      logDbContents();
     } catch (e) {
       console.error('Error updating askTime value: ', e);
       setSelectedTime(oldValue);

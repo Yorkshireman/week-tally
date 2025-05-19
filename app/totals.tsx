@@ -1,24 +1,37 @@
-import { LogEntry } from '../types';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useDbLogger } from '@/hooks';
 import { useEffect } from 'react';
 import { useSQLiteContext } from 'expo-sqlite';
+import uuid from 'react-native-uuid';
 import { KeyboardAvoidingView, Platform, StyleSheet, Text } from 'react-native';
+import { LogEntry, Thing } from '../types';
 
 export default function TotalsScreen() {
   const db = useSQLiteContext();
+  const logDbContents = useDbLogger();
 
   useEffect(() => {
     async function setup() {
       try {
-        const result: LogEntry[] = await db.getAllAsync('SELECT * from entries');
-        console.log('Entries: ', result);
+        // temporary code
+        // const firstThing = await db.getFirstAsync<Thing>('SELECT * FROM things');
+        // const nowIso = new Date().toISOString();
+        // const entryId = uuid.v4();
+
+        // await db.execAsync(
+        //   `INSERT INTO entries (id, thingId, timestamp) VALUES ('${entryId}', '${firstThing?.id}', '${nowIso}');`
+        // );
+        // end temporary code
+
+        logDbContents();
       } catch (e) {
         console.error('DB error: ', e);
+        logDbContents();
       }
     }
 
     setup();
-  }, [db]);
+  }, [db, logDbContents]);
 
   return (
     <SafeAreaView style={styles.container}>

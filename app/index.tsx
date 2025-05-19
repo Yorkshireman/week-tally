@@ -1,5 +1,6 @@
 import { Link } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useDbLogger } from '@/hooks';
 import { useSQLiteContext } from 'expo-sqlite';
 import uuid from 'react-native-uuid';
 import {
@@ -17,6 +18,7 @@ import { useEffect, useRef, useState } from 'react';
 
 const ListItem = ({ id, setListData, title }: ListItemProps) => {
   const db = useSQLiteContext();
+  const logDbContents = useDbLogger();
 
   return (
     <View
@@ -31,6 +33,7 @@ const ListItem = ({ id, setListData, title }: ListItemProps) => {
         onPress={async () => {
           setListData(prev => prev.filter(item => item.id !== id));
           await db.runAsync('DELETE FROM things WHERE id = ?', id);
+          logDbContents();
         }}
         title='Delete'
       />
@@ -42,6 +45,7 @@ export default function Index() {
   const db = useSQLiteContext();
   const flatListRef = useRef<FlatList>(null);
   const [listData, setListData] = useState<Thing[]>([]);
+  const logDbContents = useDbLogger();
   const [text, onChangeText] = useState('');
 
   useEffect(() => {
@@ -66,6 +70,7 @@ export default function Index() {
     setListData(prev => [...prev, { id, title: text.trim() }]);
     onChangeText('');
     await db.runAsync('INSERT INTO things (id, title) VALUES (?, ?)', id, text);
+    logDbContents();
   };
 
   return (
