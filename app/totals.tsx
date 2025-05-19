@@ -135,16 +135,16 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginTop: 40,
     padding: 10,
-    width: 160
+    width: 150
   },
   resetButtonText: {
     color: '#D0FEF5',
-    fontSize: 20,
+    fontSize: 18,
     textAlign: 'center'
   },
   text: {
     color: '#2D2A32',
-    fontSize: 30,
+    fontSize: 24,
     textAlign: 'center'
   }
 });
