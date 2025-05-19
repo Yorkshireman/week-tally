@@ -1,5 +1,6 @@
 import { Link } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useDbLogger } from '@/hooks';
 import { useSQLiteContext } from 'expo-sqlite';
 import { KeyboardAvoidingView, Platform, StyleSheet, Text } from 'react-native';
 import { useEffect, useState } from 'react';
@@ -14,6 +15,7 @@ const minutesAfterMidnightToTimeString = (minutesAfterMidnight: number) => {
 
 export default function ConfirmationScreen() {
   const db = useSQLiteContext();
+  const logDbContents = useDbLogger();
   const [notificationTime, setNotificationTime] = useState<string | null>(null);
 
   useEffect(() => {
@@ -33,11 +35,13 @@ export default function ConfirmationScreen() {
         'setupComplete',
         'true'
       );
+
+      logDbContents();
     };
 
     fetchSettings();
     setSetupComplete();
-  }, [db]);
+  }, [db, logDbContents]);
 
   return (
     <SafeAreaView style={styles.container}>

@@ -1,7 +1,17 @@
+import { dbSetupString } from '@/utils';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDbLogger } from '@/hooks';
+import { useRouter } from 'expo-router';
 import { useSQLiteContext } from 'expo-sqlite';
-import { FlatList, KeyboardAvoidingView, Platform, StyleSheet, Text, View } from 'react-native';
+import {
+  FlatList,
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  StyleSheet,
+  Text,
+  View
+} from 'react-native';
 import { LogEntry, Thing, ThingWithLogEntriesCount } from '../types';
 import { useEffect, useState } from 'react';
 
@@ -17,6 +27,7 @@ const startOfWeekDate = (now: Date): Date => {
 export default function TotalsScreen() {
   const db = useSQLiteContext();
   const logDbContents = useDbLogger();
+  const router = useRouter();
   const [totals, setTotals] = useState<ThingWithLogEntriesCount[]>();
 
   useEffect(() => {
@@ -57,7 +68,7 @@ export default function TotalsScreen() {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.content}
       >
-        <Text style={{ ...styles.text, fontWeight: 'bold', marginBottom: 20 }}>
+        <Text style={{ ...styles.text, fontWeight: 'bold', marginBottom: 40 }}>
           Totals This Week
         </Text>
         <FlatList
@@ -78,6 +89,33 @@ export default function TotalsScreen() {
           ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
           style={styles.list}
         />
+        <Pressable
+          onPress={async () => {
+            console.log('Clearing the database');
+            try {
+              await db.execAsync('DROP TABLE IF EXISTS things;');
+              await db.execAsync('DROP TABLE IF EXISTS settings;');
+              await db.execAsync('DROP TABLE IF EXISTS entries;');
+              await db.execAsync(dbSetupString);
+              logDbContents();
+              router.replace('/');
+            } catch (e) {
+              console.error('DB error: ', e);
+              logDbContents();
+            }
+          }}
+          style={{
+            backgroundColor: '#2D2A32',
+            borderRadius: 10,
+            marginTop: 40,
+            padding: 10,
+            width: '50%'
+          }}
+        >
+          <Text style={{ color: '#D0FEF5', fontSize: 20, textAlign: 'center' }}>
+            Clear the Database
+          </Text>
+        </Pressable>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
