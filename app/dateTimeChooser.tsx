@@ -105,9 +105,9 @@ export default function DateTimeChooserScreen() {
         <TimePicker selectedTime={selectedTime} onValueChange={onTimePickerValueChange} />
         <View>
           <Text style={{ ...styles.text, marginBottom: 10 }}>Finished?</Text>
-          <Link href='/confirmation' style={{ ...styles.navigationButton, marginBottom: 20 }}>
-            Go to next step
-          </Link>
+          <Pressable onPress={() => router.replace('/confirmation')} style={{ marginBottom: 20 }}>
+            <Text style={styles.navigationButton}>Go to next step</Text>
+          </Pressable>
           <Pressable onPress={() => router.dismissTo('/')}>
             <Text style={styles.navigationButton}>Go back</Text>
           </Pressable>

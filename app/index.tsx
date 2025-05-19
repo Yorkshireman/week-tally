@@ -7,6 +7,7 @@ import {
   FlatList,
   KeyboardAvoidingView,
   Platform,
+  Pressable,
   StyleSheet,
   Text,
   TextInput,
@@ -129,9 +130,12 @@ export default function Index() {
         {listData.length ? (
           <View>
             <Text style={{ ...styles.text, marginBottom: 10 }}>Finished?</Text>
-            <Link href='/dateTimeChooser' style={styles.nextStepButton}>
-              Go to next step
-            </Link>
+            <Pressable
+              onPress={() => router.replace('/dateTimeChooser')}
+              style={{ marginBottom: 20 }}
+            >
+              <Text style={styles.nextStepButton}>Go to next step</Text>
+            </Pressable>
           </View>
         ) : null}
       </KeyboardAvoidingView>

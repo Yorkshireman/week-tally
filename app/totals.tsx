@@ -104,15 +104,9 @@ export default function TotalsScreen() {
               logDbContents();
             }
           }}
-          style={{
-            backgroundColor: '#2D2A32',
-            borderRadius: 10,
-            marginTop: 40,
-            padding: 10,
-            width: '40%'
-          }}
+          style={styles.resetButton}
         >
-          <Text style={{ color: '#D0FEF5', fontSize: 20, textAlign: 'center' }}>Reset the app</Text>
+          <Text style={styles.resetButtonText}>Reset the app</Text>
         </Pressable>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -136,9 +130,21 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     maxHeight: '80%'
   },
+  resetButton: {
+    backgroundColor: '#2D2A32',
+    borderRadius: 10,
+    marginTop: 40,
+    padding: 10,
+    width: 160
+  },
+  resetButtonText: {
+    color: '#D0FEF5',
+    fontSize: 20,
+    textAlign: 'center'
+  },
   text: {
     color: '#2D2A32',
-    fontSize: 20,
+    fontSize: 30,
     textAlign: 'center'
   }
 });

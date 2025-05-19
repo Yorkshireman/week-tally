@@ -1,8 +1,8 @@
-import { Link } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDbLogger } from '@/hooks';
 import { useSQLiteContext } from 'expo-sqlite';
-import { KeyboardAvoidingView, Platform, StyleSheet, Text } from 'react-native';
+import { KeyboardAvoidingView, Platform, Pressable, StyleSheet, Text } from 'react-native';
+import { Link, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 
 const minutesAfterMidnightToTimeString = (minutesAfterMidnight: number) => {
@@ -17,6 +17,7 @@ export default function ConfirmationScreen() {
   const db = useSQLiteContext();
   const logDbContents = useDbLogger();
   const [notificationTime, setNotificationTime] = useState<string | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchSettings = async () => {
@@ -61,9 +62,9 @@ export default function ConfirmationScreen() {
           Come back here anytime to view your running totals or update a total if you missed a
           notification.
         </Text>
-        <Link href='/totals' style={styles.navigationButton}>
-          Roger! Tap me to acknowledge
-        </Link>
+        <Pressable onPress={() => router.replace('/totals')}>
+          <Text style={styles.navigationButton}>Roger! Take me to my running totals</Text>
+        </Pressable>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
