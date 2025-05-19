@@ -1,14 +1,15 @@
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDbLogger } from '@/hooks';
-import { useEffect } from 'react';
 import { useSQLiteContext } from 'expo-sqlite';
-import uuid from 'react-native-uuid';
-import { KeyboardAvoidingView, Platform, StyleSheet, Text } from 'react-native';
-import { LogEntry, Thing } from '../types';
+// import uuid from 'react-native-uuid';
+import { FlatList, KeyboardAvoidingView, Platform, StyleSheet, Text, View } from 'react-native';
+import { LogEntry, Thing, ThingWithLogEntriesCount } from '../types';
+import { useEffect, useState } from 'react';
 
 export default function TotalsScreen() {
   const db = useSQLiteContext();
   const logDbContents = useDbLogger();
+  const [totals, setTotals] = useState<ThingWithLogEntriesCount[]>();
 
   useEffect(() => {
     async function setup() {
@@ -24,6 +25,21 @@ export default function TotalsScreen() {
         // end temporary code
 
         logDbContents();
+
+        const logEntries = await db.getAllAsync<LogEntry>('SELECT * FROM entries');
+        const things = await db.getAllAsync<Thing>('SELECT * FROM things');
+
+        setTotals(
+          things.map(({ id, title }) => {
+            const logEntriesForThisThing = logEntries.filter(logEntry => logEntry.thingId === id);
+
+            return {
+              count: logEntriesForThisThing.length,
+              id,
+              title
+            };
+          })
+        );
       } catch (e) {
         console.error('DB error: ', e);
         logDbContents();
@@ -31,7 +47,7 @@ export default function TotalsScreen() {
     }
 
     setup();
-  }, [db, logDbContents]);
+  }, [db]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -40,6 +56,24 @@ export default function TotalsScreen() {
         style={styles.content}
       >
         <Text style={{ ...styles.text, fontWeight: 'bold', marginBottom: 20 }}>Totals</Text>
+        <FlatList
+          data={totals}
+          renderItem={({ item: { count, title } }) => (
+            <View
+              style={{
+                alignItems: 'center',
+                flexDirection: 'row',
+                justifyContent: 'center'
+              }}
+            >
+              <Text style={{ ...styles.text, fontWeight: 'bold' }}>
+                {title}: {count}
+              </Text>
+            </View>
+          )}
+          ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
+          style={styles.list}
+        />
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
@@ -56,6 +90,11 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     paddingRight: 20,
     paddingTop: 40
+  },
+  list: {
+    alignSelf: 'stretch',
+    marginBottom: 20,
+    maxHeight: '80%'
   },
   text: {
     color: '#2D2A32',
