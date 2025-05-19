@@ -1,8 +1,35 @@
 import { Link } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useSQLiteContext } from 'expo-sqlite';
 import { KeyboardAvoidingView, Platform, StyleSheet, Text } from 'react-native';
+import { useEffect, useState } from 'react';
+
+const minutesAfterMidnightToTimeString = (minutesAfterMidnight: number) => {
+  const hour = Math.floor(minutesAfterMidnight / 60);
+  const min = minutesAfterMidnight % 60;
+  const period = hour >= 12 ? 'pm' : 'am';
+  const hour12 = hour % 12 === 0 ? 12 : hour % 12;
+  return `${hour12}:${min.toString().padStart(2, '0')}${period}`;
+};
 
 export default function ConfirmationScreen() {
+  const db = useSQLiteContext();
+  const [notificationTime, setNotificationTime] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchSettings() {
+      const row = await db.getFirstAsync<{ value: string }>(
+        'SELECT value FROM settings WHERE key = ?',
+        'askTime'
+      );
+
+      const askTime = row?.value ? minutesAfterMidnightToTimeString(Number(row.value)) : '';
+      setNotificationTime(askTime);
+    }
+
+    fetchSettings();
+  }, [db]);
+
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView
@@ -13,9 +40,9 @@ export default function ConfirmationScreen() {
           You&apos;re done!
         </Text>
         <Text style={{ ...styles.text, marginBottom: 20 }}>
-          You&apos;ll get daily notifications asking you to say whether or not you have done your
-          Thing, and on Sunday you&apos;ll get a notification inviting you to view your weekly
-          totals.
+          You&apos;ll get daily notifications at {notificationTime} asking you to say whether or not
+          you have done your Thing, and on Sunday you&apos;ll get a notification inviting you to
+          view your weekly totals.
         </Text>
         <Text style={{ ...styles.text, marginBottom: 20 }}>
           Come back here anytime to view your running totals or update a total if you missed a
