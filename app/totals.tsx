@@ -1,7 +1,6 @@
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDbLogger } from '@/hooks';
 import { useSQLiteContext } from 'expo-sqlite';
-// import uuid from 'react-native-uuid';
 import { FlatList, KeyboardAvoidingView, Platform, StyleSheet, Text, View } from 'react-native';
 import { LogEntry, Thing, ThingWithLogEntriesCount } from '../types';
 import { useEffect, useState } from 'react';
@@ -23,18 +22,7 @@ export default function TotalsScreen() {
   useEffect(() => {
     async function setup() {
       try {
-        // temporary code
-        // const firstThing = await db.getFirstAsync<Thing>('SELECT * FROM things');
-        // const nowIso = new Date().toISOString();
-        // const entryId = uuid.v4();
-
-        // await db.execAsync(
-        //   `INSERT INTO entries (id, thingId, timestamp) VALUES ('${entryId}', '${firstThing?.id}', '${nowIso}');`
-        // );
-        // end temporary code
-
         logDbContents();
-
         const logEntries = await db.getAllAsync<LogEntry>('SELECT * FROM entries');
         const now = new Date();
         const things = await db.getAllAsync<Thing>('SELECT * FROM things');
@@ -61,7 +49,7 @@ export default function TotalsScreen() {
     }
 
     setup();
-  }, [db]);
+  }, [db, logDbContents]);
 
   return (
     <SafeAreaView style={styles.container}>
