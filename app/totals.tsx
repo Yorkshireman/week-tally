@@ -1,8 +1,4 @@
-import * as Notifications from 'expo-notifications';
-import { dbSetupString } from '@/utils';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useDbLogger } from '@/hooks';
-import { useRouter } from 'expo-router';
 import { useSQLiteContext } from 'expo-sqlite';
 import {
   FlatList,
@@ -14,6 +10,7 @@ import {
   View
 } from 'react-native';
 import { LogEntry, Thing, ThingWithLogEntriesCount } from '../types';
+import { useDbLogger, useResetApp } from '@/hooks';
 import { useEffect, useState } from 'react';
 
 const startOfWeekDate = (now: Date): Date => {
@@ -28,7 +25,7 @@ const startOfWeekDate = (now: Date): Date => {
 export default function TotalsScreen() {
   const db = useSQLiteContext();
   const logDbContents = useDbLogger();
-  const router = useRouter();
+  const resetApp = useResetApp();
   const [totals, setTotals] = useState<ThingWithLogEntriesCount[]>();
 
   useEffect(() => {
@@ -90,32 +87,7 @@ export default function TotalsScreen() {
           ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
           style={styles.list}
         />
-        <Pressable
-          onPress={async () => {
-            console.log('Clearing the database');
-            try {
-              await db.execAsync('DROP TABLE IF EXISTS things;');
-              await db.execAsync('DROP TABLE IF EXISTS settings;');
-              await db.execAsync('DROP TABLE IF EXISTS entries;');
-              await db.execAsync(dbSetupString);
-              console.log('DB cleared');
-              logDbContents();
-              router.replace('/');
-            } catch (e) {
-              console.error('DB error: ', e);
-              logDbContents();
-            }
-
-            try {
-              console.log('Cancelling all scheduled local notifications');
-              await Notifications.cancelAllScheduledNotificationsAsync();
-              console.log('All scheduled local notifications cancelled');
-            } catch (e) {
-              console.error('Error cancelling all scheduled local notifications: ', e);
-            }
-          }}
-          style={styles.resetButton}
-        >
+        <Pressable onPress={resetApp} style={styles.resetButton}>
           <Text style={styles.resetButtonText}>Reset the app</Text>
         </Pressable>
       </KeyboardAvoidingView>
