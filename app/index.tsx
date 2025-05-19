@@ -1,4 +1,3 @@
-import { Link } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDbLogger } from '@/hooks';
 import { useSQLiteContext } from 'expo-sqlite';
@@ -13,6 +12,7 @@ import {
   TextInput,
   View
 } from 'react-native';
+import { Link, useRouter } from 'expo-router';
 import { ListItemProps, Thing } from '../types';
 import { useEffect, useRef, useState } from 'react';
 
@@ -42,24 +42,40 @@ const ListItem = ({ id, setListData, title }: ListItemProps) => {
 };
 
 export default function Index() {
+  const [checkingSetupStatus, setCheckingSetupStatus] = useState(true);
   const db = useSQLiteContext();
   const flatListRef = useRef<FlatList>(null);
   const [listData, setListData] = useState<Thing[]>([]);
   const logDbContents = useDbLogger();
+  const router = useRouter();
   const [text, onChangeText] = useState('');
 
   useEffect(() => {
-    async function setup() {
+    const populateListDataStateFromDb = async () => {
       try {
         const result: Thing[] = await db.getAllAsync('SELECT * from things');
         setListData(result.map(({ id, title }) => ({ id, title })));
       } catch (e) {
         console.error('DB error: ', e);
       }
-    }
+    };
 
-    setup();
-  }, [db]);
+    const redirectToTotalsScreenIfSetupComplete = async () => {
+      const row = await db.getFirstAsync<{ value: string }>(
+        'SELECT value FROM settings WHERE key = ?',
+        'setupComplete'
+      );
+
+      if (row?.value === 'true') {
+        router.replace('/totals');
+      } else {
+        setCheckingSetupStatus(false);
+      }
+    };
+
+    redirectToTotalsScreenIfSetupComplete();
+    populateListDataStateFromDb();
+  }, [db, router]);
 
   const onSubmitEditing = async () => {
     if (text.trim() === '') {
@@ -72,6 +88,10 @@ export default function Index() {
     await db.runAsync('INSERT INTO things (id, title) VALUES (?, ?)', id, text);
     logDbContents();
   };
+
+  if (checkingSetupStatus) {
+    return null;
+  }
 
   return (
     <SafeAreaView style={styles.container}>

@@ -17,7 +17,7 @@ export default function ConfirmationScreen() {
   const [notificationTime, setNotificationTime] = useState<string | null>(null);
 
   useEffect(() => {
-    async function fetchSettings() {
+    const fetchSettings = async () => {
       const row = await db.getFirstAsync<{ value: string }>(
         'SELECT value FROM settings WHERE key = ?',
         'askTime'
@@ -25,9 +25,18 @@ export default function ConfirmationScreen() {
 
       const askTime = row?.value ? minutesAfterMidnightToTimeString(Number(row.value)) : '';
       setNotificationTime(askTime);
-    }
+    };
+
+    const setSetupComplete = async () => {
+      await db.runAsync(
+        'INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)',
+        'setupComplete',
+        'true'
+      );
+    };
 
     fetchSettings();
+    setSetupComplete();
   }, [db]);
 
   return (
