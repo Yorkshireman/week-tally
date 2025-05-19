@@ -5,7 +5,7 @@ import { FlatList, KeyboardAvoidingView, Platform, StyleSheet, Text, View } from
 import { LogEntry, Thing, ThingWithLogEntriesCount } from '../types';
 import { useEffect, useState } from 'react';
 
-const startOfWeekDate = (now: Date) => {
+const startOfWeekDate = (now: Date): Date => {
   const startOfWeek = new Date(now);
   const day = startOfWeek.getDay(); // 0 (Sun) - 6 (Sat)
   const diffToMonday = day === 0 ? 6 : day - 1; // 0 if Monday, 1 if Tuesday, ..., 6 if Sunday
