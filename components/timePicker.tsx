@@ -20,7 +20,7 @@ export const TimePicker = ({ selectedTime, onValueChange }: TimePickerProps) => 
       <Picker.Item label='8pm' value='1200' />
       <Picker.Item label='8:30pm' value='1230' />
       <Picker.Item label='9pm' value='1260' />
-      <Picker.Item label='9:30pm' value='1270' />
+      <Picker.Item label='9:30pm' value='1290' />
       <Picker.Item label='10pm' value='1320' />
       <Picker.Item label='10:30pm' value='1350' />
       <Picker.Item label='11pm' value='1380' />
