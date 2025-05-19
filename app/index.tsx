@@ -1,5 +1,6 @@
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDbLogger } from '@/hooks';
+import { useRouter } from 'expo-router';
 import { useSQLiteContext } from 'expo-sqlite';
 import uuid from 'react-native-uuid';
 import {
@@ -13,7 +14,6 @@ import {
   TextInput,
   View
 } from 'react-native';
-import { Link, useRouter } from 'expo-router';
 import { ListItemProps, Thing } from '../types';
 import { useEffect, useRef, useState } from 'react';
 

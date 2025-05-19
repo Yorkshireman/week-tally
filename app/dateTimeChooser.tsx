@@ -3,6 +3,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Setting } from '../types';
 import { TimePicker } from '../components';
 import { useDbLogger } from '@/hooks';
+import { useRouter } from 'expo-router';
 import { useSQLiteContext } from 'expo-sqlite';
 import {
   Alert,
@@ -13,7 +14,6 @@ import {
   Text,
   View
 } from 'react-native';
-import { Link, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 
 const ensurePermissions = async () => {

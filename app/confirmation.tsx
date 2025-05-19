@@ -1,8 +1,8 @@
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDbLogger } from '@/hooks';
+import { useRouter } from 'expo-router';
 import { useSQLiteContext } from 'expo-sqlite';
 import { KeyboardAvoidingView, Platform, Pressable, StyleSheet, Text } from 'react-native';
-import { Link, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 
 const minutesAfterMidnightToTimeString = (minutesAfterMidnight: number) => {
