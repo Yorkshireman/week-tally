@@ -109,12 +109,10 @@ export default function TotalsScreen() {
             borderRadius: 10,
             marginTop: 40,
             padding: 10,
-            width: '50%'
+            width: '40%'
           }}
         >
-          <Text style={{ color: '#D0FEF5', fontSize: 20, textAlign: 'center' }}>
-            Clear the Database
-          </Text>
+          <Text style={{ color: '#D0FEF5', fontSize: 20, textAlign: 'center' }}>Reset the app</Text>
         </Pressable>
       </KeyboardAvoidingView>
     </SafeAreaView>
