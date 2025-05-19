@@ -6,6 +6,15 @@ import { FlatList, KeyboardAvoidingView, Platform, StyleSheet, Text, View } from
 import { LogEntry, Thing, ThingWithLogEntriesCount } from '../types';
 import { useEffect, useState } from 'react';
 
+const startOfWeekDate = (now: Date) => {
+  const startOfWeek = new Date(now);
+  const day = startOfWeek.getDay(); // 0 (Sun) - 6 (Sat)
+  const diffToMonday = day === 0 ? 6 : day - 1; // 0 if Monday, 1 if Tuesday, ..., 6 if Sunday
+  startOfWeek.setDate(startOfWeek.getDate() - diffToMonday);
+  startOfWeek.setHours(0, 0, 0, 0);
+  return startOfWeek;
+};
+
 export default function TotalsScreen() {
   const db = useSQLiteContext();
   const logDbContents = useDbLogger();
@@ -27,14 +36,19 @@ export default function TotalsScreen() {
         logDbContents();
 
         const logEntries = await db.getAllAsync<LogEntry>('SELECT * FROM entries');
+        const now = new Date();
         const things = await db.getAllAsync<Thing>('SELECT * FROM things');
 
         setTotals(
           things.map(({ id, title }) => {
             const logEntriesForThisThing = logEntries.filter(logEntry => logEntry.thingId === id);
+            const totalForThisWeek = logEntriesForThisThing.filter(logEntry => {
+              const logEntryDate = new Date(logEntry.timestamp);
+              return logEntryDate >= startOfWeekDate(now) && logEntryDate <= now;
+            }).length;
 
             return {
-              count: logEntriesForThisThing.length,
+              count: totalForThisWeek,
               id,
               title
             };
@@ -55,7 +69,9 @@ export default function TotalsScreen() {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.content}
       >
-        <Text style={{ ...styles.text, fontWeight: 'bold', marginBottom: 20 }}>Totals</Text>
+        <Text style={{ ...styles.text, fontWeight: 'bold', marginBottom: 20 }}>
+          Totals This Week
+        </Text>
         <FlatList
           data={totals}
           renderItem={({ item: { count, title } }) => (
