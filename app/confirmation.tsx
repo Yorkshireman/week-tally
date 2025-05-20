@@ -75,7 +75,7 @@ export default function ConfirmationScreen() {
       const askTimeMinutesAfterMidnight = Number(row?.value);
       const notificationParams: Notifications.NotificationRequestInput = {
         content: {
-          body: 'Add 1 to my running total',
+          body: 'Yes: Add 1 to my running total\nNo: Make no change to my running total',
           categoryIdentifier: 'DAILY_CHECK_IN',
           data: { thingId: firstThingRow.id },
           title: `Have you ${firstThingRow.title} today?`
