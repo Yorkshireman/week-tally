@@ -1,17 +1,10 @@
+import { minutesAfterMidnightToTimeString } from '@/utils';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDbLogger } from '@/hooks';
 import { useRouter } from 'expo-router';
 import { useSQLiteContext } from 'expo-sqlite';
 import { KeyboardAvoidingView, Platform, Pressable, StyleSheet, Text } from 'react-native';
 import { useEffect, useState } from 'react';
-
-const minutesAfterMidnightToTimeString = (minutesAfterMidnight: number) => {
-  const hour = Math.floor(minutesAfterMidnight / 60);
-  const min = minutesAfterMidnight % 60;
-  const period = hour >= 12 ? 'pm' : 'am';
-  const hour12 = hour % 12 === 0 ? 12 : hour % 12;
-  return `${hour12}:${min.toString().padStart(2, '0')}${period}`;
-};
 
 export default function ConfirmationScreen() {
   const db = useSQLiteContext();
@@ -20,7 +13,7 @@ export default function ConfirmationScreen() {
   const router = useRouter();
 
   useEffect(() => {
-    const fetchSettings = async () => {
+    const fetchAskTimeSetting = async () => {
       const row = await db.getFirstAsync<{ value: string }>(
         'SELECT value FROM settings WHERE key = ?',
         'askTime'
@@ -40,7 +33,7 @@ export default function ConfirmationScreen() {
       logDbContents();
     };
 
-    fetchSettings();
+    fetchAskTimeSetting();
     setSetupComplete();
   }, [db, logDbContents]);
 
