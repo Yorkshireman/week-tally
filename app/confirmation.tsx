@@ -1,13 +1,15 @@
+import * as Notifications from 'expo-notifications';
 import { minutesAfterMidnightToTimeString } from '@/utils';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDbLogger } from '@/hooks';
 import { useRouter } from 'expo-router';
 import { useSQLiteContext } from 'expo-sqlite';
 import { KeyboardAvoidingView, Platform, Pressable, StyleSheet, Text } from 'react-native';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export default function ConfirmationScreen() {
   const db = useSQLiteContext();
+  const fetchedFirstThingRef = useRef<{ id: string; title: string } | null>(null);
   const logDbContents = useDbLogger();
   const [notificationTime, setNotificationTime] = useState<string | null>(null);
   const router = useRouter();
@@ -19,8 +21,79 @@ export default function ConfirmationScreen() {
         'askTime'
       );
 
-      const askTime = row?.value ? minutesAfterMidnightToTimeString(Number(row.value)) : '';
-      setNotificationTime(askTime);
+      const askTime = row?.value;
+      const askTimeString = askTime ? minutesAfterMidnightToTimeString(Number(askTime)) : '';
+      setNotificationTime(askTimeString);
+    };
+
+    const scheduleNotification = async () => {
+      await Notifications.setNotificationCategoryAsync('DAILY_CHECK_IN', [
+        {
+          buttonTitle: 'Yes',
+          identifier: 'YES',
+          options: { opensAppToForeground: false }
+        },
+        {
+          buttonTitle: 'No',
+          identifier: 'NO',
+          options: { opensAppToForeground: false }
+        }
+      ]);
+
+      const firstThingRow = await db.getFirstAsync<{ id: string; title: string }>(
+        'SELECT id, title FROM things LIMIT 1;',
+        []
+      );
+
+      if (!firstThingRow) {
+        console.error('No Thing found!');
+        return;
+      }
+
+      fetchedFirstThingRef.current = firstThingRow;
+
+      //   await Notifications.scheduleNotificationAsync({
+      //     content: {
+      //       body: 'Add 1 to my running total',
+      //       categoryIdentifier: 'DAILY_CHECK_IN',
+      //       data: { thingId: firstThingRow.id },
+      //       title: `Have you ${firstThingRow.title} today?`
+      //     },
+      //     trigger: {
+      //       repeats: false,
+      //       seconds: 3,
+      //       type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL
+      //     }
+      //   });
+      // };
+
+      const row = await db.getFirstAsync<{ value: string }>(
+        'SELECT value FROM settings WHERE key = ?',
+        'askTime'
+      );
+
+      const askTimeMinutesAfterMidnight = Number(row?.value);
+      const notificationParams: Notifications.NotificationRequestInput = {
+        content: {
+          body: 'Add 1 to my running total',
+          categoryIdentifier: 'DAILY_CHECK_IN',
+          data: { thingId: firstThingRow.id },
+          title: `Have you ${firstThingRow.title} today?`
+        },
+        trigger: {
+          hour: Math.floor(Number(askTimeMinutesAfterMidnight) / 60),
+          minute: askTimeMinutesAfterMidnight % 60,
+          repeats: true,
+          type: Notifications.SchedulableTriggerInputTypes.CALENDAR
+        }
+      };
+
+      await Notifications.scheduleNotificationAsync(notificationParams);
+
+      console.log(
+        'Scheduled daily notification with params: ',
+        JSON.stringify(notificationParams, null, 2)
+      );
     };
 
     const setSetupComplete = async () => {
@@ -34,6 +107,7 @@ export default function ConfirmationScreen() {
     };
 
     fetchAskTimeSetting();
+    scheduleNotification();
     setSetupComplete();
   }, [db, logDbContents]);
 
