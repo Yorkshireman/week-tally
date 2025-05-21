@@ -4,13 +4,54 @@ import { NotificationDataType } from '@/types';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDbLogger } from '@/hooks';
 import { useRouter } from 'expo-router';
-import { useSQLiteContext } from 'expo-sqlite';
 import { KeyboardAvoidingView, Platform, Pressable, StyleSheet, Text } from 'react-native';
-import { useEffect, useRef, useState } from 'react';
+import { SQLiteDatabase, useSQLiteContext } from 'expo-sqlite';
+import { useEffect, useState } from 'react';
+
+const scheduleNotifications = async (db: SQLiteDatabase) => {
+  const things = await db.getAllAsync<{ id: string; title: string }>(
+    'SELECT id, title FROM things;',
+    []
+  );
+
+  if (!things.length) {
+    console.error('No Things found!');
+    return;
+  }
+
+  const row = await db.getFirstAsync<{ value: string }>(
+    'SELECT value FROM settings WHERE key = ?',
+    'askTime'
+  );
+
+  const askTimeMinutesAfterMidnight = Number(row?.value);
+
+  things.forEach(async thing => {
+    const notificationParams: Notifications.NotificationRequestInput = {
+      content: {
+        body: "Tap if you did, or ignore/dismiss this notification if you didn't",
+        data: { thingId: thing.id } as NotificationDataType,
+        title: `Have you done ${thing.title} today?`
+      },
+      trigger: {
+        hour: Math.floor(Number(askTimeMinutesAfterMidnight) / 60),
+        minute: askTimeMinutesAfterMidnight % 60,
+        repeats: true,
+        type: Notifications.SchedulableTriggerInputTypes.CALENDAR
+      }
+    };
+
+    await Notifications.scheduleNotificationAsync(notificationParams);
+
+    console.log(
+      'Scheduled daily notification with params: ',
+      JSON.stringify(notificationParams, null, 2)
+    );
+  });
+};
 
 export default function ConfirmationScreen() {
   const db = useSQLiteContext();
-  const fetchedFirstThingRef = useRef<{ id: string; title: string } | null>(null);
   const logDbContents = useDbLogger();
   const [notificationTime, setNotificationTime] = useState<string | null>(null);
   const router = useRouter();
@@ -27,47 +68,6 @@ export default function ConfirmationScreen() {
       setNotificationTime(askTimeString);
     };
 
-    const scheduleNotification = async () => {
-      const firstThingRow = await db.getFirstAsync<{ id: string; title: string }>(
-        'SELECT id, title FROM things LIMIT 1;',
-        []
-      );
-
-      if (!firstThingRow) {
-        console.error('No Thing found!');
-        return;
-      }
-
-      fetchedFirstThingRef.current = firstThingRow;
-
-      const row = await db.getFirstAsync<{ value: string }>(
-        'SELECT value FROM settings WHERE key = ?',
-        'askTime'
-      );
-
-      const askTimeMinutesAfterMidnight = Number(row?.value);
-      const notificationParams: Notifications.NotificationRequestInput = {
-        content: {
-          body: "Tap if you did, or ignore/dismiss this notification if you didn't",
-          data: { thingId: firstThingRow.id } as NotificationDataType,
-          title: `Have you done ${firstThingRow.title} today?`
-        },
-        trigger: {
-          hour: Math.floor(Number(askTimeMinutesAfterMidnight) / 60),
-          minute: askTimeMinutesAfterMidnight % 60,
-          repeats: true,
-          type: Notifications.SchedulableTriggerInputTypes.CALENDAR
-        }
-      };
-
-      await Notifications.scheduleNotificationAsync(notificationParams);
-
-      console.log(
-        'Scheduled daily notification with params: ',
-        JSON.stringify(notificationParams, null, 2)
-      );
-    };
-
     const setSetupComplete = async () => {
       await db.runAsync(
         'INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)',
@@ -79,7 +79,7 @@ export default function ConfirmationScreen() {
     };
 
     fetchAskTimeSetting();
-    scheduleNotification();
+    scheduleNotifications(db);
     setSetupComplete();
   }, [db, logDbContents]);
 
@@ -106,34 +106,36 @@ export default function ConfirmationScreen() {
         </Pressable>
         <Pressable
           onPress={async () => {
-            const firstThingRow = await db.getFirstAsync<{ id: string; title: string }>(
-              'SELECT id, title FROM things LIMIT 1;',
+            const things = await db.getAllAsync<{ id: string; title: string }>(
+              'SELECT id, title FROM things;',
               []
             );
 
-            const notificationParams: Notifications.NotificationRequestInput = {
-              content: {
-                body: "Tap if you did, or ignore/dismiss this notification if you didn't",
-                data: { thingId: firstThingRow!.id } as NotificationDataType,
-                title: `Have you done ${firstThingRow!.title} today?`
-              },
-              trigger: {
-                repeats: false,
-                seconds: 4,
-                type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL
-              }
-            };
+            things.forEach(async ({ id: thingId, title }) => {
+              const notificationParams: Notifications.NotificationRequestInput = {
+                content: {
+                  body: "Tap if you did, or ignore/dismiss this notification if you didn't",
+                  data: { thingId: thingId } as NotificationDataType,
+                  title: `Have you done ${title} today?`
+                },
+                trigger: {
+                  repeats: false,
+                  seconds: 4,
+                  type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL
+                }
+              };
 
-            await Notifications.scheduleNotificationAsync(notificationParams);
+              await Notifications.scheduleNotificationAsync(notificationParams);
 
-            console.log(
-              'Scheduled daily notification with params: ',
-              JSON.stringify(notificationParams, null, 2)
-            );
+              console.log(
+                'Scheduled daily notification with params: ',
+                JSON.stringify(notificationParams, null, 2)
+              );
+            });
           }}
           style={{ marginTop: 30 }}
         >
-          <Text style={styles.navigationButton}>Trigger a notification</Text>
+          <Text style={styles.navigationButton}>Trigger notifications</Text>
         </Pressable>
       </KeyboardAvoidingView>
     </SafeAreaView>
