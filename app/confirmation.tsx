@@ -132,6 +132,38 @@ export default function ConfirmationScreen() {
         <Pressable onPress={() => router.replace('/totals')}>
           <Text style={styles.navigationButton}>Roger! Take me to my running totals</Text>
         </Pressable>
+        <Pressable
+          onPress={async () => {
+            const firstThingRow = await db.getFirstAsync<{ id: string; title: string }>(
+              'SELECT id, title FROM things LIMIT 1;',
+              []
+            );
+
+            const notificationParams: Notifications.NotificationRequestInput = {
+              content: {
+                body: 'Yes: Add 1 to my running total\nNo: Make no change to my running total',
+                categoryIdentifier: 'DAILY_CHECK_IN',
+                data: { thingId: firstThingRow!.id },
+                title: `Have you ${firstThingRow!.title} today?`
+              },
+              trigger: {
+                repeats: false,
+                seconds: 4,
+                type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL
+              }
+            };
+
+            await Notifications.scheduleNotificationAsync(notificationParams);
+
+            console.log(
+              'Scheduled daily notification with params: ',
+              JSON.stringify(notificationParams, null, 2)
+            );
+          }}
+          style={{ marginTop: 30 }}
+        >
+          <Text style={styles.navigationButton}>Trigger a notification</Text>
+        </Pressable>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
