@@ -1,54 +1,12 @@
 import * as Notifications from 'expo-notifications';
-import { minutesAfterMidnightToTimeString } from '@/utils';
 import { NotificationDataType } from '@/types';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDbLogger } from '@/hooks';
 import { useRouter } from 'expo-router';
+import { useSQLiteContext } from 'expo-sqlite';
 import { KeyboardAvoidingView, Platform, Pressable, StyleSheet, Text } from 'react-native';
-import { SQLiteDatabase, useSQLiteContext } from 'expo-sqlite';
+import { minutesAfterMidnightToTimeString, scheduleDailyNotifications } from '@/utils';
 import { useEffect, useState } from 'react';
-
-const scheduleNotifications = async (db: SQLiteDatabase) => {
-  const things = await db.getAllAsync<{ id: string; title: string }>(
-    'SELECT id, title FROM things;',
-    []
-  );
-
-  if (!things.length) {
-    console.error('No Things found!');
-    return;
-  }
-
-  const row = await db.getFirstAsync<{ value: string }>(
-    'SELECT value FROM settings WHERE key = ?',
-    'askTime'
-  );
-
-  const askTimeMinutesAfterMidnight = Number(row?.value);
-
-  things.forEach(async thing => {
-    const notificationParams: Notifications.NotificationRequestInput = {
-      content: {
-        body: "Tap if you did, or ignore/dismiss this notification if you didn't",
-        data: { thingId: thing.id } as NotificationDataType,
-        title: `Have you done ${thing.title} today?`
-      },
-      trigger: {
-        hour: Math.floor(Number(askTimeMinutesAfterMidnight) / 60),
-        minute: askTimeMinutesAfterMidnight % 60,
-        repeats: true,
-        type: Notifications.SchedulableTriggerInputTypes.CALENDAR
-      }
-    };
-
-    await Notifications.scheduleNotificationAsync(notificationParams);
-
-    console.log(
-      'Scheduled daily notification with params: ',
-      JSON.stringify(notificationParams, null, 2)
-    );
-  });
-};
 
 export default function ConfirmationScreen() {
   const db = useSQLiteContext();
@@ -79,7 +37,7 @@ export default function ConfirmationScreen() {
     };
 
     fetchAskTimeSetting();
-    scheduleNotifications(db);
+    scheduleDailyNotifications(db);
     setSetupComplete();
   }, [db, logDbContents]);
 
