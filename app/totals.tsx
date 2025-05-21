@@ -1,6 +1,8 @@
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useIsFocused } from '@react-navigation/native';
 import { useSQLiteContext } from 'expo-sqlite';
 import {
+  AppState,
   FlatList,
   KeyboardAvoidingView,
   Platform,
@@ -11,7 +13,7 @@ import {
 } from 'react-native';
 import { LogEntry, Thing, ThingWithLogEntriesCount } from '../types';
 import { useDbLogger, useResetApp } from '@/hooks';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const startOfWeekDate = (now: Date): Date => {
   const startOfWeek = new Date(now);
@@ -23,13 +25,15 @@ const startOfWeekDate = (now: Date): Date => {
 };
 
 export default function TotalsScreen() {
+  const appState = useRef(AppState.currentState);
   const db = useSQLiteContext();
+  const isFocused = useIsFocused();
   const logDbContents = useDbLogger();
   const resetApp = useResetApp();
   const [totals, setTotals] = useState<ThingWithLogEntriesCount[]>();
 
   useEffect(() => {
-    async function setup() {
+    const fetchAndSetTotals = async () => {
       try {
         logDbContents();
         const logEntries = await db.getAllAsync<LogEntry>('SELECT * FROM entries');
@@ -55,10 +59,24 @@ export default function TotalsScreen() {
         console.error('DB error: ', e);
         logDbContents();
       }
-    }
+    };
 
-    setup();
-  }, [db, logDbContents]);
+    if (isFocused) {
+      fetchAndSetTotals();
+    }
+    // Listen for app coming to the foreground
+    const subscription = AppState.addEventListener('change', nextAppState => {
+      if (appState.current.match(/inactive|background/) && nextAppState === 'active' && isFocused) {
+        fetchAndSetTotals();
+      }
+
+      appState.current = nextAppState;
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, [db, isFocused, logDbContents]);
 
   return (
     <SafeAreaView style={styles.container}>
