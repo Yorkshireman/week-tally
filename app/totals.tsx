@@ -1,6 +1,7 @@
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useIsFocused } from '@react-navigation/native';
 import { useSQLiteContext } from 'expo-sqlite';
+import uuid from 'react-native-uuid';
 import {
   AppState,
   FlatList,
@@ -89,7 +90,7 @@ export default function TotalsScreen() {
         </Text>
         <FlatList
           data={totals}
-          renderItem={({ item: { count, title } }) => (
+          renderItem={({ item: { count, title, id } }) => (
             <View
               style={{
                 alignItems: 'center',
@@ -97,9 +98,64 @@ export default function TotalsScreen() {
                 justifyContent: 'center'
               }}
             >
-              <Text style={{ ...styles.text, fontWeight: 'bold' }}>
+              <Pressable
+                onPress={async () => {
+                  if (count > 0) {
+                    const latestEntry = await db.getFirstAsync<{ id: string }>(
+                      'SELECT id FROM entries WHERE thingId = ? ORDER BY timestamp DESC LIMIT 1',
+                      id
+                    );
+
+                    if (!latestEntry) {
+                      return console.error('No entry found for this thing');
+                    }
+
+                    await db.runAsync('DELETE FROM entries WHERE id = ?', latestEntry.id);
+                    setTotals(prev =>
+                      prev?.map(t => (t.id === id ? { ...t, count: t.count - 1 } : t))
+                    );
+                  }
+                }}
+                disabled={count === 0}
+                style={{
+                  alignItems: 'center',
+                  marginRight: 10,
+                  opacity: count === 0 ? 0.3 : 1,
+                  width: 40
+                }}
+              >
+                <Text style={{ color: count === 0 ? '#aaa' : '#2D2A32', fontSize: 28 }}>-</Text>
+              </Pressable>
+              <Text
+                style={{ ...styles.text, fontWeight: 'bold', minWidth: 120, textAlign: 'center' }}
+              >
                 {title}: {count}
               </Text>
+              <Pressable
+                onPress={async () => {
+                  try {
+                    const entryId = uuid.v4();
+                    const nowIso = new Date().toISOString();
+                    await db.runAsync(
+                      'INSERT INTO entries (id, thingId, timestamp) VALUES (?, ?, ?);',
+                      entryId,
+                      id,
+                      nowIso
+                    );
+
+                    logDbContents();
+                    setTotals(prev =>
+                      prev?.map(t => (t.id === id ? { ...t, count: t.count + 1 } : t))
+                    );
+                  } catch (e) {
+                    console.error('DB error: ', e);
+                    logDbContents();
+                  }
+                }}
+                style={{ alignItems: 'center', width: 40 }}
+              >
+                <Text style={{ color: '#2D2A32', fontSize: 28 }}>+</Text>
+              </Pressable>
             </View>
           )}
           ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
