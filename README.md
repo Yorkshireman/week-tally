@@ -64,3 +64,10 @@ await db.execAsync(
    `INSERT INTO entries (id, thingId, timestamp) VALUES ('${entryId}', '${firstThing?.id}', '${nowIso}');`
 );
 ```
+
+### How to run a preview build on physical device
+
+- Add device to list of approved devices: `eas device:create`
+- `eas build --platform ios --profile preview`
+- Navigate to latest build: https://expo.dev/accounts/codedegen/projects/times-this-week/builds
+- Click "Install" and follow instructions
