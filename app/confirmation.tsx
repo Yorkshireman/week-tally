@@ -29,19 +29,6 @@ export default function ConfirmationScreen() {
     };
 
     const scheduleNotification = async () => {
-      await Notifications.setNotificationCategoryAsync('DAILY_CHECK_IN', [
-        {
-          buttonTitle: 'Yes',
-          identifier: 'YES',
-          options: { opensAppToForeground: false }
-        },
-        {
-          buttonTitle: 'No',
-          identifier: 'NO',
-          options: { opensAppToForeground: false }
-        }
-      ]);
-
       const firstThingRow = await db.getFirstAsync<{ id: string; title: string }>(
         'SELECT id, title FROM things LIMIT 1;',
         []
@@ -77,10 +64,9 @@ export default function ConfirmationScreen() {
       const askTimeMinutesAfterMidnight = Number(row?.value);
       const notificationParams: Notifications.NotificationRequestInput = {
         content: {
-          body: 'Yes: Add 1 to my running total\nNo: Make no change to my running total',
-          categoryIdentifier: 'DAILY_CHECK_IN',
+          body: "Tap if you did, or ignore/dismiss this notification if you didn't",
           data: { thingId: firstThingRow.id } as NotificationDataType,
-          title: `Have you ${firstThingRow.title} today?`
+          title: `Have you done ${firstThingRow.title} today?`
         },
         trigger: {
           hour: Math.floor(Number(askTimeMinutesAfterMidnight) / 60),
@@ -143,10 +129,9 @@ export default function ConfirmationScreen() {
 
             const notificationParams: Notifications.NotificationRequestInput = {
               content: {
-                body: 'Yes: Add 1 to my running total\nNo: Make no change to my running total',
-                categoryIdentifier: 'DAILY_CHECK_IN',
-                data: { thingId: firstThingRow!.id },
-                title: `Have you ${firstThingRow!.title} today?`
+                body: "Tap if you did, or ignore/dismiss this notification if you didn't",
+                data: { thingId: firstThingRow!.id } as NotificationDataType,
+                title: `Have you done ${firstThingRow!.title} today?`
               },
               trigger: {
                 repeats: false,

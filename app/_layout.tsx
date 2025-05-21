@@ -22,7 +22,7 @@ const NotificationsListener = ({ children }: { children: ReactNode }) => {
       const action = response.actionIdentifier;
       const data = response.notification.request.content.data as NotificationDataType;
 
-      if (action === 'YES' && data.thingId) {
+      if (action === Notifications.DEFAULT_ACTION_IDENTIFIER) {
         const newId = uuid.v4();
         const nowIso = new Date().toISOString();
         await db.runAsync(`INSERT INTO entries (id, thingId, timestamp) VALUES (?, ?, ?);`, [
