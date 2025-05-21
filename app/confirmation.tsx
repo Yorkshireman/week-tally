@@ -40,21 +40,6 @@ export default function ConfirmationScreen() {
 
       fetchedFirstThingRef.current = firstThingRow;
 
-      //   await Notifications.scheduleNotificationAsync({
-      //     content: {
-      //       body: 'Add 1 to my running total',
-      //       categoryIdentifier: 'DAILY_CHECK_IN',
-      //       data: { thingId: firstThingRow.id },
-      //       title: `Have you ${firstThingRow.title} today?`
-      //     },
-      //     trigger: {
-      //       repeats: false,
-      //       seconds: 3,
-      //       type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL
-      //     }
-      //   });
-      // };
-
       const row = await db.getFirstAsync<{ value: string }>(
         'SELECT value FROM settings WHERE key = ?',
         'askTime'
