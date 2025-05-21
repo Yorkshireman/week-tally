@@ -4,6 +4,10 @@ export type LogEntry = {
   timestamp: string;
 };
 
+export type NotificationDataType = {
+  thingId: string;
+};
+
 export type Setting = {
   key: string;
   value: string;

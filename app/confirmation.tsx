@@ -1,9 +1,11 @@
 import * as Notifications from 'expo-notifications';
 import { minutesAfterMidnightToTimeString } from '@/utils';
+import { NotificationDataType } from '@/types';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDbLogger } from '@/hooks';
 import { useRouter } from 'expo-router';
 import { useSQLiteContext } from 'expo-sqlite';
+import uuid from 'react-native-uuid';
 import { KeyboardAvoidingView, Platform, Pressable, StyleSheet, Text } from 'react-native';
 import { useEffect, useRef, useState } from 'react';
 
@@ -77,7 +79,7 @@ export default function ConfirmationScreen() {
         content: {
           body: 'Yes: Add 1 to my running total\nNo: Make no change to my running total',
           categoryIdentifier: 'DAILY_CHECK_IN',
-          data: { thingId: firstThingRow.id },
+          data: { thingId: firstThingRow.id } as NotificationDataType,
           title: `Have you ${firstThingRow.title} today?`
         },
         trigger: {
