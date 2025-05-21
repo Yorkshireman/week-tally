@@ -1,5 +1,5 @@
-import * as Notifications from 'expo-notifications';
-import { NotificationDataType } from '@/types';
+// import * as Notifications from 'expo-notifications';
+// import { NotificationDataType } from '@/types';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDbLogger } from '@/hooks';
 import { useRouter } from 'expo-router';
@@ -62,7 +62,7 @@ export default function ConfirmationScreen() {
         <Pressable onPress={() => router.replace('/totals')}>
           <Text style={styles.navigationButton}>Roger! Take me to my running totals</Text>
         </Pressable>
-        <Pressable
+        {/* <Pressable
           onPress={async () => {
             const things = await db.getAllAsync<{ id: string; title: string }>(
               'SELECT id, title FROM things;',
@@ -94,7 +94,7 @@ export default function ConfirmationScreen() {
           style={{ marginTop: 30 }}
         >
           <Text style={styles.navigationButton}>Trigger notifications</Text>
-        </Pressable>
+        </Pressable> */}
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
