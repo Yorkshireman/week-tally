@@ -124,7 +124,9 @@ export default function TotalsScreen() {
                   width: 40
                 }}
               >
-                <Text style={{ color: count === 0 ? '#aaa' : '#2D2A32', fontSize: 28 }}>-</Text>
+                <Text style={{ color: count === 0 ? '#aaa' : styles.text.color, fontSize: 28 }}>
+                  -
+                </Text>
               </Pressable>
               <Text
                 style={{ ...styles.text, fontWeight: 'bold', minWidth: 120, textAlign: 'center' }}
@@ -154,7 +156,7 @@ export default function TotalsScreen() {
                 }}
                 style={{ alignItems: 'center', width: 40 }}
               >
-                <Text style={{ color: '#2D2A32', fontSize: 28 }}>+</Text>
+                <Text style={{ ...styles.text, fontSize: 28 }}>+</Text>
               </Pressable>
             </View>
           )}
@@ -171,7 +173,7 @@ export default function TotalsScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#D0FEF5',
+    backgroundColor: '#F0FEFD',
     flex: 1,
     justifyContent: 'center'
   },
@@ -187,19 +189,21 @@ const styles = StyleSheet.create({
     maxHeight: '80%'
   },
   resetButton: {
-    backgroundColor: '#2D2A32',
+    backgroundColor: 'none',
+    borderColor: '#2D3748',
     borderRadius: 10,
+    borderWidth: 1,
     marginTop: 40,
     padding: 10,
     width: 150
   },
   resetButtonText: {
-    color: '#D0FEF5',
+    color: '#2D3748',
     fontSize: 18,
     textAlign: 'center'
   },
   text: {
-    color: '#2D2A32',
+    color: '#2D3748',
     fontSize: 24,
     textAlign: 'center'
   }

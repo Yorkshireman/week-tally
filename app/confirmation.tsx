@@ -58,11 +58,11 @@ export default function ConfirmationScreen() {
           Come back here anytime to view your running totals or update a total if you missed a
           notification.
         </Text>
-        <Text style={{ ...styles.text, marginBottom: 20 }}>
+        <Text style={{ ...styles.text, marginBottom: 40 }}>
           The totals reset to zero at midnight every Sunday.
         </Text>
-        <Pressable onPress={() => router.replace('/totals')}>
-          <Text style={styles.navigationButton}>Roger! Take me to my running totals</Text>
+        <Pressable onPress={() => router.replace('/totals')} style={styles.navigationButton}>
+          <Text style={styles.navigationButtonText}>Roger! Take me to my running totals</Text>
         </Pressable>
         {/* <Pressable
           onPress={async () => {
@@ -104,7 +104,7 @@ export default function ConfirmationScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#D0FEF5',
+    backgroundColor: '#F0FEFD',
     flex: 1,
     justifyContent: 'center'
   },
@@ -115,10 +115,16 @@ const styles = StyleSheet.create({
     paddingTop: 40
   },
   navigationButton: {
-    color: '#007AFF',
-    fontSize: 20,
-    textAlign: 'center',
-    textDecorationLine: 'underline'
+    backgroundColor: '#156F6D',
+    borderRadius: 10,
+    marginBottom: 20,
+    padding: 12,
+    width: 330
+  },
+  navigationButtonText: {
+    color: '#F0FEFD',
+    fontSize: 18,
+    textAlign: 'center'
   },
   text: {
     color: '#2D2A32',

@@ -98,18 +98,21 @@ export default function DateTimeChooserScreen() {
         <Text style={{ ...styles.text, fontWeight: 'bold', marginBottom: 20 }}>
           2. Choose when you&apos;d like to be notified
         </Text>
-        <Text style={{ ...styles.text, marginBottom: 20 }}>
+        <Text style={styles.text}>
           The app will send you a notification at a set time of your choosing each day to ask you if
           you have done your Thing that day.
         </Text>
         <TimePicker selectedTime={selectedTime} onValueChange={onTimePickerValueChange} />
         <View>
-          <Text style={{ ...styles.text, marginBottom: 10 }}>Finished?</Text>
-          <Pressable onPress={() => router.replace('/confirmation')} style={{ marginBottom: 20 }}>
-            <Text style={styles.navigationButton}>Go to next step</Text>
+          <Text style={{ ...styles.text, marginBottom: 20 }}>Finished?</Text>
+          <Pressable
+            onPress={() => router.replace('/confirmation')}
+            style={{ ...styles.navigationButton, marginBottom: 20 }}
+          >
+            <Text style={styles.navigationButtonText}>Go to next step</Text>
           </Pressable>
-          <Pressable onPress={() => router.dismissTo('/')}>
-            <Text style={styles.navigationButton}>Go back</Text>
+          <Pressable onPress={() => router.dismissTo('/')} style={styles.backButton}>
+            <Text style={styles.backButtonText}>Go back</Text>
           </Pressable>
         </View>
       </KeyboardAvoidingView>
@@ -118,8 +121,21 @@ export default function DateTimeChooserScreen() {
 }
 
 const styles = StyleSheet.create({
+  backButton: {
+    backgroundColor: 'none',
+    borderColor: '#2D3748',
+    borderRadius: 10,
+    borderWidth: 1,
+    padding: 10,
+    width: 160
+  },
+  backButtonText: {
+    color: '#2D3748',
+    fontSize: 18,
+    textAlign: 'center'
+  },
   container: {
-    backgroundColor: '#D0FEF5',
+    backgroundColor: '#F0FEFD',
     flex: 1,
     justifyContent: 'center'
   },
@@ -130,13 +146,19 @@ const styles = StyleSheet.create({
     paddingTop: 40
   },
   navigationButton: {
-    color: '#007AFF',
-    fontSize: 20,
-    textAlign: 'center',
-    textDecorationLine: 'underline'
+    backgroundColor: '#156F6D',
+    borderRadius: 10,
+    marginBottom: 20,
+    padding: 10,
+    width: 160
+  },
+  navigationButtonText: {
+    color: '#F0FEFD',
+    fontSize: 18,
+    textAlign: 'center'
   },
   text: {
-    color: '#2D2A32',
+    color: '#2D3748',
     fontSize: 20,
     textAlign: 'center'
   }

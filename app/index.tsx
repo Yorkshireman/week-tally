@@ -4,7 +4,6 @@ import { useRouter } from 'expo-router';
 import { useSQLiteContext } from 'expo-sqlite';
 import uuid from 'react-native-uuid';
 import {
-  Button,
   FlatList,
   KeyboardAvoidingView,
   Platform,
@@ -26,18 +25,22 @@ const ListItem = ({ id, setListData, title }: ListItemProps) => {
       style={{
         alignItems: 'center',
         flexDirection: 'row',
-        justifyContent: 'center'
+        gap: 40,
+        justifyContent: 'space-between',
+        marginHorizontal: '11%'
       }}
     >
-      <Text style={{ ...styles.text, flexShrink: 1, fontWeight: 'bold' }}>{title}</Text>
-      <Button
+      <Text style={styles.listItemText}>{title}</Text>
+      <Pressable
         onPress={async () => {
           setListData(prev => prev.filter(item => item.id !== id));
           await db.runAsync('DELETE FROM things WHERE id = ?', id);
           logDbContents();
         }}
-        title='Delete'
-      />
+        style={styles.deleteButton}
+      >
+        <Text style={styles.deleteButtonText}>Delete</Text>
+      </Pressable>
     </View>
   );
 };
@@ -130,12 +133,12 @@ export default function Index() {
         />
         {listData.length ? (
           <View>
-            <Text style={{ ...styles.text, marginBottom: 10 }}>Finished?</Text>
+            <Text style={{ ...styles.text, marginBottom: 20 }}>Finished?</Text>
             <Pressable
               onPress={() => router.replace('/dateTimeChooser')}
-              style={{ marginBottom: 20 }}
+              style={styles.nextStepButton}
             >
-              <Text style={styles.nextStepButton}>Go to next step</Text>
+              <Text style={styles.nextStepButtonText}>Go to next step</Text>
             </Pressable>
           </View>
         ) : null}
@@ -146,7 +149,7 @@ export default function Index() {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#D0FEF5',
+    backgroundColor: '#F0FEFD',
     flex: 1,
     justifyContent: 'center'
   },
@@ -156,25 +159,49 @@ const styles = StyleSheet.create({
     paddingRight: 20,
     paddingTop: 40
   },
+  deleteButton: {
+    backgroundColor: '#FAF089',
+    borderRadius: 10,
+    padding: 7,
+    width: 85
+  },
+  deleteButtonText: {
+    color: '#2D3748',
+    fontSize: 18,
+    textAlign: 'center'
+  },
   input: {
     borderWidth: 1,
     fontSize: 20,
     marginBottom: 40,
-    minWidth: 200,
-    padding: 10
+    padding: 10,
+    width: '78%'
   },
   list: {
     alignSelf: 'stretch',
     marginBottom: 20,
     maxHeight: '80%'
   },
+  listItemText: {
+    color: '#2D3748',
+    flexShrink: 1,
+    fontSize: 24,
+    fontWeight: 'bold'
+  },
   nextStepButton: {
-    color: '#007AFF',
-    fontSize: 20,
-    textDecorationLine: 'underline'
+    backgroundColor: '#156F6D',
+    borderRadius: 10,
+    marginBottom: 20,
+    padding: 10,
+    width: 160
+  },
+  nextStepButtonText: {
+    color: '#F0FEFD',
+    fontSize: 18,
+    textAlign: 'center'
   },
   text: {
-    color: '#2D2A32',
+    color: '#2D3748',
     fontSize: 20,
     textAlign: 'center'
   }
