@@ -51,8 +51,8 @@ export default function ConfirmationScreen() {
           You&apos;re done!
         </Text>
         <Text style={{ ...styles.text, marginBottom: 20 }}>
-          You&apos;ll get daily notifications at {notificationTime} asking you to say whether or not
-          you have done your Thing.
+          You&apos;ll get daily notifications at {notificationTime} asking you to update your
+          totals.
         </Text>
         <Text style={{ ...styles.text, marginBottom: 20 }}>
           Come back here anytime to view your running totals or update a total if you missed a
