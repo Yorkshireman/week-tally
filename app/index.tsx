@@ -106,10 +106,6 @@ export default function Index() {
         <Text style={{ ...styles.text, fontWeight: 'bold', marginBottom: 20 }}>
           1. Enter the things you would like to track
         </Text>
-        <Text style={{ ...styles.text, marginBottom: 20 }}>
-          For best results, write what fits the sentence, &quot;Have you done (something)
-          today?&quot;
-        </Text>
         <FlatList
           data={listData}
           ref={flatListRef}
