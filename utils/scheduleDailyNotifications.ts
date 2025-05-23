@@ -11,7 +11,7 @@ export const scheduleDailyNotifications = async (db: SQLiteDatabase) => {
 
   const notificationParams: Notifications.NotificationRequestInput = {
     content: {
-      title: 'Tap to update your notifications'
+      title: 'Tap to update your totals'
     },
     trigger: {
       hour: Math.floor(Number(askTimeMinutesAfterMidnight) / 60),

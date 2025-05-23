@@ -1,4 +1,4 @@
-// import * as Notifications from 'expo-notifications';
+import * as Notifications from 'expo-notifications';
 // import { NotificationDataType } from '@/types';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDbLogger } from '@/hooks';
@@ -55,43 +55,28 @@ export default function ConfirmationScreen() {
           totals.
         </Text>
         <Text style={{ ...styles.text, marginBottom: 20 }}>
-          Come back here anytime to view your running totals or update a total if you missed a
-          notification.
+          The totals reset to zero at midnight every Sunday.
         </Text>
         <Text style={{ ...styles.text, marginBottom: 40 }}>
-          The totals reset to zero at midnight every Sunday.
+          Come back here anytime to view or update your running totals if you missed a notification.
         </Text>
         <Pressable onPress={() => router.replace('/totals')} style={styles.navigationButton}>
           <Text style={styles.navigationButtonText}>Roger! Take me to my running totals</Text>
         </Pressable>
         {/* <Pressable
           onPress={async () => {
-            const things = await db.getAllAsync<{ id: string; title: string }>(
-              'SELECT id, title FROM things;',
-              []
-            );
+            const notificationParams: Notifications.NotificationRequestInput = {
+              content: {
+                title: 'Tap to update your totals'
+              },
+              trigger: {
+                repeats: false,
+                seconds: 4,
+                type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL
+              }
+            };
 
-            things.forEach(async ({ id: thingId, title }) => {
-              const notificationParams: Notifications.NotificationRequestInput = {
-                content: {
-                  body: "Tap if you did, or ignore/dismiss this notification if you didn't",
-                  data: { thingId: thingId } as NotificationDataType,
-                  title: `Have you done ${title} today?`
-                },
-                trigger: {
-                  repeats: false,
-                  seconds: 4,
-                  type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL
-                }
-              };
-
-              await Notifications.scheduleNotificationAsync(notificationParams);
-
-              console.log(
-                'Scheduled daily notification with params: ',
-                JSON.stringify(notificationParams, null, 2)
-              );
-            });
+            await Notifications.scheduleNotificationAsync(notificationParams);
           }}
           style={{ marginTop: 30 }}
         >
