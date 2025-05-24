@@ -85,17 +85,20 @@ export default function TotalsScreen() {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.content}
       >
-        <Text style={{ ...styles.text, fontWeight: 'bold', marginBottom: 40 }}>
-          Totals This Week
-        </Text>
         <FlatList
           data={totals}
+          ListHeaderComponent={
+            <Text style={{ ...styles.text, fontWeight: 'bold', marginBottom: 40 }}>
+              Totals This Week
+            </Text>
+          }
           renderItem={({ item: { count, title, id } }) => (
             <View
               style={{
                 alignItems: 'center',
                 flexDirection: 'row',
-                justifyContent: 'center'
+                justifyContent: 'center',
+                paddingHorizontal: 50
               }}
             >
               <Pressable
@@ -129,7 +132,12 @@ export default function TotalsScreen() {
                 </Text>
               </Pressable>
               <Text
-                style={{ ...styles.text, fontWeight: 'bold', minWidth: 120, textAlign: 'center' }}
+                style={{
+                  ...styles.text,
+                  fontWeight: 'bold',
+                  minWidth: 120,
+                  textAlign: 'center'
+                }}
               >
                 {title}: {count}
               </Text>
@@ -175,7 +183,10 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#F0FEFD',
     flex: 1,
-    justifyContent: 'center'
+    justifyContent: 'center',
+    paddingBottom: 60,
+    paddingHorizontal: '10%',
+    paddingTop: 40
   },
   content: {
     alignItems: 'center',
@@ -184,16 +195,14 @@ const styles = StyleSheet.create({
     paddingTop: 40
   },
   list: {
-    alignSelf: 'stretch',
-    marginBottom: 20,
-    maxHeight: '80%'
+    alignSelf: 'stretch'
   },
   resetButton: {
     backgroundColor: 'none',
     borderColor: '#2D3748',
     borderRadius: 10,
     borderWidth: 1,
-    marginTop: 40,
+    marginTop: 20,
     padding: 10,
     width: 150
   },
