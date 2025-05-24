@@ -26,8 +26,7 @@ const ListItem = ({ id, setListData, title }: ListItemProps) => {
         alignItems: 'center',
         flexDirection: 'row',
         gap: 40,
-        justifyContent: 'space-between',
-        marginHorizontal: '11%'
+        justifyContent: 'space-between'
       }}
     >
       <Text style={styles.listItemText}>{title}</Text>
@@ -103,30 +102,31 @@ export default function Index() {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.content}
       >
-        <Text style={{ ...styles.text, fontWeight: 'bold', marginBottom: 20 }}>
-          1. Enter the things you would like to track
-        </Text>
         <FlatList
           data={listData}
+          ListHeaderComponent={
+            <>
+              <Text style={{ ...styles.text, fontWeight: 'bold', marginBottom: 20 }}>
+                1. Enter the things you would like to track
+              </Text>
+              <TextInput
+                style={styles.input}
+                onChangeText={onChangeText}
+                onSubmitEditing={onSubmitEditing}
+                value={text}
+                placeholder={`Thing ${listData.length + 1}`}
+              />
+            </>
+          }
           ref={flatListRef}
           renderItem={({ item: { id, title } }) => (
             <ListItem key={id} id={id} setListData={setListData} title={title} />
           )}
           ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
-          onContentSizeChange={() => {
-            if (listData.length > 0) {
-              flatListRef.current?.scrollToEnd({ animated: true });
-            }
-          }}
           style={styles.list}
         />
-        <TextInput
-          style={styles.input}
-          onChangeText={onChangeText}
-          onSubmitEditing={onSubmitEditing}
-          value={text}
-          placeholder={`Thing ${listData.length + 1}`}
-        />
+      </KeyboardAvoidingView>
+      <View style={{ alignItems: 'center' }}>
         {listData.length ? (
           <View>
             <Text style={{ ...styles.text, marginBottom: 20 }}>Finished?</Text>
@@ -138,7 +138,7 @@ export default function Index() {
             </Pressable>
           </View>
         ) : null}
-      </KeyboardAvoidingView>
+      </View>
     </SafeAreaView>
   );
 }
@@ -147,7 +147,10 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#F0FEFD',
     flex: 1,
-    justifyContent: 'center'
+    justifyContent: 'center',
+    paddingBottom: 60,
+    paddingHorizontal: '10%',
+    paddingTop: 40
   },
   content: {
     alignItems: 'center',
@@ -170,13 +173,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     fontSize: 20,
     marginBottom: 40,
-    padding: 10,
-    width: '78%'
+    padding: 10
   },
   list: {
     alignSelf: 'stretch',
-    marginBottom: 20,
-    maxHeight: '80%'
+    marginBottom: 20
   },
   listItemText: {
     color: '#2D3748',
@@ -187,7 +188,6 @@ const styles = StyleSheet.create({
   nextStepButton: {
     backgroundColor: '#156F6D',
     borderRadius: 10,
-    marginBottom: 20,
     padding: 10,
     width: 160
   },
