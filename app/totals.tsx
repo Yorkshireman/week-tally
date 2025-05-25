@@ -32,6 +32,7 @@ export default function TotalsScreen() {
   const logDbContents = useDbLogger();
   const resetApp = useResetApp();
   const [totals, setTotals] = useState<ThingWithLogEntriesCount[]>();
+  const [weekOffset, setWeekOffset] = useState<number>(0);
 
   useEffect(() => {
     const fetchAndSetTotals = async () => {
@@ -77,7 +78,7 @@ export default function TotalsScreen() {
     return () => {
       subscription.remove();
     };
-  }, [db, isFocused, logDbContents]);
+  }, [db, isFocused, logDbContents, weekOffset]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -99,11 +100,11 @@ export default function TotalsScreen() {
                   marginBottom: 40
                 }}
               >
-                <Pressable>
+                <Pressable onPress={() => setWeekOffset(prev => prev - 1)}>
                   <Text>{'<'}</Text>
                 </Pressable>
                 <Text style={styles.text}>This week</Text>
-                <Pressable>
+                <Pressable onPress={() => setWeekOffset(prev => prev + 1)}>
                   <Text>{'>'}</Text>
                 </Pressable>
               </View>
