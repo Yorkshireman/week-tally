@@ -88,9 +88,26 @@ export default function TotalsScreen() {
         <FlatList
           data={totals}
           ListHeaderComponent={
-            <Text style={{ ...styles.text, fontWeight: 'bold', marginBottom: 40 }}>
-              Totals This Week
-            </Text>
+            <>
+              <Text style={{ ...styles.text, fontWeight: 'bold', marginBottom: 20 }}>Totals</Text>
+              <View
+                style={{
+                  alignItems: 'center',
+                  flexDirection: 'row',
+                  gap: 20,
+                  justifyContent: 'center',
+                  marginBottom: 40
+                }}
+              >
+                <Pressable>
+                  <Text>{'<'}</Text>
+                </Pressable>
+                <Text style={styles.text}>This week</Text>
+                <Pressable>
+                  <Text>{'>'}</Text>
+                </Pressable>
+              </View>
+            </>
           }
           renderItem={({ item: { count, title, id } }) => (
             <View
