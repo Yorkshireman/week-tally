@@ -16,13 +16,20 @@ import { LogEntry, Thing, ThingWithLogEntriesCount } from '../types';
 import { useDbLogger, useResetApp } from '@/hooks';
 import { useEffect, useRef, useState } from 'react';
 
-const startOfWeekDate = (now: Date): Date => {
+const startOfWeekDate = (now: Date, weekOffset = 0): Date => {
   const startOfWeek = new Date(now);
   const day = startOfWeek.getDay(); // 0 (Sun) - 6 (Sat)
   const diffToMonday = day === 0 ? 6 : day - 1; // 0 if Monday, 1 if Tuesday, ..., 6 if Sunday
-  startOfWeek.setDate(startOfWeek.getDate() - diffToMonday);
+  startOfWeek.setDate(startOfWeek.getDate() - diffToMonday + weekOffset * 7);
   startOfWeek.setHours(0, 0, 0, 0);
   return startOfWeek;
+};
+
+const getWeekLabel = (offset: number) => {
+  if (offset === 0) return 'This week';
+  if (offset === -1) return 'Last week';
+  if (offset < -1) return `${Math.abs(offset)} weeks ago`;
+  return '';
 };
 
 export default function TotalsScreen() {
@@ -42,12 +49,16 @@ export default function TotalsScreen() {
         const now = new Date();
         const things = await db.getAllAsync<Thing>('SELECT * FROM things');
 
+        const weekStart = startOfWeekDate(now, weekOffset);
+        const weekEnd = new Date(weekStart);
+        weekEnd.setDate(weekEnd.getDate() + 7);
+
         setTotals(
           things.map(({ id, title }) => {
             const logEntriesForThisThing = logEntries.filter(logEntry => logEntry.thingId === id);
             const totalForThisWeek = logEntriesForThisThing.filter(logEntry => {
               const logEntryDate = new Date(logEntry.timestamp);
-              return logEntryDate >= startOfWeekDate(now) && logEntryDate <= now;
+              return logEntryDate >= weekStart && logEntryDate < weekEnd;
             }).length;
 
             return {
@@ -103,8 +114,12 @@ export default function TotalsScreen() {
                 <Pressable onPress={() => setWeekOffset(prev => prev - 1)}>
                   <Text>{'<'}</Text>
                 </Pressable>
-                <Text style={styles.text}>This week</Text>
-                <Pressable onPress={() => setWeekOffset(prev => prev + 1)}>
+                <Text style={styles.text}>{getWeekLabel(weekOffset)}</Text>
+                <Pressable
+                  onPress={() => setWeekOffset(prev => Math.min(prev + 1, 0))}
+                  disabled={weekOffset === 0}
+                  style={{ opacity: weekOffset === 0 ? 0.3 : 1 }}
+                >
                   <Text>{'>'}</Text>
                 </Pressable>
               </View>
@@ -137,11 +152,10 @@ export default function TotalsScreen() {
                     );
                   }
                 }}
-                disabled={count === 0}
+                disabled={count === 0 || weekOffset !== 0}
                 style={{
                   alignItems: 'center',
                   marginRight: 10,
-                  opacity: count === 0 ? 0.3 : 1,
                   width: 40
                 }}
               >
@@ -160,6 +174,7 @@ export default function TotalsScreen() {
                 {title}: {count}
               </Text>
               <Pressable
+                disabled={weekOffset !== 0}
                 onPress={async () => {
                   try {
                     const entryId = uuid.v4();
