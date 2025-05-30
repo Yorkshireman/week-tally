@@ -111,7 +111,10 @@ export default function TotalsScreen() {
                   marginBottom: 40
                 }}
               >
-                <Pressable onPress={() => setWeekOffset(prev => prev - 1)}>
+                <Pressable
+                  onPress={() => setWeekOffset(prev => prev - 1)}
+                  style={styles.weekButton}
+                >
                   <Text>{'<'}</Text>
                 </Pressable>
                 <Text style={styles.text}>{getWeekLabel(weekOffset)}</Text>
@@ -120,7 +123,7 @@ export default function TotalsScreen() {
                   disabled={weekOffset === 0}
                   style={{ opacity: weekOffset === 0 ? 0.3 : 1 }}
                 >
-                  <Text>{'>'}</Text>
+                  <Text style={styles.weekButton}>{'>'}</Text>
                 </Pressable>
               </View>
             </>
@@ -248,5 +251,8 @@ const styles = StyleSheet.create({
     color: '#2D3748',
     fontSize: 24,
     textAlign: 'center'
+  },
+  weekButton: {
+    padding: 10
   }
 });
