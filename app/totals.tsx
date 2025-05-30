@@ -147,7 +147,13 @@ export default function TotalsScreen() {
                   width: 40
                 }}
               >
-                <Text style={{ color: count === 0 ? '#aaa' : styles.text.color, fontSize: 28 }}>
+                <Text
+                  style={{
+                    opacity: count === 0 || weekOffset !== 0 ? 0.3 : 1,
+                    ...styles.text,
+                    ...styles.countButton
+                  }}
+                >
                   -
                 </Text>
               </Pressable>
@@ -185,7 +191,15 @@ export default function TotalsScreen() {
                 }}
                 style={{ alignItems: 'center', width: 40 }}
               >
-                <Text style={{ ...styles.text, fontSize: 28 }}>+</Text>
+                <Text
+                  style={{
+                    opacity: weekOffset !== 0 ? 0.3 : 1,
+                    ...styles.text,
+                    ...styles.countButton
+                  }}
+                >
+                  +
+                </Text>
               </Pressable>
             </View>
           )}
@@ -214,6 +228,11 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     paddingRight: 20,
     paddingTop: 40
+  },
+  countButton: {
+    fontSize: 28,
+    paddingHorizontal: 12,
+    paddingVertical: 2
   },
   list: {
     alignSelf: 'stretch'
