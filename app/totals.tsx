@@ -66,6 +66,7 @@ export default function TotalsScreen() {
     const subscription = AppState.addEventListener('change', nextAppState => {
       if (appState.current.match(/inactive|background/) && nextAppState === 'active' && isFocused) {
         fetchAndSetTotals();
+        setWeekOffset(0);
       }
 
       appState.current = nextAppState;
@@ -124,23 +125,50 @@ export default function TotalsScreen() {
             >
               <Pressable
                 onPress={async () => {
-                  if (count > 0) {
-                    const latestEntry = await db.getFirstAsync<{ id: string }>(
-                      'SELECT id FROM entries WHERE thingId = ? ORDER BY timestamp DESC LIMIT 1',
-                      id
-                    );
+                  if (count === 0) return;
 
-                    if (!latestEntry) {
-                      return console.error('No entry found for this thing');
+                  try {
+                    if (weekOffset !== 0) {
+                      const weekStart = buildStartOfWeekDate(new Date(), weekOffset);
+                      const weekEnd = new Date(weekStart);
+                      weekEnd.setDate(weekEnd.getDate() + 7);
+
+                      const latestEntry = await db.getFirstAsync<LogEntry>(
+                        'SELECT id FROM entries WHERE thingId = ? AND timestamp >= ? AND timestamp < ? ORDER BY timestamp DESC LIMIT 1',
+                        id,
+                        weekStart.toISOString(),
+                        weekEnd.toISOString()
+                      );
+
+                      if (!latestEntry) {
+                        return console.error('No entry found for this Thing in the specified week');
+                      }
+
+                      console.log('Deleting a historical LogEntry, weekOffset:', weekOffset);
+                      await db.runAsync('DELETE FROM entries WHERE id = ?', latestEntry.id);
+                    } else {
+                      const latestEntry = await db.getFirstAsync<{ id: string }>(
+                        'SELECT id FROM entries WHERE thingId = ? ORDER BY timestamp DESC LIMIT 1',
+                        id
+                      );
+
+                      if (!latestEntry) {
+                        return console.error('No entry found for this thing');
+                      }
+
+                      await db.runAsync('DELETE FROM entries WHERE id = ?', latestEntry.id);
                     }
 
-                    await db.runAsync('DELETE FROM entries WHERE id = ?', latestEntry.id);
+                    logDbContents();
                     setTotals(prev =>
                       prev?.map(t => (t.id === id ? { ...t, count: t.count - 1 } : t))
                     );
+                  } catch (e) {
+                    console.error('DB error: ', e);
+                    logDbContents();
                   }
                 }}
-                disabled={count === 0 || weekOffset !== 0}
+                disabled={count === 0}
                 style={{
                   alignItems: 'center',
                   marginRight: 10,
@@ -149,9 +177,9 @@ export default function TotalsScreen() {
               >
                 <Text
                   style={{
-                    opacity: count === 0 || weekOffset !== 0 ? 0.3 : 1,
                     ...styles.text,
-                    ...styles.countButton
+                    ...styles.countButton,
+                    opacity: count === 0 ? 0.3 : 1
                   }}
                 >
                   -
@@ -168,16 +196,27 @@ export default function TotalsScreen() {
                 {title}: {count}
               </Text>
               <Pressable
-                disabled={weekOffset !== 0}
                 onPress={async () => {
                   try {
+                    let dateIso: string;
                     const entryId = uuid.v4();
-                    const nowIso = new Date().toISOString();
+                    const now = new Date();
+
+                    if (weekOffset !== 0) {
+                      const weekStart = buildStartOfWeekDate(now, weekOffset);
+                      dateIso = weekStart.toISOString();
+                    } else {
+                      dateIso = now.toISOString();
+                    }
+
+                    weekOffset !== 0 &&
+                      console.log('Adding a historical entry, weekOffset:', weekOffset);
+
                     await db.runAsync(
                       'INSERT INTO entries (id, thingId, timestamp) VALUES (?, ?, ?);',
                       entryId,
                       id,
-                      nowIso
+                      dateIso
                     );
 
                     logDbContents();
@@ -191,15 +230,7 @@ export default function TotalsScreen() {
                 }}
                 style={{ alignItems: 'center', width: 40 }}
               >
-                <Text
-                  style={{
-                    opacity: weekOffset !== 0 ? 0.3 : 1,
-                    ...styles.text,
-                    ...styles.countButton
-                  }}
-                >
-                  +
-                </Text>
+                <Text style={{ ...styles.text, ...styles.countButton }}>+</Text>
               </Pressable>
             </View>
           )}
