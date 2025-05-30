@@ -12,25 +12,10 @@ import {
   Text,
   View
 } from 'react-native';
-import { LogEntry, Thing, ThingWithLogEntriesCount } from '../types';
+import { buildStartOfWeekDate, getWeekLabel } from '@/utils';
+import { LogEntry, Thing, ThingWithLogEntriesCount } from '@/types';
 import { useDbLogger, useResetApp } from '@/hooks';
 import { useEffect, useRef, useState } from 'react';
-
-const startOfWeekDate = (now: Date, weekOffset = 0): Date => {
-  const startOfWeek = new Date(now);
-  const day = startOfWeek.getDay(); // 0 (Sun) - 6 (Sat)
-  const diffToMonday = day === 0 ? 6 : day - 1; // 0 if Monday, 1 if Tuesday, ..., 6 if Sunday
-  startOfWeek.setDate(startOfWeek.getDate() - diffToMonday + weekOffset * 7);
-  startOfWeek.setHours(0, 0, 0, 0);
-  return startOfWeek;
-};
-
-const getWeekLabel = (offset: number) => {
-  if (offset === 0) return 'This week';
-  if (offset === -1) return 'Last week';
-  if (offset < -1) return `${Math.abs(offset)} weeks ago`;
-  return '';
-};
 
 export default function TotalsScreen() {
   const appState = useRef(AppState.currentState);
@@ -49,7 +34,7 @@ export default function TotalsScreen() {
         const now = new Date();
         const things = await db.getAllAsync<Thing>('SELECT * FROM things');
 
-        const weekStart = startOfWeekDate(now, weekOffset);
+        const weekStart = buildStartOfWeekDate(now, weekOffset);
         const weekEnd = new Date(weekStart);
         weekEnd.setDate(weekEnd.getDate() + 7);
 
