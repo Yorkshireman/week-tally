@@ -1,4 +1,4 @@
 export { buildStartOfWeekDate, getWeekLabel } from './dateUtils';
-export { dbSetupString } from './dbSetupString';
+export { migrateDbIfNeeded } from './migrateDbIfNeeded';
 export { minutesAfterMidnightToTimeString } from './minutesAfterMidnightToTimeString';
 export { scheduleDailyNotifications } from './scheduleDailyNotifications';

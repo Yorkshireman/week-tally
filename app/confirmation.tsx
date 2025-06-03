@@ -1,4 +1,4 @@
-import * as Notifications from 'expo-notifications';
+// import * as Notifications from 'expo-notifications';
 // import { NotificationDataType } from '@/types';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDbLogger } from '@/hooks';

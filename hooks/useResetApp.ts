@@ -1,5 +1,5 @@
 import * as Notifications from 'expo-notifications';
-import { dbSetupString } from '@/utils';
+import { dbSetupString } from '@/constants';
 import { useDbLogger } from './useDbLogger';
 import { useRouter } from 'expo-router';
 import { useSQLiteContext } from 'expo-sqlite';
