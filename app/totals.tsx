@@ -12,8 +12,8 @@ import {
   Text,
   View
 } from 'react-native';
-import { buildStartOfWeekDate, getWeekLabel } from '@/utils';
-import { LogEntry, Thing, ThingWithLogEntriesCount } from '@/types';
+import { buildStartOfWeekDate, fetchAndSetTotals, getWeekLabel } from '@/utils';
+import { LogEntry, ThingWithLogEntriesCount } from '@/types';
 import { useDbLogger, useResetApp } from '@/hooks';
 import { useEffect, useRef, useState } from 'react';
 
@@ -27,42 +27,13 @@ export default function TotalsScreen() {
   const [weekOffset, setWeekOffset] = useState<number>(0);
 
   useEffect(() => {
-    const fetchAndSetTotals = async () => {
-      try {
-        logDbContents();
-        const logEntries = await db.getAllAsync<LogEntry>('SELECT * FROM entries');
-        const now = new Date();
-        const things = await db.getAllAsync<Thing>('SELECT * FROM things');
-
-        const weekStart = buildStartOfWeekDate(now, weekOffset);
-        const weekEnd = new Date(weekStart);
-        weekEnd.setDate(weekEnd.getDate() + 7);
-
-        setTotals(
-          things.map(thing => {
-            const { id } = thing;
-            const logEntriesForThisThing = logEntries.filter(logEntry => logEntry.thingId === id);
-            const totalForThisWeek = logEntriesForThisThing.filter(logEntry => {
-              const logEntryDate = new Date(logEntry.timestamp);
-              return logEntryDate >= weekStart && logEntryDate < weekEnd;
-            }).length;
-
-            return { count: totalForThisWeek, ...thing };
-          })
-        );
-      } catch (e) {
-        console.error('DB error: ', e);
-        logDbContents();
-      }
-    };
-
     if (isFocused) {
-      fetchAndSetTotals();
+      fetchAndSetTotals(db, logDbContents, setTotals, weekOffset);
     }
     // Listen for app coming to the foreground
     const subscription = AppState.addEventListener('change', nextAppState => {
       if (appState.current.match(/inactive|background/) && nextAppState === 'active' && isFocused) {
-        fetchAndSetTotals();
+        fetchAndSetTotals(db, logDbContents, setTotals, weekOffset);
         setWeekOffset(0);
       }
 
