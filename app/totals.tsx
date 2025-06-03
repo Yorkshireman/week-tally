@@ -39,18 +39,15 @@ export default function TotalsScreen() {
         weekEnd.setDate(weekEnd.getDate() + 7);
 
         setTotals(
-          things.map(({ id, title }) => {
+          things.map(thing => {
+            const { id } = thing;
             const logEntriesForThisThing = logEntries.filter(logEntry => logEntry.thingId === id);
             const totalForThisWeek = logEntriesForThisThing.filter(logEntry => {
               const logEntryDate = new Date(logEntry.timestamp);
               return logEntryDate >= weekStart && logEntryDate < weekEnd;
             }).length;
 
-            return {
-              count: totalForThisWeek,
-              id,
-              title
-            };
+            return { count: totalForThisWeek, ...thing };
           })
         );
       } catch (e) {

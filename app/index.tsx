@@ -56,8 +56,8 @@ export default function Index() {
   useEffect(() => {
     const populateListDataStateFromDb = async () => {
       try {
-        const result: Thing[] = await db.getAllAsync('SELECT * from things');
-        setListData(result.map(({ id, title }) => ({ id, title })));
+        const dbThings: Thing[] = await db.getAllAsync('SELECT * from things');
+        setListData(dbThings);
       } catch (e) {
         console.error('DB error: ', e);
       }
@@ -86,8 +86,8 @@ export default function Index() {
     }
 
     const id = uuid.v4();
+    const now = new Date().toISOString();
     try {
-      const now = new Date().toISOString();
       await db.runAsync(
         'INSERT INTO things (createdAt, currentlyTracking, id, title, updatedAt) VALUES (?, ?, ?, ?, ?)',
         now,
@@ -103,7 +103,10 @@ export default function Index() {
     }
 
     logDbContents();
-    setListData(prev => [...prev, { id, title: text.trim() }]);
+    setListData(prev => [
+      ...prev,
+      { createdAt: now, currentlyTracking: 1, id, title: text.trim(), updatedAt: now }
+    ]);
     onChangeText('');
   };
 

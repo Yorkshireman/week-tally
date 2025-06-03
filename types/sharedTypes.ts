@@ -14,6 +14,9 @@ export type Setting = {
 };
 
 export type Thing = {
+  createdAt: string;
+  currentlyTracking: number;
   id: string;
   title: string;
+  updatedAt: string;
 };
