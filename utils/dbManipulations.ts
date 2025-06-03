@@ -1,6 +1,29 @@
 import { buildStartOfWeekDate } from './dateUtils';
 import { LogEntry } from '@/types';
 import { SQLiteDatabase } from 'expo-sqlite';
+import uuid from 'react-native-uuid';
+
+export const addLogEntryToDb = async (db: SQLiteDatabase, thingId: string, weekOffset: number) => {
+  let dateIso: string;
+  const entryId = uuid.v4();
+  const now = new Date();
+
+  if (weekOffset !== 0) {
+    const weekStart = buildStartOfWeekDate(now, weekOffset);
+    dateIso = weekStart.toISOString();
+  } else {
+    dateIso = now.toISOString();
+  }
+
+  weekOffset !== 0 && console.log('Adding a historical entry, weekOffset:', weekOffset);
+
+  await db.runAsync(
+    'INSERT INTO entries (id, thingId, timestamp) VALUES (?, ?, ?);',
+    entryId,
+    thingId,
+    dateIso
+  );
+};
 
 export const deleteLogEntryFromDb = async (
   db: SQLiteDatabase,

@@ -2,7 +2,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { ThingWithLogEntriesCount } from '@/types';
 import { useIsFocused } from '@react-navigation/native';
 import { useSQLiteContext } from 'expo-sqlite';
-import uuid from 'react-native-uuid';
+import { addLogEntryToDb, deleteLogEntryFromDb, fetchAndSetTotals, getWeekLabel } from '@/utils';
 import {
   AppState,
   FlatList,
@@ -13,12 +13,6 @@ import {
   Text,
   View
 } from 'react-native';
-import {
-  buildStartOfWeekDate,
-  deleteLogEntryFromDb,
-  fetchAndSetTotals,
-  getWeekLabel
-} from '@/utils';
 import { useDbLogger, useResetApp } from '@/hooks';
 import { useEffect, useRef, useState } from 'react';
 
@@ -50,8 +44,18 @@ export default function TotalsScreen() {
     };
   }, [db, isFocused, logDbContents, weekOffset]);
 
-  const deleteLogEntry = async (count: number, id: string) => {
-    if (count === 0) return;
+  const addLogEntry = async (id: string) => {
+    try {
+      await addLogEntryToDb(db, id, weekOffset);
+      logDbContents();
+      setTotals(prev => prev?.map(t => (t.id === id ? { ...t, count: t.count + 1 } : t)));
+    } catch (e) {
+      console.error('DB error: ', e);
+      logDbContents();
+    }
+  };
+
+  const deleteLogEntry = async (id: string) => {
     try {
       await deleteLogEntryFromDb(db, id, weekOffset);
       logDbContents();
@@ -109,7 +113,10 @@ export default function TotalsScreen() {
               }}
             >
               <Pressable
-                onPress={() => deleteLogEntry(count, id)}
+                onPress={() => {
+                  if (count === 0) return;
+                  deleteLogEntry(id);
+                }}
                 disabled={count === 0}
                 style={{
                   alignItems: 'center',
@@ -138,38 +145,7 @@ export default function TotalsScreen() {
                 {title}: {count}
               </Text>
               <Pressable
-                onPress={async () => {
-                  try {
-                    let dateIso: string;
-                    const entryId = uuid.v4();
-                    const now = new Date();
-
-                    if (weekOffset !== 0) {
-                      const weekStart = buildStartOfWeekDate(now, weekOffset);
-                      dateIso = weekStart.toISOString();
-                    } else {
-                      dateIso = now.toISOString();
-                    }
-
-                    weekOffset !== 0 &&
-                      console.log('Adding a historical entry, weekOffset:', weekOffset);
-
-                    await db.runAsync(
-                      'INSERT INTO entries (id, thingId, timestamp) VALUES (?, ?, ?);',
-                      entryId,
-                      id,
-                      dateIso
-                    );
-
-                    logDbContents();
-                    setTotals(prev =>
-                      prev?.map(t => (t.id === id ? { ...t, count: t.count + 1 } : t))
-                    );
-                  } catch (e) {
-                    console.error('DB error: ', e);
-                    logDbContents();
-                  }
-                }}
+                onPress={() => addLogEntry(id)}
                 style={{ alignItems: 'center', width: 40 }}
               >
                 <Text style={{ ...styles.text, ...styles.countButton }}>+</Text>
