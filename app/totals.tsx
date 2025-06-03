@@ -1,4 +1,5 @@
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { ThingWithLogEntriesCount } from '@/types';
 import { useIsFocused } from '@react-navigation/native';
 import { useSQLiteContext } from 'expo-sqlite';
 import uuid from 'react-native-uuid';
@@ -12,8 +13,12 @@ import {
   Text,
   View
 } from 'react-native';
-import { buildStartOfWeekDate, fetchAndSetTotals, getWeekLabel } from '@/utils';
-import { LogEntry, ThingWithLogEntriesCount } from '@/types';
+import {
+  buildStartOfWeekDate,
+  deleteLogEntryFromDb,
+  fetchAndSetTotals,
+  getWeekLabel
+} from '@/utils';
 import { useDbLogger, useResetApp } from '@/hooks';
 import { useEffect, useRef, useState } from 'react';
 
@@ -44,6 +49,18 @@ export default function TotalsScreen() {
       subscription.remove();
     };
   }, [db, isFocused, logDbContents, weekOffset]);
+
+  const deleteLogEntry = async (count: number, id: string) => {
+    if (count === 0) return;
+    try {
+      await deleteLogEntryFromDb(db, id, weekOffset);
+      logDbContents();
+      setTotals(prev => prev?.map(t => (t.id === id ? { ...t, count: t.count - 1 } : t)));
+    } catch (e) {
+      console.error('DB error: ', e);
+      logDbContents();
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -92,50 +109,7 @@ export default function TotalsScreen() {
               }}
             >
               <Pressable
-                onPress={async () => {
-                  if (count === 0) return;
-
-                  try {
-                    if (weekOffset !== 0) {
-                      const weekStart = buildStartOfWeekDate(new Date(), weekOffset);
-                      const weekEnd = new Date(weekStart);
-                      weekEnd.setDate(weekEnd.getDate() + 7);
-
-                      const latestEntry = await db.getFirstAsync<LogEntry>(
-                        'SELECT id FROM entries WHERE thingId = ? AND timestamp >= ? AND timestamp < ? ORDER BY timestamp DESC LIMIT 1',
-                        id,
-                        weekStart.toISOString(),
-                        weekEnd.toISOString()
-                      );
-
-                      if (!latestEntry) {
-                        return console.error('No entry found for this Thing in the specified week');
-                      }
-
-                      console.log('Deleting a historical LogEntry, weekOffset:', weekOffset);
-                      await db.runAsync('DELETE FROM entries WHERE id = ?', latestEntry.id);
-                    } else {
-                      const latestEntry = await db.getFirstAsync<{ id: string }>(
-                        'SELECT id FROM entries WHERE thingId = ? ORDER BY timestamp DESC LIMIT 1',
-                        id
-                      );
-
-                      if (!latestEntry) {
-                        return console.error('No entry found for this thing');
-                      }
-
-                      await db.runAsync('DELETE FROM entries WHERE id = ?', latestEntry.id);
-                    }
-
-                    logDbContents();
-                    setTotals(prev =>
-                      prev?.map(t => (t.id === id ? { ...t, count: t.count - 1 } : t))
-                    );
-                  } catch (e) {
-                    console.error('DB error: ', e);
-                    logDbContents();
-                  }
-                }}
+                onPress={() => deleteLogEntry(count, id)}
                 disabled={count === 0}
                 style={{
                   alignItems: 'center',
