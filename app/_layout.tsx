@@ -61,7 +61,7 @@ export default function RootLayout() {
 }
 
 const migrateDbIfNeeded = async (db: SQLiteDatabase) => {
-  const DATABASE_VERSION = 3;
+  const DATABASE_VERSION = 5; // Increment version
   const row = await db.getFirstAsync<{ user_version: number }>('PRAGMA user_version');
   let currentDbVersion = row?.user_version ?? 0;
 
@@ -70,8 +70,23 @@ const migrateDbIfNeeded = async (db: SQLiteDatabase) => {
 
   await db.execAsync(dbSetupString);
 
-  if (currentDbVersion >= DATABASE_VERSION) {
-    return;
+  if (currentDbVersion < 4) {
+    console.log('Migrating database to version 4');
+    await db.execAsync(`ALTER TABLE things ADD COLUMN createdAt TEXT;`);
+    console.log('Added createdAt column to things table');
+    await db.execAsync(`ALTER TABLE things ADD COLUMN updatedAt TEXT;`);
+    console.log('Added updatedAt column to things table');
+    const now = new Date().toISOString();
+    await db.execAsync(
+      `UPDATE things SET createdAt = COALESCE(createdAt, '${now}'), updatedAt = COALESCE(updatedAt, '${now}');`
+    );
+    console.log('Updated existing rows with createdAt and updatedAt');
+  }
+
+  if (currentDbVersion < 5) {
+    console.log('Migrating database to version 5');
+    await db.execAsync(`ALTER TABLE things ADD COLUMN currentlyTracking INTEGER NOT NULL DEFAULT 1;`);
+    console.log('Added currentlyTracking column to things table');
   }
 
   if (currentDbVersion === 0) {

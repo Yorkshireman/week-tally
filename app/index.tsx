@@ -86,10 +86,25 @@ export default function Index() {
     }
 
     const id = uuid.v4();
+    try {
+      const now = new Date().toISOString();
+      await db.runAsync(
+        'INSERT INTO things (createdAt, currentlyTracking, id, title, updatedAt) VALUES (?, ?, ?, ?, ?)',
+        now,
+        1,
+        id,
+        text.trim(),
+        now
+      );
+    } catch (e) {
+      console.error('DB error: ', e);
+      logDbContents();
+      return;
+    }
+
+    logDbContents();
     setListData(prev => [...prev, { id, title: text.trim() }]);
     onChangeText('');
-    await db.runAsync('INSERT INTO things (id, title) VALUES (?, ?)', id, text);
-    logDbContents();
   };
 
   if (checkingSetupStatus) {
