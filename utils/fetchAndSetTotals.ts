@@ -13,11 +13,18 @@ export const fetchAndSetTotals = async (
     logDbContents();
     const logEntries = await db.getAllAsync<LogEntry>('SELECT * FROM entries');
     const now = new Date();
-    const things = await db.getAllAsync<Thing>('SELECT * FROM things');
+    const unfilteredThings = await db.getAllAsync<Thing>('SELECT * FROM things');
 
     const weekStart = buildStartOfWeekDate(now, weekOffset);
     const weekEnd = new Date(weekStart);
     weekEnd.setDate(weekEnd.getDate() + 7);
+
+    const things = unfilteredThings
+      .filter(thing => {
+        const createdAtDate = new Date(thing.createdAt);
+        return createdAtDate < weekEnd;
+      })
+      .filter(thing => thing.currentlyTracking);
 
     setTotals(
       things.map(thing => {
