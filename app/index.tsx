@@ -4,6 +4,7 @@ import { useSQLiteContext } from 'expo-sqlite';
 import uuid from 'react-native-uuid';
 import { addThingToDb, deleteThingFromDb } from '@/utils';
 import {
+  Alert,
   FlatList,
   KeyboardAvoidingView,
   Platform,
@@ -11,6 +12,7 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  useColorScheme,
   View
 } from 'react-native';
 import { ListItemProps, Thing } from '../types';
@@ -21,6 +23,7 @@ const ListItem = ({ id, setListData, title }: ListItemProps) => {
   const {
     text: { color }
   } = useColours();
+  const colourScheme = useColorScheme();
   const db = useSQLiteContext();
   const logDbContents = useDbLogger();
 
@@ -36,14 +39,28 @@ const ListItem = ({ id, setListData, title }: ListItemProps) => {
       <Text style={styles.listItemText}>{title}</Text>
       <Pressable
         onPress={async () => {
-          try {
-            await deleteThingFromDb(db, id);
-            setListData(prev => prev.filter(item => item.id !== id));
-          } catch (e) {
-            console.error('DB error: ', e);
-          }
+          Alert.alert(
+            'Are you sure?',
+            '',
+            [
+              { style: 'cancel', text: 'Cancel' },
+              {
+                onPress: async () => {
+                  try {
+                    await deleteThingFromDb(db, id);
+                    setListData(prev => prev.filter(item => item.id !== id));
+                  } catch (e) {
+                    console.error('DB error: ', e);
+                  }
 
-          logDbContents();
+                  logDbContents();
+                },
+                style: 'destructive',
+                text: 'Delete'
+              }
+            ],
+            { userInterfaceStyle: colourScheme === 'dark' ? 'dark' : 'light' }
+          );
         }}
         style={styles.deleteButton}
       >
