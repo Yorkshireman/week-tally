@@ -58,12 +58,12 @@ export default function TotalsScreen() {
   const deleteLogEntry = async (id: string) => {
     try {
       await deleteLogEntryFromDb(db, id, weekOffset);
-      logDbContents();
       setTotals(prev => prev?.map(t => (t.id === id ? { ...t, count: t.count - 1 } : t)));
     } catch (e) {
       console.error('DB error: ', e);
-      logDbContents();
     }
+
+    logDbContents();
   };
 
   return (
