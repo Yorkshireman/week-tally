@@ -1,9 +1,27 @@
 import { useColorScheme } from 'react-native';
 
+const primitiveNeutral = {
+  700: '#2D3748'
+};
+
+const primitivePrimary = {
+  700: '#005958',
+  900: '#00302F'
+};
+
+const semanticNeutral = {
+  300: '#CBD5E0'
+};
+
 const styles = {
   dark: {
     page: {
-      backgroundColor: '#2D3748'
+      backgroundColor: primitiveNeutral[700]
+    },
+    tabs: {
+      active: '#fff',
+      borderColor: semanticNeutral[300],
+      inactive: primitivePrimary[700]
     },
     text: {
       color: '#fff'
@@ -13,8 +31,13 @@ const styles = {
     page: {
       backgroundColor: '#fff'
     },
+    tabs: {
+      active: primitivePrimary[900],
+      borderColor: semanticNeutral[300],
+      inactive: primitivePrimary[700]
+    },
     text: {
-      color: '#2D3748'
+      color: primitiveNeutral[700]
     }
   }
 };

@@ -15,7 +15,6 @@ export default function Settings() {
         padding: 20
       }}
     >
-      <Text style={{ color, fontSize: 24, fontWeight: 'bold' }}>Settings</Text>
       <Text style={{ color, marginTop: 20 }}>
         This is a placeholder for settings. You can add your settings options here.
       </Text>

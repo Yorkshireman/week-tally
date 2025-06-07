@@ -5,6 +5,7 @@ import { useColours } from '@/hooks';
 export default function TabsLayout() {
   const {
     page: { backgroundColor },
+    tabs: { active, borderColor, inactive },
     text: { color }
   } = useColours();
 
@@ -15,21 +16,28 @@ export default function TabsLayout() {
     headerTitleStyle: { fontSize: 25 }
   };
 
+  const tabBarStyles = {
+    tabBarActiveTintColor: active,
+    tabBarInactiveTintColor: inactive,
+    tabBarStyle: {
+      backgroundColor,
+      borderTopColor: borderColor,
+      borderTopWidth: 1
+    }
+  };
+
   return (
     <Tabs
       screenOptions={{
         ...headerStyles,
-        tabBarActiveTintColor: '#ffd33d',
-        tabBarStyle: {
-          backgroundColor: '#25292e'
-        }
+        ...tabBarStyles
       }}
     >
       <Tabs.Screen
         name='totals'
         options={{
           tabBarIcon: ({ color, focused }) => (
-            <Ionicons name={focused ? 'home-sharp' : 'home-outline'} color={color} size={24} />
+            <Ionicons name={focused ? 'bar-chart' : 'bar-chart-outline'} color={color} size={24} />
           ),
           title: 'Totals'
         }}
@@ -38,11 +46,7 @@ export default function TabsLayout() {
         name='settings'
         options={{
           tabBarIcon: ({ color, focused }) => (
-            <Ionicons
-              name={focused ? 'information-circle' : 'information-circle-outline'}
-              color={color}
-              size={24}
-            />
+            <Ionicons name={focused ? 'settings' : 'settings-outline'} color={color} size={24} />
           ),
           title: 'Settings'
         }}
