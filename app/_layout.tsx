@@ -3,6 +3,7 @@ import { NotificationsListener } from '@/components';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { SQLiteProvider } from 'expo-sqlite';
 import { Stack } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
 import { Suspense } from 'react';
 
 const Fallback = () => {
@@ -22,6 +23,7 @@ export default function RootLayout() {
               <Stack.Screen name='confirmation' options={{ headerShown: false }} />
               <Stack.Screen name='totals' options={{ headerShown: false }} />
             </Stack>
+            <StatusBar style='dark' />
           </SafeAreaProvider>
         </NotificationsListener>
       </SQLiteProvider>
