@@ -5,7 +5,7 @@ import { useColours } from '@/hooks';
 export default function TabsLayout() {
   const {
     page: { backgroundColor },
-    tabs: { active, borderColor, inactive },
+    tabBar,
     text: { color }
   } = useColours();
 
@@ -16,21 +16,11 @@ export default function TabsLayout() {
     headerTitleStyle: { fontSize: 25 }
   };
 
-  const tabBarStyles = {
-    tabBarActiveTintColor: active,
-    tabBarInactiveTintColor: inactive,
-    tabBarStyle: {
-      backgroundColor,
-      borderTopColor: borderColor,
-      borderTopWidth: 1
-    }
-  };
-
   return (
     <Tabs
       screenOptions={{
         ...headerStyles,
-        ...tabBarStyles
+        ...tabBar
       }}
     >
       <Tabs.Screen

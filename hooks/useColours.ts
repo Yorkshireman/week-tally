@@ -18,10 +18,13 @@ const styles = {
     page: {
       backgroundColor: primitiveNeutral[700]
     },
-    tabs: {
-      active: '#fff',
-      borderColor: semanticNeutral[300],
-      inactive: primitivePrimary[700]
+    tabBar: {
+      tabBarActiveTintColor: '#fff',
+      tabBarInactiveTintColor: '#fff',
+      tabBarStyle: {
+        backgroundColor: primitiveNeutral[700],
+        borderTopColor: semanticNeutral[300]
+      }
     },
     text: {
       color: '#fff'
@@ -31,10 +34,13 @@ const styles = {
     page: {
       backgroundColor: '#fff'
     },
-    tabs: {
-      active: primitivePrimary[900],
-      borderColor: semanticNeutral[300],
-      inactive: primitivePrimary[700]
+    tabBar: {
+      tabBarActiveTintColor: primitivePrimary[900],
+      tabBarInactiveTintColor: primitivePrimary[700],
+      tabBarStyle: {
+        backgroundColor: '#fff',
+        borderTopColor: semanticNeutral[300]
+      }
     },
     text: {
       color: primitiveNeutral[700]
