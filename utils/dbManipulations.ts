@@ -29,6 +29,18 @@ export const addLogEntryToDb = async (db: SQLiteDatabase, thingId: string, weekO
   );
 };
 
+export const addThingToDb = async (db: SQLiteDatabase, id: string, now: string, text: string) => {
+  console.log('Adding a new Thing to the database: ', text.trim());
+  await db.runAsync(
+    'INSERT INTO things (createdAt, currentlyTracking, id, title, updatedAt) VALUES (?, ?, ?, ?, ?)',
+    now,
+    1,
+    id,
+    text.trim(),
+    now
+  );
+};
+
 export const deleteLogEntryFromDb = async (
   db: SQLiteDatabase,
   thingId: string,

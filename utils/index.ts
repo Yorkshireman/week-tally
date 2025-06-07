@@ -1,4 +1,4 @@
-export { addLogEntryToDb, deleteLogEntryFromDb } from './dbManipulations';
+export { addLogEntryToDb, addThingToDb, deleteLogEntryFromDb } from './dbManipulations';
 export { buildStartOfWeekDate, getWeekLabel } from './dateUtils';
 export { fetchAndSetTotals } from './fetchAndSetTotals';
 export { migrateDbIfNeeded } from './migrateDbIfNeeded';

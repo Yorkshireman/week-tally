@@ -1,3 +1,4 @@
+import { addThingToDb } from '@/utils';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDbLogger } from '@/hooks';
 import { useRouter } from 'expo-router';
@@ -87,15 +88,9 @@ export default function Index() {
 
     const id = uuid.v4();
     const now = new Date().toISOString();
+
     try {
-      await db.runAsync(
-        'INSERT INTO things (createdAt, currentlyTracking, id, title, updatedAt) VALUES (?, ?, ?, ?, ?)',
-        now,
-        1,
-        id,
-        text.trim(),
-        now
-      );
+      await addThingToDb(db, id, now, text);
     } catch (e) {
       console.error('DB error: ', e);
       logDbContents();
