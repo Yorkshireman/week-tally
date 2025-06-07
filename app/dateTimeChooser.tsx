@@ -2,7 +2,6 @@ import * as Notifications from 'expo-notifications';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Setting } from '../types';
 import { TimePicker } from '../components';
-import { useDbLogger } from '@/hooks';
 import { useRouter } from 'expo-router';
 import { useSQLiteContext } from 'expo-sqlite';
 import {
@@ -14,6 +13,7 @@ import {
   Text,
   View
 } from 'react-native';
+import { useColours, useDbLogger } from '@/hooks';
 import { useEffect, useState } from 'react';
 
 const ensurePermissions = async () => {
@@ -36,6 +36,10 @@ const ensurePermissions = async () => {
 };
 
 export default function DateTimeChooserScreen() {
+  const {
+    page: { backgroundColor },
+    text: { color }
+  } = useColours();
   const db = useSQLiteContext();
   const logDbContents = useDbLogger();
   const [selectedTime, setSelectedTime] = useState<string>('1080');
@@ -90,21 +94,21 @@ export default function DateTimeChooserScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={{ ...styles.container, backgroundColor }}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.content}
       >
-        <Text style={{ ...styles.text, fontWeight: 'bold', marginBottom: 20 }}>
+        <Text style={{ ...styles.text, color, fontWeight: 'bold', marginBottom: 20 }}>
           2. Choose when you&apos;d like to be notified
         </Text>
-        <Text style={styles.text}>
+        <Text style={{ ...styles.text, color }}>
           The app will send you a notification at a set time of your choosing each day to ask you if
           you have done your Thing that day.
         </Text>
         <TimePicker selectedTime={selectedTime} onValueChange={onTimePickerValueChange} />
         <View>
-          <Text style={{ ...styles.text, marginBottom: 20 }}>Finished?</Text>
+          <Text style={{ ...styles.text, color, marginBottom: 20 }}>Finished?</Text>
           <Pressable
             onPress={() => router.replace('/confirmation')}
             style={{ ...styles.navigationButton, marginBottom: 20 }}
@@ -112,7 +116,7 @@ export default function DateTimeChooserScreen() {
             <Text style={styles.navigationButtonText}>Go to next step</Text>
           </Pressable>
           <Pressable onPress={() => router.dismissTo('/')} style={styles.backButton}>
-            <Text style={styles.backButtonText}>Go back</Text>
+            <Text style={{ ...styles.backButtonText, color }}>Go back</Text>
           </Pressable>
         </View>
       </KeyboardAvoidingView>
@@ -130,12 +134,10 @@ const styles = StyleSheet.create({
     width: 160
   },
   backButtonText: {
-    color: '#2D3748',
     fontSize: 18,
     textAlign: 'center'
   },
   container: {
-    backgroundColor: '#F0FEFD',
     flex: 1,
     justifyContent: 'center'
   },
@@ -158,7 +160,6 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   text: {
-    color: '#2D3748',
     fontSize: 20,
     textAlign: 'center'
   }

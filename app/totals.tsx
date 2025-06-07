@@ -13,11 +13,15 @@ import {
   Text,
   View
 } from 'react-native';
-import { useDbLogger, useResetApp } from '@/hooks';
+import { useColours, useDbLogger, useResetApp } from '@/hooks';
 import { useEffect, useRef, useState } from 'react';
 
 export default function TotalsScreen() {
   const appState = useRef(AppState.currentState);
+  const {
+    page: { backgroundColor },
+    text: { color }
+  } = useColours();
   const db = useSQLiteContext();
   const isFocused = useIsFocused();
   const logDbContents = useDbLogger();
@@ -67,7 +71,7 @@ export default function TotalsScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={{ ...styles.container, backgroundColor }}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.content}
@@ -76,7 +80,9 @@ export default function TotalsScreen() {
           data={totals}
           ListHeaderComponent={
             <>
-              <Text style={{ ...styles.text, fontWeight: 'bold', marginBottom: 20 }}>Totals</Text>
+              <Text style={{ ...styles.text, color, fontWeight: 'bold', marginBottom: 20 }}>
+                Totals
+              </Text>
               <View
                 style={{
                   alignItems: 'center',
@@ -92,7 +98,7 @@ export default function TotalsScreen() {
                 >
                   <Text>{'<'}</Text>
                 </Pressable>
-                <Text style={styles.text}>{getWeekLabel(weekOffset)}</Text>
+                <Text style={{ ...styles.text, color }}>{getWeekLabel(weekOffset)}</Text>
                 <Pressable
                   onPress={() => setWeekOffset(prev => Math.min(prev + 1, 0))}
                   disabled={weekOffset === 0}
@@ -127,6 +133,7 @@ export default function TotalsScreen() {
                 <Text
                   style={{
                     ...styles.text,
+                    color,
                     ...styles.countButton,
                     opacity: count === 0 ? 0.3 : 1
                   }}
@@ -137,6 +144,7 @@ export default function TotalsScreen() {
               <Text
                 style={{
                   ...styles.text,
+                  color,
                   fontWeight: 'bold',
                   minWidth: 120,
                   textAlign: 'center'
@@ -148,7 +156,7 @@ export default function TotalsScreen() {
                 onPress={() => addLogEntry(id)}
                 style={{ alignItems: 'center', width: 40 }}
               >
-                <Text style={{ ...styles.text, ...styles.countButton }}>+</Text>
+                <Text style={{ ...styles.text, color, ...styles.countButton }}>+</Text>
               </Pressable>
             </View>
           )}
@@ -156,7 +164,7 @@ export default function TotalsScreen() {
           style={styles.list}
         />
         <Pressable onPress={resetApp} style={styles.resetButton}>
-          <Text style={styles.resetButtonText}>Reset the app</Text>
+          <Text style={{ ...styles.resetButtonText, color }}>Reset the app</Text>
         </Pressable>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -165,7 +173,6 @@ export default function TotalsScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#F0FEFD',
     flex: 1,
     justifyContent: 'center',
     paddingBottom: 60,
@@ -196,12 +203,10 @@ const styles = StyleSheet.create({
     width: 150
   },
   resetButtonText: {
-    color: '#2D3748',
     fontSize: 18,
     textAlign: 'center'
   },
   text: {
-    color: '#2D3748',
     fontSize: 24,
     textAlign: 'center'
   },

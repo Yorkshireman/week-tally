@@ -1,12 +1,16 @@
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useDbLogger } from '@/hooks';
 import { useRouter } from 'expo-router';
 import { useSQLiteContext } from 'expo-sqlite';
 import { KeyboardAvoidingView, Platform, Pressable, StyleSheet, Text } from 'react-native';
 import { minutesAfterMidnightToTimeString, scheduleDailyNotifications } from '@/utils';
+import { useColours, useDbLogger } from '@/hooks';
 import { useEffect, useState } from 'react';
 
 export default function ConfirmationScreen() {
+  const {
+    page: { backgroundColor },
+    text: { color }
+  } = useColours();
   const db = useSQLiteContext();
   const logDbContents = useDbLogger();
   const [notificationTime, setNotificationTime] = useState<string | null>(null);
@@ -40,22 +44,22 @@ export default function ConfirmationScreen() {
   }, [db, logDbContents]);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={{ ...styles.container, backgroundColor }}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.content}
       >
-        <Text style={{ ...styles.text, fontWeight: 'bold', marginBottom: 20 }}>
+        <Text style={{ ...styles.text, color, fontWeight: 'bold', marginBottom: 20 }}>
           You&apos;re done!
         </Text>
-        <Text style={{ ...styles.text, marginBottom: 20 }}>
+        <Text style={{ ...styles.text, color, marginBottom: 20 }}>
           You&apos;ll get daily notifications at {notificationTime} asking you to update your
           totals.
         </Text>
-        <Text style={{ ...styles.text, marginBottom: 20 }}>
+        <Text style={{ ...styles.text, color, marginBottom: 20 }}>
           The totals reset to zero at midnight every Sunday.
         </Text>
-        <Text style={{ ...styles.text, marginBottom: 40 }}>
+        <Text style={{ ...styles.text, color, marginBottom: 40 }}>
           Come back here anytime to view or update your running totals if you missed a notification.
         </Text>
         <Pressable onPress={() => router.replace('/totals')} style={styles.navigationButton}>
@@ -68,7 +72,6 @@ export default function ConfirmationScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#F0FEFD',
     flex: 1,
     justifyContent: 'center'
   },
@@ -91,7 +94,6 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   text: {
-    color: '#2D2A32',
     fontSize: 20,
     textAlign: 'center'
   }

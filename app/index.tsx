@@ -1,5 +1,4 @@
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useDbLogger } from '@/hooks';
 import { useRouter } from 'expo-router';
 import { useSQLiteContext } from 'expo-sqlite';
 import uuid from 'react-native-uuid';
@@ -15,9 +14,13 @@ import {
   View
 } from 'react-native';
 import { ListItemProps, Thing } from '../types';
+import { useColours, useDbLogger } from '@/hooks';
 import { useEffect, useRef, useState } from 'react';
 
 const ListItem = ({ id, setListData, title }: ListItemProps) => {
+  const {
+    text: { color }
+  } = useColours();
   const db = useSQLiteContext();
   const logDbContents = useDbLogger();
 
@@ -44,7 +47,7 @@ const ListItem = ({ id, setListData, title }: ListItemProps) => {
         }}
         style={styles.deleteButton}
       >
-        <Text style={styles.deleteButtonText}>Delete</Text>
+        <Text style={{ ...styles.deleteButtonText, color }}>Delete</Text>
       </Pressable>
     </View>
   );
@@ -52,6 +55,10 @@ const ListItem = ({ id, setListData, title }: ListItemProps) => {
 
 export default function Index() {
   const [checkingSetupStatus, setCheckingSetupStatus] = useState(true);
+  const {
+    page: { backgroundColor },
+    text: { color }
+  } = useColours();
   const db = useSQLiteContext();
   const flatListRef = useRef<FlatList>(null);
   const [listData, setListData] = useState<Thing[]>([]);
@@ -114,7 +121,7 @@ export default function Index() {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={{ ...styles.container, backgroundColor }}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.content}
@@ -123,7 +130,7 @@ export default function Index() {
           data={listData}
           ListHeaderComponent={
             <>
-              <Text style={{ ...styles.text, fontWeight: 'bold', marginBottom: 20 }}>
+              <Text style={{ ...styles.text, color, fontWeight: 'bold', marginBottom: 20 }}>
                 1. Enter the things you would like to track
               </Text>
               <TextInput
@@ -146,7 +153,7 @@ export default function Index() {
       <View style={{ alignItems: 'center' }}>
         {listData.length ? (
           <View>
-            <Text style={{ ...styles.text, marginBottom: 20 }}>Finished?</Text>
+            <Text style={{ ...styles.text, color, marginBottom: 20 }}>Finished?</Text>
             <Pressable
               onPress={() => router.replace('/dateTimeChooser')}
               style={styles.nextStepButton}
@@ -162,7 +169,6 @@ export default function Index() {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#F0FEFD',
     flex: 1,
     justifyContent: 'center',
     paddingBottom: 60,
@@ -182,7 +188,6 @@ const styles = StyleSheet.create({
     width: 85
   },
   deleteButtonText: {
-    color: '#2D3748',
     fontSize: 18,
     textAlign: 'center'
   },
@@ -214,7 +219,6 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   text: {
-    color: '#2D3748',
     fontSize: 20,
     textAlign: 'center'
   }
