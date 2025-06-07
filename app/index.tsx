@@ -96,18 +96,17 @@ export default function Index() {
 
     try {
       await addThingToDb(db, id, now, text);
+      setListData(prev => [
+        ...prev,
+        { createdAt: now, currentlyTracking: 1, id, title: text.trim(), updatedAt: now }
+      ]);
+
+      onChangeText('');
     } catch (e) {
       console.error('DB error: ', e);
-      logDbContents();
-      return;
     }
 
     logDbContents();
-    setListData(prev => [
-      ...prev,
-      { createdAt: now, currentlyTracking: 1, id, title: text.trim(), updatedAt: now }
-    ]);
-    onChangeText('');
   };
 
   if (checkingSetupStatus) {
