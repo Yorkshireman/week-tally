@@ -9,25 +9,16 @@ export default function TabsLayout() {
   } = useColours();
 
   const headerStyles = {
-    headerStyle: {
-      backgroundColor,
-      borderBottomColor: color,
-      borderBottomWidth: 1
-    },
+    headerShadowVisible: false,
+    headerStyle: { backgroundColor },
     headerTintColor: color,
-    headerTitleStyle: {
-      fontSize: 20
-    }
+    headerTitleStyle: { fontSize: 25 }
   };
 
   return (
     <Tabs
       screenOptions={{
-        headerShadowVisible: false,
-        headerStyle: {
-          backgroundColor: '#25292e'
-        },
-        headerTintColor: '#fff',
+        ...headerStyles,
         tabBarActiveTintColor: '#ffd33d',
         tabBarStyle: {
           backgroundColor: '#25292e'
@@ -37,7 +28,6 @@ export default function TabsLayout() {
       <Tabs.Screen
         name='totals'
         options={{
-          ...headerStyles,
           tabBarIcon: ({ color, focused }) => (
             <Ionicons name={focused ? 'home-sharp' : 'home-outline'} color={color} size={24} />
           ),
@@ -47,7 +37,6 @@ export default function TabsLayout() {
       <Tabs.Screen
         name='settings'
         options={{
-          ...headerStyles,
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
               name={focused ? 'information-circle' : 'information-circle-outline'}
