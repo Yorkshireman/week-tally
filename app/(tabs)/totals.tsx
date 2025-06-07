@@ -79,35 +79,27 @@ export default function TotalsScreen() {
         <FlatList
           data={totals}
           ListHeaderComponent={
-            <>
-              <Text style={{ ...styles.text, color, fontWeight: 'bold', marginBottom: 20 }}>
-                Totals
-              </Text>
-              <View
-                style={{
-                  alignItems: 'center',
-                  flexDirection: 'row',
-                  gap: 20,
-                  justifyContent: 'center',
-                  marginBottom: 40
-                }}
+            <View
+              style={{
+                alignItems: 'center',
+                flexDirection: 'row',
+                gap: 20,
+                justifyContent: 'center',
+                marginBottom: 40
+              }}
+            >
+              <Pressable onPress={() => setWeekOffset(prev => prev - 1)} style={styles.weekButton}>
+                <Text>{'<'}</Text>
+              </Pressable>
+              <Text style={{ ...styles.text, color }}>{getWeekLabel(weekOffset)}</Text>
+              <Pressable
+                onPress={() => setWeekOffset(prev => Math.min(prev + 1, 0))}
+                disabled={weekOffset === 0}
+                style={{ opacity: weekOffset === 0 ? 0.3 : 1 }}
               >
-                <Pressable
-                  onPress={() => setWeekOffset(prev => prev - 1)}
-                  style={styles.weekButton}
-                >
-                  <Text>{'<'}</Text>
-                </Pressable>
-                <Text style={{ ...styles.text, color }}>{getWeekLabel(weekOffset)}</Text>
-                <Pressable
-                  onPress={() => setWeekOffset(prev => Math.min(prev + 1, 0))}
-                  disabled={weekOffset === 0}
-                  style={{ opacity: weekOffset === 0 ? 0.3 : 1 }}
-                >
-                  <Text style={styles.weekButton}>{'>'}</Text>
-                </Pressable>
-              </View>
-            </>
+                <Text style={styles.weekButton}>{'>'}</Text>
+              </Pressable>
+            </View>
           }
           renderItem={({ item: { count, title, id } }) => (
             <View
