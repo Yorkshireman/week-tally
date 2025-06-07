@@ -21,7 +21,7 @@ export default function RootLayout() {
               <Stack.Screen name='index' options={{ headerShown: false }} />
               <Stack.Screen name='dateTimeChooser' options={{ headerShown: false }} />
               <Stack.Screen name='confirmation' options={{ headerShown: false }} />
-              <Stack.Screen name='totals' options={{ headerShown: false }} />
+              <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
             </Stack>
             <StatusBar style='dark' />
           </SafeAreaProvider>
