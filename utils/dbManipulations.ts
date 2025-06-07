@@ -15,7 +15,11 @@ export const addLogEntryToDb = async (db: SQLiteDatabase, thingId: string, weekO
     dateIso = now.toISOString();
   }
 
-  weekOffset !== 0 && console.log('Adding a historical entry, weekOffset:', weekOffset);
+  if (weekOffset === 0) {
+    console.log('Adding a LogEntry');
+  } else {
+    console.log('Adding a historical LogEntry, weekOffset:', weekOffset);
+  }
 
   await db.runAsync(
     'INSERT INTO entries (id, thingId, timestamp) VALUES (?, ?, ?);',
@@ -46,7 +50,11 @@ export const deleteLogEntryFromDb = async (
       return console.error('No entry found for this Thing in the specified week');
     }
 
-    console.log('Deleting a historical LogEntry, weekOffset:', weekOffset);
+    console.log(
+      `Deleting a historical LogEntry for Thing, id: ${thingId}, weekOffset: `,
+      weekOffset
+    );
+
     await db.runAsync('DELETE FROM entries WHERE id = ?', latestEntry.id);
   } else {
     const latestEntry = await db.getFirstAsync<{ id: string }>(
@@ -58,6 +66,7 @@ export const deleteLogEntryFromDb = async (
       return console.error('No entry found for this thing');
     }
 
+    console.log('Deleting the latest LogEntry for Thing, id: ', thingId);
     await db.runAsync('DELETE FROM entries WHERE id = ?', latestEntry.id);
   }
 };
