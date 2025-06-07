@@ -82,3 +82,8 @@ export const deleteLogEntryFromDb = async (
     await db.runAsync('DELETE FROM entries WHERE id = ?', latestEntry.id);
   }
 };
+
+export const deleteThingFromDb = async (db: SQLiteDatabase, id: string) => {
+  console.log(`Deleting Thing from DB, id: ${id}`);
+  await db.runAsync('DELETE FROM things WHERE id = ?', id);
+};
