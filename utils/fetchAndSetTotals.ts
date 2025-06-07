@@ -9,34 +9,46 @@ export const fetchAndSetTotals = async (
   setTotals: Dispatch<SetStateAction<ThingWithLogEntriesCount[] | undefined>>,
   weekOffset: number
 ) => {
+  const now = new Date();
+  const weekStart = buildStartOfWeekDate(now, weekOffset);
+  const weekEnd = new Date(weekStart);
+  weekEnd.setDate(weekEnd.getDate() + 7);
+
   try {
-    logDbContents();
-    const logEntries = await db.getAllAsync<LogEntry>('SELECT * FROM entries');
-    const now = new Date();
-    const unfilteredThings = await db.getAllAsync<Thing>('SELECT * FROM things');
+    console.log(
+      `Fetching LogEntries for week starting ${weekStart.toISOString()} and ending ${weekEnd.toISOString()}`
+    );
 
-    const weekStart = buildStartOfWeekDate(now, weekOffset);
-    const weekEnd = new Date(weekStart);
-    weekEnd.setDate(weekEnd.getDate() + 7);
+    const logEntries = await db.getAllAsync<LogEntry>(
+      'SELECT * FROM entries WHERE timestamp >= ? AND timestamp < ?',
+      weekStart.toISOString(),
+      weekEnd.toISOString()
+    );
 
-    const things = unfilteredThings
-      .filter(thing => {
-        const createdAtDate = new Date(thing.createdAt);
-        return createdAtDate < weekEnd;
-      })
-      .filter(thing => thing.currentlyTracking);
+    console.log(
+      `Found ${logEntries.length} LogEntries for the week: ${JSON.stringify(logEntries, null, 2)}`
+    );
+
+    const thingIds = Array.from(new Set(logEntries.map(({ thingId }) => thingId)));
+
+    console.log(
+      `Fetching Things with 1 or more LogEntry for week ending ${weekEnd.toISOString()} (matched by IDs: ${thingIds.join(
+        ', '
+      )}), or have currentlyTracking = 1`
+    );
+
+    const things = await db.getAllAsync<Thing>(
+      'SELECT DISTINCT * FROM things WHERE id IN (?) OR currentlyTracking = 1',
+      thingIds.join(',')
+    );
+
+    console.log(`Found ${things.length} Things: ${JSON.stringify(things, null, 2)}`);
 
     setTotals(
-      things.map(thing => {
-        const { id } = thing;
-        const logEntriesForThisThing = logEntries.filter(logEntry => logEntry.thingId === id);
-        const totalForThisWeek = logEntriesForThisThing.filter(logEntry => {
-          const logEntryDate = new Date(logEntry.timestamp);
-          return logEntryDate >= weekStart && logEntryDate < weekEnd;
-        }).length;
-
-        return { count: totalForThisWeek, ...thing };
-      })
+      things.map(thing => ({
+        ...thing,
+        count: logEntries.filter(entry => entry.thingId === thing.id).length
+      }))
     );
   } catch (e) {
     console.error('DB error: ', e);

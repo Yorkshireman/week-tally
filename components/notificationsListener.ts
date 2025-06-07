@@ -5,6 +5,7 @@ import { useSQLiteContext } from 'expo-sqlite';
 import uuid from 'react-native-uuid';
 import { ReactNode, useEffect } from 'react';
 
+// may be able to remove this now, since notifications don't contain actions anymore
 export const NotificationsListener = ({ children }: { children: ReactNode }) => {
   const db = useSQLiteContext();
   const logDbContents = useDbLogger();
