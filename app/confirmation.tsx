@@ -1,5 +1,3 @@
-// import * as Notifications from 'expo-notifications';
-// import { NotificationDataType } from '@/types';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDbLogger } from '@/hooks';
 import { useRouter } from 'expo-router';
@@ -63,25 +61,6 @@ export default function ConfirmationScreen() {
         <Pressable onPress={() => router.replace('/totals')} style={styles.navigationButton}>
           <Text style={styles.navigationButtonText}>Roger! Take me to my running totals</Text>
         </Pressable>
-        {/* <Pressable
-          onPress={async () => {
-            const notificationParams: Notifications.NotificationRequestInput = {
-              content: {
-                title: 'Tap to update your totals'
-              },
-              trigger: {
-                repeats: false,
-                seconds: 4,
-                type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL
-              }
-            };
-
-            await Notifications.scheduleNotificationAsync(notificationParams);
-          }}
-          style={{ marginTop: 30 }}
-        >
-          <Text style={styles.navigationButton}>Trigger notifications</Text>
-        </Pressable> */}
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
