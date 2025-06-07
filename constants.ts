@@ -3,8 +3,11 @@ export const dbSetupString = `
   PRAGMA foreign_keys = ON;
 
   CREATE TABLE IF NOT EXISTS things (
+    createdAt TEXT    NOT NULL,
+    currentlyTracking INTEGER NOT NULL DEFAULT 1,
     id        TEXT    PRIMARY KEY NOT NULL,
-    title     TEXT    NOT NULL
+    title     TEXT    NOT NULL,
+    updatedAt TEXT    NOT NULL
   );
 
   CREATE TABLE IF NOT EXISTS settings (

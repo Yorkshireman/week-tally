@@ -1,7 +1,8 @@
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { ThingWithLogEntriesCount } from '@/types';
 import { useIsFocused } from '@react-navigation/native';
 import { useSQLiteContext } from 'expo-sqlite';
-import uuid from 'react-native-uuid';
+import { addLogEntryToDb, deleteLogEntryFromDb, fetchAndSetTotals, getWeekLabel } from '@/utils';
 import {
   AppState,
   FlatList,
@@ -12,18 +13,8 @@ import {
   Text,
   View
 } from 'react-native';
-import { LogEntry, Thing, ThingWithLogEntriesCount } from '../types';
 import { useDbLogger, useResetApp } from '@/hooks';
 import { useEffect, useRef, useState } from 'react';
-
-const startOfWeekDate = (now: Date): Date => {
-  const startOfWeek = new Date(now);
-  const day = startOfWeek.getDay(); // 0 (Sun) - 6 (Sat)
-  const diffToMonday = day === 0 ? 6 : day - 1; // 0 if Monday, 1 if Tuesday, ..., 6 if Sunday
-  startOfWeek.setDate(startOfWeek.getDate() - diffToMonday);
-  startOfWeek.setHours(0, 0, 0, 0);
-  return startOfWeek;
-};
 
 export default function TotalsScreen() {
   const appState = useRef(AppState.currentState);
@@ -32,43 +23,17 @@ export default function TotalsScreen() {
   const logDbContents = useDbLogger();
   const resetApp = useResetApp();
   const [totals, setTotals] = useState<ThingWithLogEntriesCount[]>();
+  const [weekOffset, setWeekOffset] = useState<number>(0);
 
   useEffect(() => {
-    const fetchAndSetTotals = async () => {
-      try {
-        logDbContents();
-        const logEntries = await db.getAllAsync<LogEntry>('SELECT * FROM entries');
-        const now = new Date();
-        const things = await db.getAllAsync<Thing>('SELECT * FROM things');
-
-        setTotals(
-          things.map(({ id, title }) => {
-            const logEntriesForThisThing = logEntries.filter(logEntry => logEntry.thingId === id);
-            const totalForThisWeek = logEntriesForThisThing.filter(logEntry => {
-              const logEntryDate = new Date(logEntry.timestamp);
-              return logEntryDate >= startOfWeekDate(now) && logEntryDate <= now;
-            }).length;
-
-            return {
-              count: totalForThisWeek,
-              id,
-              title
-            };
-          })
-        );
-      } catch (e) {
-        console.error('DB error: ', e);
-        logDbContents();
-      }
-    };
-
     if (isFocused) {
-      fetchAndSetTotals();
+      fetchAndSetTotals(db, logDbContents, setTotals, weekOffset);
     }
     // Listen for app coming to the foreground
     const subscription = AppState.addEventListener('change', nextAppState => {
       if (appState.current.match(/inactive|background/) && nextAppState === 'active' && isFocused) {
-        fetchAndSetTotals();
+        fetchAndSetTotals(db, logDbContents, setTotals, weekOffset);
+        setWeekOffset(0);
       }
 
       appState.current = nextAppState;
@@ -77,7 +42,29 @@ export default function TotalsScreen() {
     return () => {
       subscription.remove();
     };
-  }, [db, isFocused, logDbContents]);
+  }, [db, isFocused, logDbContents, weekOffset]);
+
+  const addLogEntry = async (id: string) => {
+    try {
+      await addLogEntryToDb(db, id, weekOffset);
+      logDbContents();
+      setTotals(prev => prev?.map(t => (t.id === id ? { ...t, count: t.count + 1 } : t)));
+    } catch (e) {
+      console.error('DB error: ', e);
+      logDbContents();
+    }
+  };
+
+  const deleteLogEntry = async (id: string) => {
+    try {
+      await deleteLogEntryFromDb(db, id, weekOffset);
+      setTotals(prev => prev?.map(t => (t.id === id ? { ...t, count: t.count - 1 } : t)));
+    } catch (e) {
+      console.error('DB error: ', e);
+    }
+
+    logDbContents();
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -88,9 +75,33 @@ export default function TotalsScreen() {
         <FlatList
           data={totals}
           ListHeaderComponent={
-            <Text style={{ ...styles.text, fontWeight: 'bold', marginBottom: 40 }}>
-              Totals This Week
-            </Text>
+            <>
+              <Text style={{ ...styles.text, fontWeight: 'bold', marginBottom: 20 }}>Totals</Text>
+              <View
+                style={{
+                  alignItems: 'center',
+                  flexDirection: 'row',
+                  gap: 20,
+                  justifyContent: 'center',
+                  marginBottom: 40
+                }}
+              >
+                <Pressable
+                  onPress={() => setWeekOffset(prev => prev - 1)}
+                  style={styles.weekButton}
+                >
+                  <Text>{'<'}</Text>
+                </Pressable>
+                <Text style={styles.text}>{getWeekLabel(weekOffset)}</Text>
+                <Pressable
+                  onPress={() => setWeekOffset(prev => Math.min(prev + 1, 0))}
+                  disabled={weekOffset === 0}
+                  style={{ opacity: weekOffset === 0 ? 0.3 : 1 }}
+                >
+                  <Text style={styles.weekButton}>{'>'}</Text>
+                </Pressable>
+              </View>
+            </>
           }
           renderItem={({ item: { count, title, id } }) => (
             <View
@@ -102,32 +113,24 @@ export default function TotalsScreen() {
               }}
             >
               <Pressable
-                onPress={async () => {
-                  if (count > 0) {
-                    const latestEntry = await db.getFirstAsync<{ id: string }>(
-                      'SELECT id FROM entries WHERE thingId = ? ORDER BY timestamp DESC LIMIT 1',
-                      id
-                    );
-
-                    if (!latestEntry) {
-                      return console.error('No entry found for this thing');
-                    }
-
-                    await db.runAsync('DELETE FROM entries WHERE id = ?', latestEntry.id);
-                    setTotals(prev =>
-                      prev?.map(t => (t.id === id ? { ...t, count: t.count - 1 } : t))
-                    );
-                  }
+                onPress={() => {
+                  if (count === 0) return;
+                  deleteLogEntry(id);
                 }}
                 disabled={count === 0}
                 style={{
                   alignItems: 'center',
                   marginRight: 10,
-                  opacity: count === 0 ? 0.3 : 1,
                   width: 40
                 }}
               >
-                <Text style={{ color: count === 0 ? '#aaa' : styles.text.color, fontSize: 28 }}>
+                <Text
+                  style={{
+                    ...styles.text,
+                    ...styles.countButton,
+                    opacity: count === 0 ? 0.3 : 1
+                  }}
+                >
                   -
                 </Text>
               </Pressable>
@@ -142,29 +145,10 @@ export default function TotalsScreen() {
                 {title}: {count}
               </Text>
               <Pressable
-                onPress={async () => {
-                  try {
-                    const entryId = uuid.v4();
-                    const nowIso = new Date().toISOString();
-                    await db.runAsync(
-                      'INSERT INTO entries (id, thingId, timestamp) VALUES (?, ?, ?);',
-                      entryId,
-                      id,
-                      nowIso
-                    );
-
-                    logDbContents();
-                    setTotals(prev =>
-                      prev?.map(t => (t.id === id ? { ...t, count: t.count + 1 } : t))
-                    );
-                  } catch (e) {
-                    console.error('DB error: ', e);
-                    logDbContents();
-                  }
-                }}
+                onPress={() => addLogEntry(id)}
                 style={{ alignItems: 'center', width: 40 }}
               >
-                <Text style={{ ...styles.text, fontSize: 28 }}>+</Text>
+                <Text style={{ ...styles.text, ...styles.countButton }}>+</Text>
               </Pressable>
             </View>
           )}
@@ -194,6 +178,11 @@ const styles = StyleSheet.create({
     paddingRight: 20,
     paddingTop: 40
   },
+  countButton: {
+    fontSize: 28,
+    paddingHorizontal: 12,
+    paddingVertical: 2
+  },
   list: {
     alignSelf: 'stretch'
   },
@@ -215,5 +204,8 @@ const styles = StyleSheet.create({
     color: '#2D3748',
     fontSize: 24,
     textAlign: 'center'
+  },
+  weekButton: {
+    padding: 10
   }
 });

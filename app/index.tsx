@@ -3,6 +3,7 @@ import { useDbLogger } from '@/hooks';
 import { useRouter } from 'expo-router';
 import { useSQLiteContext } from 'expo-sqlite';
 import uuid from 'react-native-uuid';
+import { addThingToDb, deleteThingFromDb } from '@/utils';
 import {
   FlatList,
   KeyboardAvoidingView,
@@ -32,8 +33,13 @@ const ListItem = ({ id, setListData, title }: ListItemProps) => {
       <Text style={styles.listItemText}>{title}</Text>
       <Pressable
         onPress={async () => {
-          setListData(prev => prev.filter(item => item.id !== id));
-          await db.runAsync('DELETE FROM things WHERE id = ?', id);
+          try {
+            await deleteThingFromDb(db, id);
+            setListData(prev => prev.filter(item => item.id !== id));
+          } catch (e) {
+            console.error('DB error: ', e);
+          }
+
           logDbContents();
         }}
         style={styles.deleteButton}
@@ -56,8 +62,8 @@ export default function Index() {
   useEffect(() => {
     const populateListDataStateFromDb = async () => {
       try {
-        const result: Thing[] = await db.getAllAsync('SELECT * from things');
-        setListData(result.map(({ id, title }) => ({ id, title })));
+        const dbThings: Thing[] = await db.getAllAsync('SELECT * from things');
+        setListData(dbThings);
       } catch (e) {
         console.error('DB error: ', e);
       }
@@ -86,9 +92,20 @@ export default function Index() {
     }
 
     const id = uuid.v4();
-    setListData(prev => [...prev, { id, title: text.trim() }]);
-    onChangeText('');
-    await db.runAsync('INSERT INTO things (id, title) VALUES (?, ?)', id, text);
+    const now = new Date().toISOString();
+
+    try {
+      await addThingToDb(db, id, now, text);
+      setListData(prev => [
+        ...prev,
+        { createdAt: now, currentlyTracking: 1, id, title: text.trim(), updatedAt: now }
+      ]);
+
+      onChangeText('');
+    } catch (e) {
+      console.error('DB error: ', e);
+    }
+
     logDbContents();
   };
 
