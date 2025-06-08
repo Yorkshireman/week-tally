@@ -1,3 +1,4 @@
+import { globalStyles } from '@/styles';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useSQLiteContext } from 'expo-sqlite';
@@ -45,8 +46,8 @@ export default function ConfirmationScreen() {
   }, [db, logDbContents]);
 
   return (
-    <SafeAreaView style={{ ...styles.container, backgroundColor }}>
-      <View style={styles.content}>
+    <SafeAreaView style={{ ...globalStyles.screenWrapper, backgroundColor }}>
+      <View style={{ ...globalStyles.content, gap: 20 }}>
         <Text style={{ ...styles.text, color, fontWeight: 'bold' }}>You&apos;re done!</Text>
         <Text style={{ ...styles.text, color }}>
           You&apos;ll get daily notifications at {notificationTime} asking you to update your
@@ -74,18 +75,6 @@ export default function ConfirmationScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    gap: 40,
-    paddingHorizontal: '25%',
-    paddingVertical: '25%'
-  },
-  content: {
-    alignItems: 'center',
-    flex: 1,
-    gap: 20,
-    justifyContent: 'center'
-  },
   navigationButton: {
     borderRadius: 10,
     borderWidth: 1,

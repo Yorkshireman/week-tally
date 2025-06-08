@@ -1,3 +1,4 @@
+import { globalStyles } from '@/styles';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ThingWithLogEntriesCount } from '@/types';
 import { useIsFocused } from '@react-navigation/native';
@@ -70,10 +71,10 @@ export default function TotalsScreen() {
   };
 
   return (
-    <SafeAreaView style={{ ...styles.container, backgroundColor }}>
+    <SafeAreaView style={{ ...globalStyles.screenWrapper, backgroundColor }}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.content}
+        style={globalStyles.content}
       >
         <FlatList
           contentContainerStyle={{
@@ -165,18 +166,6 @@ export default function TotalsScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    gap: 40,
-    paddingHorizontal: '25%',
-    paddingVertical: '25%'
-  },
-  content: {
-    alignItems: 'center',
-    flex: 1,
-    gap: 20,
-    justifyContent: 'center'
-  },
   countButton: {
     fontSize: 28,
     paddingHorizontal: 12,

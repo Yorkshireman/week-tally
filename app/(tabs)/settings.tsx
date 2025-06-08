@@ -1,7 +1,8 @@
+import { globalStyles } from '@/styles';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useColours } from '@/hooks';
 import { useResetApp } from '@/hooks/useResetApp';
-import { Alert, Pressable, StyleSheet, Text, useColorScheme } from 'react-native';
+import { Alert, Pressable, StyleSheet, Text, useColorScheme, View } from 'react-native';
 
 export default function Settings() {
   const colourScheme = useColorScheme();
@@ -31,24 +32,20 @@ export default function Settings() {
   };
 
   return (
-    <SafeAreaView style={{ ...styles.container, backgroundColor }}>
-      <Pressable
-        onPress={onPressResetAppButton}
-        style={{ ...styles.resetButton, backgroundColor: warning.backgroundColor }}
-      >
-        <Text style={{ ...styles.resetButtonText, color: warning.color }}>Reset the app</Text>
-      </Pressable>
+    <SafeAreaView style={{ ...globalStyles.screenWrapper, backgroundColor }}>
+      <View style={globalStyles.content}>
+        <Pressable
+          onPress={onPressResetAppButton}
+          style={{ ...styles.resetButton, backgroundColor: warning.backgroundColor }}
+        >
+          <Text style={{ ...styles.resetButtonText, color: warning.color }}>Reset the app</Text>
+        </Pressable>
+      </View>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    flex: 1,
-    justifyContent: 'center',
-    paddingHorizontal: '10%'
-  },
   resetButton: {
     borderRadius: 10,
     padding: 10,

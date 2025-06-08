@@ -1,4 +1,5 @@
 import * as Notifications from 'expo-notifications';
+import { globalStyles } from '@/styles';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Setting } from '../types';
 import { TimePicker } from '../components';
@@ -87,8 +88,8 @@ export default function DateTimeChooserScreen() {
   };
 
   return (
-    <SafeAreaView style={{ ...styles.container, backgroundColor }}>
-      <View style={styles.content}>
+    <SafeAreaView style={{ ...globalStyles.screenWrapper, backgroundColor }}>
+      <View style={globalStyles.content}>
         <Text style={{ ...styles.text, color, fontWeight: 'bold', marginBottom: 20 }}>
           2. Choose when you&apos;d like to be notified
         </Text>
@@ -127,17 +128,6 @@ const styles = StyleSheet.create({
   backButtonText: {
     fontSize: 18,
     textAlign: 'center'
-  },
-  container: {
-    flex: 1,
-    gap: 40,
-    paddingHorizontal: '25%',
-    paddingVertical: '25%'
-  },
-  content: {
-    alignItems: 'center',
-    flex: 1,
-    justifyContent: 'center'
   },
   navigationButton: {
     borderRadius: 10,

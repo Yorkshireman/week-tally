@@ -1,3 +1,4 @@
+import { globalStyles } from '@/styles';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -141,8 +142,8 @@ export default function Index() {
   }
 
   return (
-    <SafeAreaView style={{ ...styles.container, backgroundColor }}>
-      <View style={styles.content}>
+    <SafeAreaView style={{ ...globalStyles.screenWrapper, backgroundColor }}>
+      <View style={globalStyles.content}>
         <FlatList
           contentContainerStyle={{
             flexGrow: 1,
@@ -188,17 +189,6 @@ export default function Index() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    gap: 40,
-    paddingHorizontal: '25%',
-    paddingVertical: '25%'
-  },
-  content: {
-    alignItems: 'center',
-    flex: 1,
-    justifyContent: 'center'
-  },
   input: {
     borderWidth: 1,
     fontSize: 20,
