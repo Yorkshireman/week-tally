@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useSQLiteContext } from 'expo-sqlite';
 import uuid from 'react-native-uuid';
-import { addThingToDb, deleteThingFromDb } from '@/utils';
+import { addThingToDb, deleteThingFromDb, normaliseFontSize } from '@/utils';
 import {
   Alert,
   FlatList,
@@ -67,7 +67,7 @@ const ListItem = ({ id, setListData, title }: ListItemProps) => {
         onPress={onPressDeleteButton}
         style={{ borderColor: iconButton.borderColor, borderRadius: 7, borderWidth: 2, padding: 5 }}
       >
-        <Ionicons color={iconButton.color} name='trash' size={24} />
+        <Ionicons color={iconButton.color} name='trash' size={normaliseFontSize(24)} />
       </Pressable>
     </View>
   );
@@ -90,7 +90,10 @@ export default function Index() {
   useEffect(() => {
     const populateListDataStateFromDb = async () => {
       try {
-        const dbThings: Thing[] = await db.getAllAsync('SELECT * from things');
+        const dbThings: Thing[] = await db.getAllAsync(
+          'SELECT * from things ORDER BY createdAt DESC'
+        );
+
         setListData(dbThings);
       } catch (e) {
         console.error('DB error: ', e);
@@ -152,7 +155,7 @@ export default function Index() {
           data={listData}
           ListHeaderComponent={
             <View style={{ gap: 40 }}>
-              <Text style={{ ...styles.text, color, fontWeight: 'bold' }}>
+              <Text style={{ ...styles.text, color }}>
                 1. Enter the things you would like to track
               </Text>
               <TextInput
@@ -191,7 +194,7 @@ export default function Index() {
 const styles = StyleSheet.create({
   input: {
     borderWidth: 1,
-    fontSize: 20,
+    fontSize: normaliseFontSize(24),
     marginBottom: 40,
     padding: 10
   },
@@ -200,7 +203,7 @@ const styles = StyleSheet.create({
   },
   listItemText: {
     flexShrink: 1,
-    fontSize: 24,
+    fontSize: normaliseFontSize(24),
     fontWeight: 'bold'
   },
   nextStepButton: {
@@ -214,7 +217,7 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   text: {
-    fontSize: 20,
+    fontSize: normaliseFontSize(24),
     textAlign: 'center'
   }
 });

@@ -2,7 +2,11 @@ import { globalStyles } from '@/styles';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useSQLiteContext } from 'expo-sqlite';
-import { minutesAfterMidnightToTimeString, scheduleDailyNotifications } from '@/utils';
+import {
+  minutesAfterMidnightToTimeString,
+  normaliseFontSize,
+  scheduleDailyNotifications
+} from '@/utils';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useColours, useDbLogger } from '@/hooks';
 import { useEffect, useState } from 'react';
@@ -86,7 +90,7 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   text: {
-    fontSize: 20,
+    fontSize: normaliseFontSize(24),
     textAlign: 'center'
   }
 });

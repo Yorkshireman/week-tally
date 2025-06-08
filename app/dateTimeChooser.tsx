@@ -1,5 +1,6 @@
 import * as Notifications from 'expo-notifications';
 import { globalStyles } from '@/styles';
+import { normaliseFontSize } from '@/utils';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Setting } from '../types';
 import { TimePicker } from '../components';
@@ -90,12 +91,8 @@ export default function DateTimeChooserScreen() {
   return (
     <SafeAreaView style={{ ...globalStyles.screenWrapper, backgroundColor }}>
       <View style={globalStyles.content}>
-        <Text style={{ ...styles.text, color, fontWeight: 'bold', marginBottom: 20 }}>
-          2. Choose when you&apos;d like to be notified
-        </Text>
-        <Text style={{ ...styles.text, color }}>
-          The app will send you a notification at a set time of your choosing each day to ask you if
-          you have done your Thing that day.
+        <Text style={{ ...styles.text, color, marginBottom: 20 }}>
+          2. Choose when you&apos;d like to be notified each day to update your totals
         </Text>
         <TimePicker selectedTime={selectedTime} onValueChange={onTimePickerValueChange} />
       </View>
@@ -140,7 +137,7 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   text: {
-    fontSize: 20,
+    fontSize: normaliseFontSize(24),
     textAlign: 'center'
   }
 });

@@ -3,7 +3,13 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { ThingWithLogEntriesCount } from '@/types';
 import { useIsFocused } from '@react-navigation/native';
 import { useSQLiteContext } from 'expo-sqlite';
-import { addLogEntryToDb, deleteLogEntryFromDb, fetchAndSetTotals, getWeekLabel } from '@/utils';
+import {
+  addLogEntryToDb,
+  deleteLogEntryFromDb,
+  fetchAndSetTotals,
+  getWeekLabel,
+  normaliseFontSize
+} from '@/utils';
 import {
   AppState,
   FlatList,
@@ -167,7 +173,7 @@ export default function TotalsScreen() {
 
 const styles = StyleSheet.create({
   countButton: {
-    fontSize: 28,
+    fontSize: normaliseFontSize(28),
     paddingHorizontal: 12,
     paddingVertical: 2
   },
@@ -175,7 +181,7 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch'
   },
   text: {
-    fontSize: 24,
+    fontSize: normaliseFontSize(24),
     textAlign: 'center'
   },
   weekButton: {

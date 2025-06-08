@@ -38,7 +38,7 @@ export const fetchAndSetTotals = async (
     );
 
     const things = await db.getAllAsync<Thing>(
-      'SELECT DISTINCT * FROM things WHERE id IN (?) OR currentlyTracking = 1',
+      'SELECT DISTINCT * FROM things WHERE id IN (?) OR currentlyTracking = 1 ORDER BY createdAt DESC',
       thingIds.join(',')
     );
 
