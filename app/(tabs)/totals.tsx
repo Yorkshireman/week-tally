@@ -11,16 +11,7 @@ import {
   getWeekLabel,
   normaliseFontSize
 } from '@/utils';
-import {
-  AppState,
-  FlatList,
-  KeyboardAvoidingView,
-  Platform,
-  Pressable,
-  StyleSheet,
-  Text,
-  View
-} from 'react-native';
+import { AppState, FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useColours, useDbLogger } from '@/hooks';
 import { useEffect, useRef, useState } from 'react';
 
@@ -80,10 +71,7 @@ export default function TotalsScreen() {
 
   return (
     <SafeAreaView style={{ ...globalStyles.screenWrapper, backgroundColor }}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={globalStyles.content}
-      >
+      <View style={globalStyles.content}>
         <FlatList
           contentContainerStyle={{
             flexGrow: 1,
@@ -187,7 +175,7 @@ export default function TotalsScreen() {
           ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
           style={styles.list}
         />
-      </KeyboardAvoidingView>
+      </View>
     </SafeAreaView>
   );
 }
