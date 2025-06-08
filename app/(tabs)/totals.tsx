@@ -114,9 +114,8 @@ export default function TotalsScreen() {
             <View
               style={{
                 alignItems: 'center',
-                flex: 1,
-                flexDirection: 'row',
-                gap: 10
+                backgroundColor: 'red',
+                flexDirection: 'row'
               }}
             >
               <Pressable
@@ -137,36 +136,46 @@ export default function TotalsScreen() {
                   style={{ ...styles.countButton, opacity: count === 0 ? 0.5 : 1 }}
                 />
               </Pressable>
+              {/* title and count container */}
               <View
                 style={{
                   alignItems: 'center',
+                  backgroundColor: 'blue',
                   flex: 1,
-                  flexDirection: 'row',
-                  justifyContent: 'center',
-                  paddingHorizontal: 5
+                  flexDirection: 'row'
+                  // minWidth: 0
+                  // paddingHorizontal: 5
                 }}
               >
-                <Text
-                  style={{
-                    ...styles.text,
-                    color,
-                    fontWeight: 'bold',
-                    paddingHorizontal: 10,
-                    textAlign: 'center'
-                  }}
-                >
-                  {title}
-                </Text>
-                <Text
-                  style={{
-                    ...styles.text,
-                    color,
-                    fontWeight: 'bold',
-                    padding: 5
-                  }}
-                >
-                  {count}
-                </Text>
+                <View style={{ flex: 1, marginRight: 4 }}>
+                  <Text
+                    style={{
+                      ...styles.text,
+                      backgroundColor: 'coral',
+                      color,
+                      // flexShrink: 1,
+                      fontWeight: 'bold',
+                      // paddingHorizontal: 10
+                      textAlign: 'center'
+                    }}
+                  >
+                    {title}
+                  </Text>
+                </View>
+                <View style={{ minWidth: 10 }}>
+                  <Text
+                    style={{
+                      ...styles.text,
+                      backgroundColor: 'grey',
+                      color,
+                      fontWeight: 'bold',
+                      textAlign: 'center'
+                      // padding: 5
+                    }}
+                  >
+                    {count}
+                  </Text>
+                </View>
               </View>
               <Pressable
                 onPress={() => addLogEntry(id)}
@@ -191,17 +200,16 @@ export default function TotalsScreen() {
 
 const styles = StyleSheet.create({
   countButton: {
-    fontSize: normaliseFontSize(32),
-    paddingLeft: 5,
-    paddingRight: 5,
-    paddingVertical: 5
+    fontSize: normaliseFontSize(32)
+    // paddingLeft: 5,
+    // paddingRight: 5,
+    // paddingVertical: 5
   },
   list: {
     alignSelf: 'stretch'
   },
   text: {
-    fontSize: normaliseFontSize(24),
-    textAlign: 'center'
+    fontSize: normaliseFontSize(24)
   },
   weekButton: {
     padding: 10
