@@ -97,7 +97,7 @@ export default function TotalsScreen() {
                 alignItems: 'center',
                 flexDirection: 'row',
                 gap: 20,
-                justifyContent: 'center',
+                justifyContent: 'space-between',
                 marginBottom: 20
               }}
             >
@@ -112,7 +112,7 @@ export default function TotalsScreen() {
               <Pressable
                 onPress={() => setWeekOffset(prev => Math.min(prev + 1, 0))}
                 disabled={weekOffset === 0}
-                style={{ opacity: weekOffset === 0 ? 0.5 : 1 }}
+                style={{ ...styles.weekButton, opacity: weekOffset === 0 ? 0.5 : 1 }}
               >
                 <Ionicons
                   color={iconButton.color}
@@ -177,7 +177,7 @@ export default function TotalsScreen() {
               </View>
               <Pressable
                 onPress={() => addLogEntry(id)}
-                style={{ alignItems: 'center', width: 40 }}
+                style={{ alignItems: 'center', borderColor: 'black', width: 40 }}
               >
                 <Text style={{ ...styles.text, color, ...styles.countButton }}>+</Text>
               </Pressable>
@@ -205,7 +205,6 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   weekButton: {
-    // backgroundColor: 'red',
     padding: 10
   }
 });
