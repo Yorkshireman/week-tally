@@ -171,20 +171,18 @@ export default function Index() {
           style={styles.list}
         />
       </View>
-      <View style={{ alignItems: 'center' }}>
-        {listData.length ? (
-          <View style={{ alignSelf: 'stretch' }}>
-            <Pressable
-              onPress={() => router.replace('/dateTimeChooser')}
-              style={{ ...styles.nextStepButton, ...primary }}
-            >
-              <Text style={{ ...styles.nextStepButtonText, color: primary.color }}>
-                Go to next step
-              </Text>
-            </Pressable>
-          </View>
-        ) : null}
-      </View>
+      {listData.length ? (
+        <View style={{ alignSelf: 'stretch' }}>
+          <Pressable
+            onPress={() => router.replace('/dateTimeChooser')}
+            style={{ ...styles.nextStepButton, ...primary }}
+          >
+            <Text style={{ ...styles.nextStepButtonText, color: primary.color }}>
+              Go to next step
+            </Text>
+          </Pressable>
+        </View>
+      ) : null}
     </SafeAreaView>
   );
 }
