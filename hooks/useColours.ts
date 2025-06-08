@@ -6,16 +6,13 @@ const primitiveError = {
 };
 
 const primitiveNeutral = {
+  300: '#CBD5E0',
   700: '#2D3748'
 };
 
 const primitivePrimary = {
   700: '#005958',
   900: '#00302F'
-};
-
-const semanticNeutral = {
-  300: '#CBD5E0'
 };
 
 const styles = {
@@ -36,6 +33,9 @@ const styles = {
         color: '#fff'
       }
     },
+    divider: {
+      backgroundColor: primitiveNeutral[300]
+    },
     error: {
       ...primitiveError
     },
@@ -51,7 +51,7 @@ const styles = {
       tabBarInactiveTintColor: '#fff',
       tabBarStyle: {
         backgroundColor: primitiveNeutral[700],
-        borderTopColor: semanticNeutral[300]
+        borderTopColor: primitiveNeutral[300]
       }
     },
     text: {
@@ -75,6 +75,9 @@ const styles = {
         color: '#fff'
       }
     },
+    divider: {
+      backgroundColor: primitiveNeutral[300]
+    },
     error: {
       ...primitiveError
     },
@@ -90,7 +93,7 @@ const styles = {
       tabBarInactiveTintColor: primitivePrimary[700],
       tabBarStyle: {
         backgroundColor: '#fff',
-        borderTopColor: semanticNeutral[300]
+        borderTopColor: primitiveNeutral[300]
       }
     },
     text: {
