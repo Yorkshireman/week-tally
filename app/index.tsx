@@ -7,8 +7,6 @@ import { addThingToDb, deleteThingFromDb } from '@/utils';
 import {
   Alert,
   FlatList,
-  KeyboardAvoidingView,
-  Platform,
   Pressable,
   StyleSheet,
   Text,
@@ -126,8 +124,8 @@ export default function Index() {
     try {
       await addThingToDb(db, id, now, text);
       setListData(prev => [
-        ...prev,
-        { createdAt: now, currentlyTracking: 1, id, title: text.trim(), updatedAt: now }
+        { createdAt: now, currentlyTracking: 1, id, title: text.trim(), updatedAt: now },
+        ...prev
       ]);
 
       onChangeText('');
@@ -144,15 +142,16 @@ export default function Index() {
 
   return (
     <SafeAreaView style={{ ...styles.container, backgroundColor }}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.content}
-      >
+      <View style={styles.content}>
         <FlatList
+          contentContainerStyle={{
+            flexGrow: 1,
+            justifyContent: 'center'
+          }}
           data={listData}
           ListHeaderComponent={
-            <>
-              <Text style={{ ...styles.text, color, fontWeight: 'bold', marginBottom: 20 }}>
+            <View style={{ gap: 40 }}>
+              <Text style={{ ...styles.text, color, fontWeight: 'bold' }}>
                 1. Enter the things you would like to track
               </Text>
               <TextInput
@@ -162,7 +161,7 @@ export default function Index() {
                 value={text}
                 placeholder={`Thing ${listData.length + 1}`}
               />
-            </>
+            </View>
           }
           ref={flatListRef}
           renderItem={({ item: { id, title } }) => (
@@ -171,11 +170,10 @@ export default function Index() {
           ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
           style={styles.list}
         />
-      </KeyboardAvoidingView>
+      </View>
       <View style={{ alignItems: 'center' }}>
         {listData.length ? (
-          <View>
-            <Text style={{ ...styles.text, color, marginBottom: 20 }}>Finished?</Text>
+          <View style={{ alignSelf: 'stretch' }}>
             <Pressable
               onPress={() => router.replace('/dateTimeChooser')}
               style={{ ...styles.nextStepButton, ...primary }}
@@ -194,16 +192,14 @@ export default function Index() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    paddingBottom: 60,
-    paddingHorizontal: '10%',
-    paddingTop: 40
+    gap: 40,
+    paddingHorizontal: '25%',
+    paddingVertical: '25%'
   },
   content: {
     alignItems: 'center',
-    paddingLeft: 20,
-    paddingRight: 20,
-    paddingTop: 40
+    flex: 1,
+    justifyContent: 'center'
   },
   input: {
     borderWidth: 1,
@@ -212,8 +208,7 @@ const styles = StyleSheet.create({
     padding: 10
   },
   list: {
-    alignSelf: 'stretch',
-    marginBottom: 20
+    alignSelf: 'stretch'
   },
   listItemText: {
     flexShrink: 1,
@@ -223,8 +218,7 @@ const styles = StyleSheet.create({
   nextStepButton: {
     borderRadius: 10,
     borderWidth: 1,
-    padding: 10,
-    width: 163
+    padding: 15
   },
   nextStepButtonText: {
     fontSize: 18,
