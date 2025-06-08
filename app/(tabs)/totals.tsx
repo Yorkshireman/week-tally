@@ -126,9 +126,9 @@ export default function TotalsScreen() {
             <View
               style={{
                 alignItems: 'center',
+                flex: 1,
                 flexDirection: 'row',
-                gap: 10,
-                justifyContent: 'center'
+                gap: 10
               }}
             >
               <Pressable
