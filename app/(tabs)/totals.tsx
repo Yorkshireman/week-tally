@@ -123,9 +123,18 @@ export default function TotalsScreen() {
                   style={{ ...styles.countButton, opacity: count === 0 ? 0.5 : 1 }}
                 />
               </Pressable>
-              <View style={{ alignItems: 'center', flex: 1, flexDirection: 'row' }}>
-                <View style={{ flex: 1, paddingRight: 10 }}>
-                  <Text style={{ ...styles.text, color, fontWeight: 'bold' }}>{title}</Text>
+              <View
+                style={{
+                  alignItems: 'center',
+                  flex: 1,
+                  flexDirection: 'row',
+                  paddingHorizontal: 10
+                }}
+              >
+                <View style={{ flex: 1, paddingHorizontal: 10 }}>
+                  <Text style={{ ...styles.text, color, fontWeight: 'bold', textAlign: 'left' }}>
+                    {title}
+                  </Text>
                 </View>
                 <View style={{ minWidth: 10 }}>
                   <Text style={{ ...styles.text, color, fontWeight: 'bold' }}>{count}</Text>
