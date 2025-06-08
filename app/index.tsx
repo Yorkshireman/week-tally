@@ -1,3 +1,4 @@
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useSQLiteContext } from 'expo-sqlite';
@@ -21,6 +22,7 @@ import { useEffect, useRef, useState } from 'react';
 
 const ListItem = ({ id, setListData, title }: ListItemProps) => {
   const {
+    iconButton,
     text: { color }
   } = useColours();
   const colourScheme = useColorScheme();
@@ -61,9 +63,12 @@ const ListItem = ({ id, setListData, title }: ListItemProps) => {
         justifyContent: 'space-between'
       }}
     >
-      <Text style={styles.listItemText}>{title}</Text>
-      <Pressable onPress={onPressDeleteButton} style={styles.deleteButton}>
-        <Text style={{ ...styles.deleteButtonText, color }}>Delete</Text>
+      <Text style={{ ...styles.listItemText, color }}>{title}</Text>
+      <Pressable
+        onPress={onPressDeleteButton}
+        style={{ borderColor: iconButton.borderColor, borderRadius: 7, borderWidth: 2, padding: 5 }}
+      >
+        <Ionicons color={iconButton.color} name='trash' size={24} />
       </Pressable>
     </View>
   );
@@ -72,6 +77,7 @@ const ListItem = ({ id, setListData, title }: ListItemProps) => {
 export default function Index() {
   const [checkingSetupStatus, setCheckingSetupStatus] = useState(true);
   const {
+    button: { primary },
     page: { backgroundColor },
     text: { color }
   } = useColours();
@@ -172,9 +178,11 @@ export default function Index() {
             <Text style={{ ...styles.text, color, marginBottom: 20 }}>Finished?</Text>
             <Pressable
               onPress={() => router.replace('/dateTimeChooser')}
-              style={styles.nextStepButton}
+              style={{ ...styles.nextStepButton, ...primary }}
             >
-              <Text style={styles.nextStepButtonText}>Go to next step</Text>
+              <Text style={{ ...styles.nextStepButtonText, color: primary.color }}>
+                Go to next step
+              </Text>
             </Pressable>
           </View>
         ) : null}
@@ -197,16 +205,6 @@ const styles = StyleSheet.create({
     paddingRight: 20,
     paddingTop: 40
   },
-  deleteButton: {
-    backgroundColor: '#FAF089',
-    borderRadius: 10,
-    padding: 7,
-    width: 85
-  },
-  deleteButtonText: {
-    fontSize: 18,
-    textAlign: 'center'
-  },
   input: {
     borderWidth: 1,
     fontSize: 20,
@@ -218,20 +216,19 @@ const styles = StyleSheet.create({
     marginBottom: 20
   },
   listItemText: {
-    color: '#2D3748',
     flexShrink: 1,
     fontSize: 24,
     fontWeight: 'bold'
   },
   nextStepButton: {
-    backgroundColor: '#156F6D',
     borderRadius: 10,
+    borderWidth: 1,
     padding: 10,
-    width: 160
+    width: 163
   },
   nextStepButtonText: {
-    color: '#F0FEFD',
     fontSize: 18,
+    fontWeight: 'bold',
     textAlign: 'center'
   },
   text: {

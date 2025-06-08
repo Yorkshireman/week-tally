@@ -21,6 +21,11 @@ const semanticNeutral = {
 const styles = {
   dark: {
     button: {
+      primary: {
+        backgroundColor: primitiveNeutral[700],
+        borderColor: '#fff',
+        color: '#fff'
+      },
       warning: {
         backgroundColor: primitiveError[500],
         color: '#fff'
@@ -28,6 +33,10 @@ const styles = {
     },
     error: {
       ...primitiveError
+    },
+    iconButton: {
+      borderColor: '#fff',
+      color: '#fff'
     },
     page: {
       backgroundColor: primitiveNeutral[700]
@@ -46,6 +55,11 @@ const styles = {
   },
   light: {
     button: {
+      primary: {
+        backgroundColor: primitivePrimary[700],
+        borderColor: primitivePrimary[700],
+        color: '#fff'
+      },
       warning: {
         backgroundColor: primitiveError[500],
         color: '#fff'
@@ -53,6 +67,10 @@ const styles = {
     },
     error: {
       ...primitiveError
+    },
+    iconButton: {
+      borderColor: primitiveNeutral[700],
+      color: primitiveNeutral[700]
     },
     page: {
       backgroundColor: '#fff'
