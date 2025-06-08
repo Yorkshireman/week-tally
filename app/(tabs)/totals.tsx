@@ -73,11 +73,7 @@ export default function TotalsScreen() {
     <SafeAreaView style={{ ...globalStyles.screenWrapper, backgroundColor }}>
       <View style={globalStyles.content}>
         <FlatList
-          contentContainerStyle={{
-            flexGrow: 1,
-            gap: 10,
-            justifyContent: 'center'
-          }}
+          contentContainerStyle={{ flexGrow: 1, gap: 10, justifyContent: 'center' }}
           data={totals}
           ListHeaderComponent={
             <View
@@ -111,23 +107,14 @@ export default function TotalsScreen() {
             </View>
           }
           renderItem={({ item: { count, title, id } }) => (
-            <View
-              style={{
-                alignItems: 'center',
-                backgroundColor: 'red',
-                flexDirection: 'row'
-              }}
-            >
+            <View style={{ alignItems: 'center', flexDirection: 'row' }}>
               <Pressable
                 onPress={() => {
                   if (count === 0) return;
                   deleteLogEntry(id);
                 }}
                 disabled={count === 0}
-                style={{
-                  alignItems: 'center',
-                  width: 40
-                }}
+                style={{ alignItems: 'center', width: 40 }}
               >
                 <Ionicons
                   color={iconButton.color}
@@ -136,45 +123,12 @@ export default function TotalsScreen() {
                   style={{ ...styles.countButton, opacity: count === 0 ? 0.5 : 1 }}
                 />
               </Pressable>
-              {/* title and count container */}
-              <View
-                style={{
-                  alignItems: 'center',
-                  backgroundColor: 'blue',
-                  flex: 1,
-                  flexDirection: 'row'
-                  // minWidth: 0
-                  // paddingHorizontal: 5
-                }}
-              >
-                <View style={{ flex: 1, marginRight: 4 }}>
-                  <Text
-                    style={{
-                      ...styles.text,
-                      backgroundColor: 'coral',
-                      color,
-                      // flexShrink: 1,
-                      fontWeight: 'bold',
-                      // paddingHorizontal: 10
-                      textAlign: 'center'
-                    }}
-                  >
-                    {title}
-                  </Text>
+              <View style={{ alignItems: 'center', flex: 1, flexDirection: 'row' }}>
+                <View style={{ flex: 1, paddingRight: 10 }}>
+                  <Text style={{ ...styles.text, color, fontWeight: 'bold' }}>{title}</Text>
                 </View>
                 <View style={{ minWidth: 10 }}>
-                  <Text
-                    style={{
-                      ...styles.text,
-                      backgroundColor: 'grey',
-                      color,
-                      fontWeight: 'bold',
-                      textAlign: 'center'
-                      // padding: 5
-                    }}
-                  >
-                    {count}
-                  </Text>
+                  <Text style={{ ...styles.text, color, fontWeight: 'bold' }}>{count}</Text>
                 </View>
               </View>
               <Pressable
@@ -200,16 +154,15 @@ export default function TotalsScreen() {
 
 const styles = StyleSheet.create({
   countButton: {
-    fontSize: normaliseFontSize(32)
-    // paddingLeft: 5,
-    // paddingRight: 5,
-    // paddingVertical: 5
+    fontSize: normaliseFontSize(32),
+    padding: 5
   },
   list: {
     alignSelf: 'stretch'
   },
   text: {
-    fontSize: normaliseFontSize(24)
+    fontSize: normaliseFontSize(24),
+    textAlign: 'center'
   },
   weekButton: {
     padding: 10
