@@ -1,5 +1,10 @@
 import { useColorScheme } from 'react-native';
 
+const primitiveError = {
+  400: '#F56565',
+  500: '#D93939'
+};
+
 const primitiveNeutral = {
   700: '#2D3748'
 };
@@ -15,6 +20,15 @@ const semanticNeutral = {
 
 const styles = {
   dark: {
+    button: {
+      warning: {
+        backgroundColor: primitiveError[500],
+        color: '#fff'
+      }
+    },
+    error: {
+      ...primitiveError
+    },
     page: {
       backgroundColor: primitiveNeutral[700]
     },
@@ -31,6 +45,15 @@ const styles = {
     }
   },
   light: {
+    button: {
+      warning: {
+        backgroundColor: primitiveError[500],
+        color: '#fff'
+      }
+    },
+    error: {
+      ...primitiveError
+    },
     page: {
       backgroundColor: '#fff'
     },

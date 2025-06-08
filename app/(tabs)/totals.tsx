@@ -13,7 +13,7 @@ import {
   Text,
   View
 } from 'react-native';
-import { useColours, useDbLogger, useResetApp } from '@/hooks';
+import { useColours, useDbLogger } from '@/hooks';
 import { useEffect, useRef, useState } from 'react';
 
 export default function TotalsScreen() {
@@ -25,7 +25,6 @@ export default function TotalsScreen() {
   const db = useSQLiteContext();
   const isFocused = useIsFocused();
   const logDbContents = useDbLogger();
-  const resetApp = useResetApp();
   const [totals, setTotals] = useState<ThingWithLogEntriesCount[]>();
   const [weekOffset, setWeekOffset] = useState<number>(0);
 
@@ -155,9 +154,6 @@ export default function TotalsScreen() {
           ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
           style={styles.list}
         />
-        <Pressable onPress={resetApp} style={styles.resetButton}>
-          <Text style={{ ...styles.resetButtonText, color }}>Reset the app</Text>
-        </Pressable>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
@@ -167,9 +163,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    paddingBottom: 60,
-    paddingHorizontal: '10%',
-    paddingTop: 40
+    paddingHorizontal: '10%'
   },
   content: {
     alignItems: 'center',
@@ -184,19 +178,6 @@ const styles = StyleSheet.create({
   },
   list: {
     alignSelf: 'stretch'
-  },
-  resetButton: {
-    backgroundColor: 'none',
-    borderColor: '#2D3748',
-    borderRadius: 10,
-    borderWidth: 1,
-    marginTop: 20,
-    padding: 10,
-    width: 150
-  },
-  resetButtonText: {
-    fontSize: 18,
-    textAlign: 'center'
   },
   text: {
     fontSize: 24,
