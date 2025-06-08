@@ -60,6 +60,11 @@ const styles = {
         borderColor: primitivePrimary[700],
         color: '#fff'
       },
+      secondary: {
+        backgroundColor: '#fff',
+        borderColor: primitiveNeutral[700],
+        color: primitiveNeutral[700]
+      },
       warning: {
         backgroundColor: primitiveError[500],
         color: '#fff'
