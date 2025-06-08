@@ -117,8 +117,8 @@ export default function TotalsScreen() {
               style={{
                 alignItems: 'center',
                 flexDirection: 'row',
-                justifyContent: 'center',
-                paddingHorizontal: 50
+                gap: 10,
+                justifyContent: 'center'
               }}
             >
               <Pressable
@@ -129,7 +129,6 @@ export default function TotalsScreen() {
                 disabled={count === 0}
                 style={{
                   alignItems: 'center',
-                  marginRight: 10,
                   width: 40
                 }}
               >
@@ -144,17 +143,28 @@ export default function TotalsScreen() {
                   -
                 </Text>
               </Pressable>
-              <Text
+              <View
                 style={{
-                  ...styles.text,
-                  color,
-                  fontWeight: 'bold',
-                  minWidth: 120,
-                  textAlign: 'center'
+                  alignItems: 'center',
+                  flex: 1,
+                  flexDirection: 'row',
+                  gap: 15,
+                  justifyContent: 'center',
+                  paddingHorizontal: 5
                 }}
               >
-                {title}: {count}
-              </Text>
+                <Text
+                  style={{
+                    ...styles.text,
+                    color,
+                    fontWeight: 'bold',
+                    textAlign: 'center'
+                  }}
+                >
+                  {title}
+                </Text>
+                <Text style={{ ...styles.text, color, fontWeight: 'bold' }}>{count}</Text>
+              </View>
               <Pressable
                 onPress={() => addLogEntry(id)}
                 style={{ alignItems: 'center', width: 40 }}
