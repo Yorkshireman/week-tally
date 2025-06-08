@@ -1,13 +1,14 @@
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useSQLiteContext } from 'expo-sqlite';
-import { KeyboardAvoidingView, Platform, Pressable, StyleSheet, Text } from 'react-native';
 import { minutesAfterMidnightToTimeString, scheduleDailyNotifications } from '@/utils';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useColours, useDbLogger } from '@/hooks';
 import { useEffect, useState } from 'react';
 
 export default function ConfirmationScreen() {
   const {
+    button: { primary },
     page: { backgroundColor },
     text: { color }
   } = useColours();
@@ -45,27 +46,29 @@ export default function ConfirmationScreen() {
 
   return (
     <SafeAreaView style={{ ...styles.container, backgroundColor }}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.content}
-      >
-        <Text style={{ ...styles.text, color, fontWeight: 'bold', marginBottom: 20 }}>
-          You&apos;re done!
-        </Text>
-        <Text style={{ ...styles.text, color, marginBottom: 20 }}>
+      <View style={styles.content}>
+        <Text style={{ ...styles.text, color, fontWeight: 'bold' }}>You&apos;re done!</Text>
+        <Text style={{ ...styles.text, color }}>
           You&apos;ll get daily notifications at {notificationTime} asking you to update your
           totals.
         </Text>
-        <Text style={{ ...styles.text, color, marginBottom: 20 }}>
+        <Text style={{ ...styles.text, color }}>
           The totals reset to zero at midnight every Sunday.
         </Text>
-        <Text style={{ ...styles.text, color, marginBottom: 40 }}>
+        <Text style={{ ...styles.text, color }}>
           Come back here anytime to view or update your running totals if you missed a notification.
         </Text>
-        <Pressable onPress={() => router.replace('/totals')} style={styles.navigationButton}>
-          <Text style={styles.navigationButtonText}>Roger! Take me to my running totals</Text>
+      </View>
+      <View>
+        <Pressable
+          onPress={() => router.replace('/totals')}
+          style={{ ...styles.navigationButton, ...primary }}
+        >
+          <Text style={{ ...styles.navigationButtonText, color: primary.color }}>
+            Roger! Take me to my running totals
+          </Text>
         </Pressable>
-      </KeyboardAvoidingView>
+      </View>
     </SafeAreaView>
   );
 }
@@ -73,24 +76,24 @@ export default function ConfirmationScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center'
+    gap: 40,
+    paddingHorizontal: '25%',
+    paddingVertical: '25%'
   },
   content: {
     alignItems: 'center',
-    paddingLeft: 20,
-    paddingRight: 20,
-    paddingTop: 40
+    flex: 1,
+    gap: 20,
+    justifyContent: 'center'
   },
   navigationButton: {
-    backgroundColor: '#156F6D',
     borderRadius: 10,
-    marginBottom: 20,
-    padding: 12,
-    width: 330
+    borderWidth: 1,
+    padding: 15
   },
   navigationButtonText: {
-    color: '#F0FEFD',
     fontSize: 18,
+    fontWeight: 'bold',
     textAlign: 'center'
   },
   text: {
