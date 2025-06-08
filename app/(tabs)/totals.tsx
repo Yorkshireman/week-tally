@@ -76,6 +76,11 @@ export default function TotalsScreen() {
         style={styles.content}
       >
         <FlatList
+          contentContainerStyle={{
+            flexGrow: 1,
+            gap: 10,
+            justifyContent: 'center'
+          }}
           data={totals}
           ListHeaderComponent={
             <View
@@ -84,7 +89,7 @@ export default function TotalsScreen() {
                 flexDirection: 'row',
                 gap: 20,
                 justifyContent: 'center',
-                marginBottom: 40
+                marginBottom: 20
               }}
             >
               <Pressable onPress={() => setWeekOffset(prev => prev - 1)} style={styles.weekButton}>
@@ -162,14 +167,15 @@ export default function TotalsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    paddingHorizontal: '10%'
+    gap: 40,
+    paddingHorizontal: '25%',
+    paddingVertical: '25%'
   },
   content: {
     alignItems: 'center',
-    paddingLeft: 20,
-    paddingRight: 20,
-    paddingTop: 40
+    flex: 1,
+    gap: 20,
+    justifyContent: 'center'
   },
   countButton: {
     fontSize: 28,

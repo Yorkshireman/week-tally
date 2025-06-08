@@ -4,15 +4,7 @@ import { Setting } from '../types';
 import { TimePicker } from '../components';
 import { useRouter } from 'expo-router';
 import { useSQLiteContext } from 'expo-sqlite';
-import {
-  Alert,
-  KeyboardAvoidingView,
-  Platform,
-  Pressable,
-  StyleSheet,
-  Text,
-  View
-} from 'react-native';
+import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useColours, useDbLogger } from '@/hooks';
 import { useEffect, useState } from 'react';
 
