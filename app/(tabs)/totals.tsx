@@ -1,4 +1,5 @@
 import { globalStyles } from '@/styles';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ThingWithLogEntriesCount } from '@/types';
 import { useIsFocused } from '@react-navigation/native';
@@ -26,6 +27,7 @@ import { useEffect, useRef, useState } from 'react';
 export default function TotalsScreen() {
   const appState = useRef(AppState.currentState);
   const {
+    iconButton,
     page: { backgroundColor },
     text: { color }
   } = useColours();
@@ -100,15 +102,23 @@ export default function TotalsScreen() {
               }}
             >
               <Pressable onPress={() => setWeekOffset(prev => prev - 1)} style={styles.weekButton}>
-                <Text>{'<'}</Text>
+                <Ionicons
+                  color={iconButton.color}
+                  name='chevron-back-circle'
+                  size={normaliseFontSize(32)}
+                />
               </Pressable>
               <Text style={{ ...styles.text, color }}>{getWeekLabel(weekOffset)}</Text>
               <Pressable
                 onPress={() => setWeekOffset(prev => Math.min(prev + 1, 0))}
                 disabled={weekOffset === 0}
-                style={{ opacity: weekOffset === 0 ? 0.3 : 1 }}
+                style={{ opacity: weekOffset === 0 ? 0.5 : 1 }}
               >
-                <Text style={styles.weekButton}>{'>'}</Text>
+                <Ionicons
+                  color={iconButton.color}
+                  name='chevron-forward-circle'
+                  size={normaliseFontSize(32)}
+                />
               </Pressable>
             </View>
           }
@@ -195,6 +205,7 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   weekButton: {
+    // backgroundColor: 'red',
     padding: 10
   }
 });
