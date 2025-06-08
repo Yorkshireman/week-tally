@@ -104,7 +104,7 @@ export default function TotalsScreen() {
               <Pressable onPress={() => setWeekOffset(prev => prev - 1)} style={styles.weekButton}>
                 <Ionicons
                   color={iconButton.color}
-                  name='chevron-back-circle'
+                  name='chevron-back-circle-outline'
                   size={normaliseFontSize(32)}
                 />
               </Pressable>
@@ -116,7 +116,7 @@ export default function TotalsScreen() {
               >
                 <Ionicons
                   color={iconButton.color}
-                  name='chevron-forward-circle'
+                  name='chevron-forward-circle-outline'
                   size={normaliseFontSize(32)}
                 />
               </Pressable>
@@ -142,16 +142,12 @@ export default function TotalsScreen() {
                   width: 40
                 }}
               >
-                <Text
-                  style={{
-                    ...styles.text,
-                    color,
-                    ...styles.countButton,
-                    opacity: count === 0 ? 0.3 : 1
-                  }}
-                >
-                  -
-                </Text>
+                <Ionicons
+                  color={iconButton.color}
+                  name='remove-circle'
+                  size={normaliseFontSize(32)}
+                  style={{ ...styles.countButton, opacity: count === 0 ? 0.5 : 1 }}
+                />
               </Pressable>
               <View
                 style={{
@@ -179,7 +175,12 @@ export default function TotalsScreen() {
                 onPress={() => addLogEntry(id)}
                 style={{ alignItems: 'center', borderColor: 'black', width: 40 }}
               >
-                <Text style={{ ...styles.text, color, ...styles.countButton }}>+</Text>
+                <Ionicons
+                  color={iconButton.color}
+                  name='add-circle'
+                  size={normaliseFontSize(32)}
+                  style={styles.countButton}
+                />
               </Pressable>
             </View>
           )}
@@ -193,9 +194,10 @@ export default function TotalsScreen() {
 
 const styles = StyleSheet.create({
   countButton: {
-    fontSize: normaliseFontSize(28),
-    paddingHorizontal: 12,
-    paddingVertical: 2
+    fontSize: normaliseFontSize(32),
+    paddingLeft: 5,
+    paddingRight: 5,
+    paddingVertical: 5
   },
   list: {
     alignSelf: 'stretch'

@@ -80,7 +80,7 @@ const styles = {
     },
     iconButton: {
       borderColor: primitiveNeutral[700],
-      color: primitiveNeutral[700]
+      color: primitivePrimary[900]
     },
     page: {
       backgroundColor: '#fff'
