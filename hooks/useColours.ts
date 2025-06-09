@@ -6,6 +6,19 @@ const primitiveError = {
   500: '#D93939'
 };
 
+const primitiveInfo = {
+  50: '#F0FEFD',
+  100: '#C8F9F6',
+  200: '#85EEEB',
+  300: '#1BD9D5',
+  400: '#00BCB9',
+  500: '#00A5A2',
+  600: '#156F6D',
+  700: '#005958',
+  800: '#004746',
+  900: '#00302F'
+};
+
 const primitiveNeutral = {
   50: '#F7FAFC',
   300: '#CBD5E0',
@@ -59,6 +72,7 @@ const styles = {
       backgroundColor: primitiveNeutral[700]
     },
     primitiveError,
+    primitiveInfo,
     primitiveNeutral,
     settingsScreen: {
       section: {
@@ -114,6 +128,7 @@ const styles = {
       backgroundColor: primitiveNeutral[50]
     },
     primitiveError,
+    primitiveInfo,
     primitiveNeutral,
     settingsScreen: {
       section: {
