@@ -89,5 +89,10 @@ export const updateCurrentlyTracking = async (
   newValue: 1 | 0,
   thingId: string
 ) => {
-  await db.runAsync('UPDATE things SET currentlyTracking = ? WHERE id = ?', [newValue, thingId]);
+  const now = new Date().toISOString();
+  await db.runAsync('UPDATE things SET currentlyTracking = ?, updatedAt = ? WHERE id = ?', [
+    newValue,
+    now,
+    thingId
+  ]);
 };
