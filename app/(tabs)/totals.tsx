@@ -1,3 +1,4 @@
+import * as Haptics from 'expo-haptics';
 import { globalStyles } from '@/styles';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -48,6 +49,7 @@ export default function TotalsScreen() {
   }, [db, isFocused, logDbContents, weekOffset]);
 
   const addLogEntry = async (id: string) => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     try {
       await addLogEntryToDb(db, id, weekOffset);
       logDbContents();
@@ -59,6 +61,7 @@ export default function TotalsScreen() {
   };
 
   const deleteLogEntry = async (id: string) => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     try {
       await deleteLogEntryFromDb(db, id, weekOffset);
       setTotals(prev => prev?.map(t => (t.id === id ? { ...t, count: t.count - 1 } : t)));
@@ -69,6 +72,16 @@ export default function TotalsScreen() {
     logDbContents();
   };
 
+  const goBackOneWeek = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    setWeekOffset(prev => prev - 1);
+  };
+
+  const goForwardOneWeek = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    setWeekOffset(prev => Math.min(prev + 1, 0));
+  };
+
   return (
     <SafeAreaView style={{ ...globalStyles.screenWrapper, backgroundColor }}>
       <View style={globalStyles.content}>
@@ -76,16 +89,8 @@ export default function TotalsScreen() {
           contentContainerStyle={{ flexGrow: 1, gap: 10, justifyContent: 'center' }}
           data={totals}
           ListHeaderComponent={
-            <View
-              style={{
-                alignItems: 'center',
-                flexDirection: 'row',
-                gap: 20,
-                justifyContent: 'space-between',
-                marginBottom: 20
-              }}
-            >
-              <Pressable onPress={() => setWeekOffset(prev => prev - 1)} style={styles.weekButton}>
+            <View style={styles.listHeader}>
+              <Pressable onPress={goBackOneWeek} style={styles.weekButton}>
                 <Ionicons
                   color={iconButton.color}
                   name='chevron-back-circle-outline'
@@ -94,7 +99,7 @@ export default function TotalsScreen() {
               </Pressable>
               <Text style={{ ...styles.text, color }}>{getWeekLabel(weekOffset)}</Text>
               <Pressable
-                onPress={() => setWeekOffset(prev => Math.min(prev + 1, 0))}
+                onPress={goForwardOneWeek}
                 disabled={weekOffset === 0}
                 style={{ ...styles.weekButton, opacity: weekOffset === 0 ? 0.5 : 1 }}
               >
@@ -114,7 +119,7 @@ export default function TotalsScreen() {
                   deleteLogEntry(id);
                 }}
                 disabled={count === 0}
-                style={{ alignItems: 'center', width: 40 }}
+                style={styles.countButtonWrapper}
               >
                 <Ionicons
                   color={iconButton.color}
@@ -140,10 +145,7 @@ export default function TotalsScreen() {
                   <Text style={{ ...styles.text, color, fontWeight: 'bold' }}>{count}</Text>
                 </View>
               </View>
-              <Pressable
-                onPress={() => addLogEntry(id)}
-                style={{ alignItems: 'center', borderColor: 'black', width: 40 }}
-              >
+              <Pressable onPress={() => addLogEntry(id)} style={styles.countButtonWrapper}>
                 <Ionicons
                   color={iconButton.color}
                   name='add-circle'
@@ -166,8 +168,16 @@ const styles = StyleSheet.create({
     fontSize: normaliseFontSize(32),
     padding: 5
   },
+  countButtonWrapper: { alignItems: 'center', width: 40 },
   list: {
     alignSelf: 'stretch'
+  },
+  listHeader: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 20,
+    justifyContent: 'space-between',
+    marginBottom: 20
   },
   text: {
     fontSize: normaliseFontSize(24),
