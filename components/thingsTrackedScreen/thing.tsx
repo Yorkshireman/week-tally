@@ -2,16 +2,30 @@ import { globalStyles } from '@/styles';
 import { normaliseFontSize } from '@/utils';
 import { Thing as ThingType } from '@/types';
 import { useColours } from '@/hooks';
+import { useSQLiteContext } from 'expo-sqlite';
 import { useState } from 'react';
 import { StyleSheet, Switch, Text, View } from 'react-native';
 
 export const Thing = ({ thing }: { thing: ThingType }) => {
-  const [isEnabled, setIsEnabled] = useState(false);
-  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+  const db = useSQLiteContext();
+  const [isEnabled, setIsEnabled] = useState(Boolean(thing.currentlyTracking));
   const {
     primitiveNeutral,
     settingsScreen: { section: sectionColours }
   } = useColours();
+
+  const toggleSwitch = async () => {
+    setIsEnabled(previousState => !previousState);
+    try {
+      if (isEnabled) {
+        await db.runAsync('UPDATE things SET currentlyTracking = ? WHERE id = ?', [0, thing.id]);
+      } else {
+        await db.runAsync('UPDATE things SET currentlyTracking = ? WHERE id = ?', [1, thing.id]);
+      }
+    } catch (error) {
+      console.error('Error updating thing:', error);
+    }
+  };
 
   return (
     <View style={{ ...globalStyles.settingsScreenSection, ...sectionColours }}>
