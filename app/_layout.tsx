@@ -37,7 +37,6 @@ export default function RootLayout() {
                 options={{
                   ...headerStyles,
                   headerBackTitle: 'Settings',
-                  headerTintColor: text.color,
                   title: 'Things tracked'
                 }}
               />
