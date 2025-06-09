@@ -11,6 +11,7 @@ export const Thing = ({ thing }: { thing: ThingType }) => {
   const [isEnabled, setIsEnabled] = useState(Boolean(thing.currentlyTracking));
   const {
     primitiveNeutral,
+    primitivePrimary,
     settingsScreen: { section: sectionColours }
   } = useColours();
 
@@ -33,9 +34,9 @@ export const Thing = ({ thing }: { thing: ThingType }) => {
     >
       <Text style={styles.text}>{thing.title}</Text>
       <Switch
-        trackColor={{ false: '#767577', true: '#81b0ff' }}
-        thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
-        ios_backgroundColor='#3e3e3e'
+        trackColor={{ true: primitivePrimary[400] }}
+        thumbColor={isEnabled ? '#fff' : primitiveNeutral[200]}
+        ios_backgroundColor={primitiveNeutral[600]}
         onValueChange={toggleSwitch}
         value={isEnabled}
       />
