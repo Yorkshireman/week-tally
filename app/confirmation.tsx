@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   text: {
-    fontSize: normaliseFontSize(24),
+    fontSize: normaliseFontSize(18),
     textAlign: 'center'
   }
 });
