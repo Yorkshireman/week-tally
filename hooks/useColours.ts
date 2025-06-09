@@ -45,6 +45,12 @@ const styles = {
     error: {
       ...primitiveError
     },
+    header: {
+      headerStyle: {
+        backgroundColor: primitiveNeutral[700]
+      },
+      headerTintColor: '#fff'
+    },
     iconButton: {
       borderColor: '#fff',
       color: '#fff'
@@ -93,6 +99,12 @@ const styles = {
     },
     error: {
       ...primitiveError
+    },
+    header: {
+      headerStyle: {
+        backgroundColor: '#fff'
+      },
+      headerTintColor: primitivePrimary[900]
     },
     iconButton: {
       borderColor: primitiveNeutral[700],

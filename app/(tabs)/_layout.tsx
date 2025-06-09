@@ -1,19 +1,16 @@
+import { globalStyles } from '@/styles';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Tabs } from 'expo-router';
 import { useColours } from '@/hooks';
 
+const { headerTitleStyle } = globalStyles;
+
 export default function TabsLayout() {
-  const {
-    page: { backgroundColor },
-    tabBar,
-    text: { color }
-  } = useColours();
+  const { header, tabBar } = useColours();
 
   const headerStyles = {
-    headerShadowVisible: false,
-    headerStyle: { backgroundColor },
-    headerTintColor: color,
-    headerTitleStyle: { fontSize: 25 }
+    ...header,
+    headerTitleStyle
   };
 
   return (
