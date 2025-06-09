@@ -9,7 +9,7 @@ export const globalStyles = StyleSheet.create({
   screenWrapper: {
     flex: 1,
     gap: 40,
-    paddingHorizontal: '25%',
+    paddingHorizontal: 25,
     paddingVertical: '25%'
   }
 });

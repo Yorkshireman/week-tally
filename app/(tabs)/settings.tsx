@@ -1,8 +1,8 @@
 import { Divider } from '@/components';
 import { globalStyles } from '@/styles';
-import { ResetAppSection } from '@/components/settingsScreen';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useColours } from '@/hooks';
+import { ResetAppSection, SelectThingsSection } from '@/components/settingsScreen';
 import { StyleSheet, View } from 'react-native';
 
 export default function Settings() {
@@ -12,7 +12,8 @@ export default function Settings() {
 
   return (
     <SafeAreaView style={{ ...globalStyles.screenWrapper, backgroundColor }}>
-      <View style={globalStyles.content}>
+      <View>
+        <SelectThingsSection />
         <Divider />
         <ResetAppSection sectionStyles={styles.section} />
       </View>

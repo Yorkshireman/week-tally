@@ -1,19 +1,25 @@
 import { useColorScheme } from 'react-native';
 
+/* eslint-disable sort-keys */
 const primitiveError = {
   400: '#F56565',
   500: '#D93939'
 };
 
 const primitiveNeutral = {
+  50: '#F7FAFC',
   300: '#CBD5E0',
+  400: '#A0AEC0',
+  500: '#718096',
   700: '#2D3748'
 };
 
 const primitivePrimary = {
+  50: '#F0FEFD',
   700: '#005958',
   900: '#00302F'
 };
+/* eslint-enable sort-keys */
 
 const styles = {
   dark: {
@@ -45,6 +51,12 @@ const styles = {
     },
     page: {
       backgroundColor: primitiveNeutral[700]
+    },
+    primitiveNeutral,
+    settingsScreen: {
+      section: {
+        backgroundColor: primitiveNeutral[500]
+      }
     },
     tabBar: {
       tabBarActiveTintColor: '#fff',
@@ -86,7 +98,13 @@ const styles = {
       color: primitivePrimary[900]
     },
     page: {
-      backgroundColor: '#fff'
+      backgroundColor: primitiveNeutral[50]
+    },
+    primitiveNeutral,
+    settingsScreen: {
+      section: {
+        backgroundColor: '#fff'
+      }
     },
     tabBar: {
       tabBarActiveTintColor: primitivePrimary[900],
