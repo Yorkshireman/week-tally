@@ -1,3 +1,4 @@
+import { globalStyles } from '@/styles';
 import { migrateDbIfNeeded } from '@/utils';
 import { NotificationsListener } from '@/components';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -7,12 +8,20 @@ import { StatusBar } from 'expo-status-bar';
 import { Suspense } from 'react';
 import { useColours } from '@/hooks';
 
+const { headerTitleStyle } = globalStyles;
+
 const Fallback = () => {
   console.log('DB not ready, rendering Fallback component');
   return null;
 };
 
 export default function RootLayout() {
+  const { header } = useColours();
+  const headerStyles = {
+    ...header,
+    headerTitleStyle
+  };
+
   const { text } = useColours();
   return (
     <Suspense fallback={<Fallback />}>
@@ -26,6 +35,7 @@ export default function RootLayout() {
               <Stack.Screen
                 name='thingsTracked'
                 options={{
+                  ...headerStyles,
                   headerBackTitle: 'Settings',
                   headerTintColor: text.color,
                   title: 'Things tracked'
