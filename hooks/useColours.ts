@@ -52,6 +52,7 @@ const styles = {
     page: {
       backgroundColor: primitiveNeutral[700]
     },
+    primitiveError,
     primitiveNeutral,
     settingsScreen: {
       section: {
@@ -100,6 +101,7 @@ const styles = {
     page: {
       backgroundColor: primitiveNeutral[50]
     },
+    primitiveError,
     primitiveNeutral,
     settingsScreen: {
       section: {

@@ -1,3 +1,4 @@
+import { globalStyles } from '@/styles';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { normaliseFontSize } from '@/utils';
 import { useColours } from '@/hooks';
@@ -7,7 +8,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 export const SelectThingsSection = () => {
   const {
     primitiveNeutral,
-    settingsScreen: { section }
+    settingsScreen: { section: sectionColours }
   } = useColours();
 
   const router = useRouter();
@@ -17,16 +18,7 @@ export const SelectThingsSection = () => {
   };
 
   return (
-    <View
-      style={{
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginHorizontal: -25,
-        paddingHorizontal: 25,
-        paddingVertical: 12,
-        ...section
-      }}
-    >
+    <View style={{ ...globalStyles.settingsScreenSection, ...sectionColours }}>
       <Text style={styles.text}>Things tracked</Text>
       <Pressable onPress={onPress}>
         <View style={{ flexDirection: 'row', gap: 5 }}>

@@ -2,8 +2,8 @@ import { Divider } from '@/components';
 import { globalStyles } from '@/styles';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useColours } from '@/hooks';
+import { View } from 'react-native';
 import { ResetAppSection, SelectThingsSection } from '@/components/settingsScreen';
-import { StyleSheet, View } from 'react-native';
 
 export default function Settings() {
   const {
@@ -15,18 +15,8 @@ export default function Settings() {
       <View>
         <SelectThingsSection />
         <Divider />
-        <ResetAppSection sectionStyles={styles.section} />
+        <ResetAppSection />
       </View>
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  section: {
-    paddingVertical: 12
-  },
-  text: {
-    fontSize: 20,
-    textAlign: 'center'
-  }
-});
