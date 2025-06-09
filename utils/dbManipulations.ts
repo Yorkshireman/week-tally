@@ -10,9 +10,8 @@ export const addLogEntryToDb = async (db: SQLiteDatabase, thingId: string, weekO
 
   if (weekOffset !== 0) {
     const weekStart = buildStartOfWeekDate(now, weekOffset);
-    weekStart.setDate(weekStart.getDate() + 1); // Move to next day to avoid midnight issues
+    weekStart.setDate(weekStart.getDate() + 1); // Move 1 day ahead to avoid midnight issues
     dateIso = weekStart.toISOString();
-    console.log('Adding a historical LogEntry, weekOffset:', weekOffset);
   } else {
     dateIso = now.toISOString();
     console.log('Adding a LogEntry');

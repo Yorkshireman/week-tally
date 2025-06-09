@@ -39,10 +39,9 @@ export const fetchAndSetTotals = async (
         )}), or have currentlyTracking = 1`
       );
 
-      things = await db.getAllAsync<Thing>(
-        'SELECT DISTINCT * FROM things WHERE id IN (?) OR currentlyTracking = 1 ORDER BY createdAt DESC',
-        thingIds.join(',')
-      );
+      const placeholders = thingIds.map(() => '?').join(',');
+      const sql = `SELECT DISTINCT * FROM things WHERE id IN (${placeholders}) OR currentlyTracking = 1 ORDER BY createdAt DESC`;
+      things = await db.getAllAsync<Thing>(sql, ...thingIds);
 
       console.log(`Found ${things.length} Things: ${JSON.stringify(things, null, 2)}`);
     } else {
