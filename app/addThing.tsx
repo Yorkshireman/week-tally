@@ -2,16 +2,21 @@ import { globalStyles } from '@/styles';
 import { useDbLogger } from '@/hooks';
 import { useNavigation } from 'expo-router';
 import { useSQLiteContext } from 'expo-sqlite';
-import { useState } from 'react';
 import uuid from 'react-native-uuid';
 import { addThingToDb, normaliseFontSize } from '@/utils';
 import { StyleSheet, TextInput, View } from 'react-native';
+import { useEffect, useRef, useState } from 'react';
 
 export default function AddThing() {
   const db = useSQLiteContext();
+  const inputRef = useRef<TextInput>(null);
   const logDbContents = useDbLogger();
   const navigation = useNavigation();
   const [text, onChangeText] = useState('');
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
 
   const onSubmitEditing = async () => {
     if (text.trim() === '') {
@@ -35,6 +40,7 @@ export default function AddThing() {
   return (
     <View style={{ ...globalStyles.screenWrapper, paddingVertical: 25 }}>
       <TextInput
+        ref={inputRef}
         style={styles.input}
         onChangeText={onChangeText}
         onSubmitEditing={onSubmitEditing}

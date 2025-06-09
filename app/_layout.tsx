@@ -22,7 +22,6 @@ export default function RootLayout() {
     headerTitleStyle
   };
 
-  const { text } = useColours();
   return (
     <Suspense fallback={<Fallback />}>
       <SQLiteProvider databaseName='things.db' onInit={migrateDbIfNeeded} useSuspense>
