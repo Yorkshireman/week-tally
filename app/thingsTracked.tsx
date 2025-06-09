@@ -1,8 +1,10 @@
 import { globalStyles } from '@/styles';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { normaliseFontSize } from '@/utils';
 import { Thing } from '@/components/thingsTrackedScreen';
 import { Thing as ThingType } from '@/types';
 import { useColours } from '@/hooks';
+import { useRouter } from 'expo-router';
 import { useSQLiteContext } from 'expo-sqlite';
 import { Text, View } from 'react-native';
 import { useEffect, useState } from 'react';
@@ -10,6 +12,7 @@ import { useEffect, useState } from 'react';
 export default function ThingsTracked() {
   const { primitiveInfo } = useColours();
   const db = useSQLiteContext();
+  const router = useRouter();
   const [things, setThings] = useState<ThingType[]>([]);
 
   useEffect(() => {
@@ -48,6 +51,15 @@ export default function ThingsTracked() {
         {things.map(thing => (
           <Thing key={thing.id} thing={thing} />
         ))}
+        <Ionicons
+          name='add-circle-outline'
+          size={normaliseFontSize(32)}
+          color={primitiveInfo[600]}
+          style={{ alignSelf: 'center' }}
+          onPress={() => {
+            router.push('/addThing');
+          }}
+        />
       </View>
     </View>
   );

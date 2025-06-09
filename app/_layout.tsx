@@ -41,6 +41,18 @@ export default function RootLayout() {
                 }}
               />
               <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
+              <Stack.Screen
+                name='addThing'
+                options={{
+                  ...headerStyles,
+                  headerTitleStyle: {
+                    ...headerStyles.headerTitleStyle,
+                    fontSize: 18
+                  },
+                  presentation: 'modal',
+                  title: 'Add a new Thing'
+                }}
+              />
             </Stack>
             <StatusBar style='dark' />
           </SafeAreaProvider>
