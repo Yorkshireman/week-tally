@@ -2,11 +2,13 @@ import { globalStyles } from '@/styles';
 import { normaliseFontSize } from '@/utils';
 import { Thing } from '@/components/thingsTrackedScreen';
 import { Thing as ThingType } from '@/types';
+import { useColours } from '@/hooks';
 import { useSQLiteContext } from 'expo-sqlite';
 import { Text, View } from 'react-native';
 import { useEffect, useState } from 'react';
 
 export default function ThingsTracked() {
+  const { primitiveInfo } = useColours();
   const db = useSQLiteContext();
   const [things, setThings] = useState<ThingType[]>([]);
 
@@ -28,8 +30,16 @@ export default function ThingsTracked() {
   }, [db]);
 
   return (
-    <View style={{ ...globalStyles.screenWrapper, paddingVertical: 0 }}>
-      <Text style={{ fontSize: normaliseFontSize(16) }}>
+    <View style={{ ...globalStyles.screenWrapper, gap: 16, paddingVertical: 16 }}>
+      <Text
+        style={{
+          backgroundColor: primitiveInfo[600],
+          borderRadius: 10,
+          color: 'white',
+          fontSize: normaliseFontSize(16),
+          padding: 16
+        }}
+      >
         When untracking a Thing, no data is deleted, and its totals will still show up in past
         weeks, but it will no longer be displayed in your current week&apos;s totals.{'\n\n'}Anytime
         you want to start tracking it again, just toggle it back on.
