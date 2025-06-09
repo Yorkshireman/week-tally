@@ -84,3 +84,11 @@ export const deleteThingFromDb = async (db: SQLiteDatabase, id: string) => {
   console.log(`Deleting Thing from DB, id: ${id}`);
   await db.runAsync('DELETE FROM things WHERE id = ?', id);
 };
+
+export const updateCurrentlyTracking = async (
+  db: SQLiteDatabase,
+  newValue: 1 | 0,
+  thingId: string
+) => {
+  await db.runAsync('UPDATE things SET currentlyTracking = ? WHERE id = ?', [newValue, thingId]);
+};

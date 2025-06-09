@@ -1,6 +1,7 @@
 import { globalStyles } from '@/styles';
 import { normaliseFontSize } from '@/utils';
 import { Thing as ThingType } from '@/types';
+import { updateCurrentlyTracking } from '@/utils/dbManipulations';
 import { useColours } from '@/hooks';
 import { useSQLiteContext } from 'expo-sqlite';
 import { useState } from 'react';
@@ -19,12 +20,15 @@ export const Thing = ({ thing }: { thing: ThingType }) => {
     setIsEnabled(previousState => !previousState);
     try {
       if (isEnabled) {
-        await db.runAsync('UPDATE things SET currentlyTracking = ? WHERE id = ?', [0, thing.id]);
+        await updateCurrentlyTracking(db, 0, thing.id);
       } else {
-        await db.runAsync('UPDATE things SET currentlyTracking = ? WHERE id = ?', [1, thing.id]);
+        await updateCurrentlyTracking(db, 1, thing.id);
       }
     } catch (error) {
-      console.error('Error updating thing:', error);
+      console.error(
+        `Error updating currentlyTracking for Thing: ${thing.title}, id: ${thing.id}`,
+        error
+      );
     }
   };
 
