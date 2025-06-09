@@ -28,7 +28,9 @@ export const Thing = ({ thing }: { thing: ThingType }) => {
   };
 
   return (
-    <View style={{ ...globalStyles.settingsScreenSection, ...sectionColours }}>
+    <View
+      style={{ ...globalStyles.settingsScreenSection, ...sectionColours, alignItems: 'center' }}
+    >
       <Text style={styles.text}>{thing.title}</Text>
       <Switch
         trackColor={{ false: '#767577', true: '#81b0ff' }}

@@ -1,3 +1,4 @@
+import { globalStyles } from '@/styles';
 import { normaliseFontSize } from '@/utils';
 import { Thing } from '@/components/thingsTrackedScreen';
 import { Thing as ThingType } from '@/types';
@@ -27,14 +28,14 @@ export default function ThingsTracked() {
   }, [db]);
 
   return (
-    <>
-      <Text style={{ fontSize: normaliseFontSize(16), marginVertical: 20 }}>
-        When untracking a Thing, no historical data is deleted, and its totals will still show up in
-        past weeks, but it will no longer appear in your current week&apos;s totals.{'\n\n'}Anytime
+    <View style={{ ...globalStyles.screenWrapper, paddingVertical: 0 }}>
+      <Text style={{ fontSize: normaliseFontSize(16) }}>
+        When untracking a Thing, no data is deleted, and its totals will still show up in past
+        weeks, but it will no longer be displayed in your current week&apos;s totals.{'\n\n'}Anytime
         you want to start tracking it again, just toggle it back on.
       </Text>
       {things.length > 0 ? (
-        <View>
+        <View style={{ gap: 5 }}>
           {things.map(thing => (
             <Thing key={thing.id} thing={thing} />
           ))}
@@ -42,6 +43,6 @@ export default function ThingsTracked() {
       ) : (
         <Text>No things tracked yet.</Text>
       )}
-    </>
+    </View>
   );
 }
