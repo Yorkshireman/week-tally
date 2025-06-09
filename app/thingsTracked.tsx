@@ -1,3 +1,4 @@
+import { normaliseFontSize } from '@/utils';
 import { Thing } from '@/components/thingsTrackedScreen';
 import { Thing as ThingType } from '@/types';
 import { useSQLiteContext } from 'expo-sqlite';
@@ -27,6 +28,11 @@ export default function ThingsTracked() {
 
   return (
     <>
+      <Text style={{ fontSize: normaliseFontSize(16), marginVertical: 20 }}>
+        When untracking a Thing, no historical data is deleted, and its totals will still show up in
+        past weeks, but it will no longer appear in your current week&apos;s totals.{'\n\n'}Anytime
+        you want to start tracking it again, just toggle it back on.
+      </Text>
       {things.length > 0 ? (
         <View>
           {things.map(thing => (
