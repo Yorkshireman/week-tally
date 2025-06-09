@@ -44,15 +44,11 @@ export default function ThingsTracked() {
         weeks, but it will no longer be displayed in your current week&apos;s totals.{'\n\n'}Anytime
         you want to start tracking it again, just toggle it back on.
       </Text>
-      {things.length > 0 ? (
-        <View style={{ gap: 5 }}>
-          {things.map(thing => (
-            <Thing key={thing.id} thing={thing} />
-          ))}
-        </View>
-      ) : (
-        <Text>No things tracked yet.</Text>
-      )}
+      <View style={{ gap: 5 }}>
+        {things.map(thing => (
+          <Thing key={thing.id} thing={thing} />
+        ))}
+      </View>
     </View>
   );
 }
