@@ -1,3 +1,4 @@
+import { Divider } from '../divider';
 import { globalStyles } from '@/styles';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Menu } from 'react-native-paper';
@@ -81,6 +82,10 @@ export const Thing = ({ setThings, thing }: { setThings: SetThings; thing: Thing
           visible={menuVisible}
           onDismiss={() => setMenuVisible(false)}
         >
+          <View style={{ maxWidth: 250, paddingHorizontal: 16, paddingVertical: 6 }}>
+            <Text style={{ fontSize: normaliseFontSize(16), marginBottom: 16 }}>{thing.title}</Text>
+            <Divider />
+          </View>
           <Menu.Item
             leadingIcon='trash-can-outline'
             onPress={() => {
