@@ -31,25 +31,36 @@ export const fetchAndSetTotals = async (
 
     const thingIds = Array.from(new Set(logEntries.map(({ thingId }) => thingId)));
 
-    console.log(
-      `Fetching Things with 1 or more LogEntry for week ending ${weekEnd.toISOString()} (matched by IDs: ${thingIds.join(
-        ', '
-      )}), or have currentlyTracking = 1`
-    );
+    let things: Thing[] = [];
+    if (weekOffset) {
+      console.log(
+        `Fetching Things with 1 or more LogEntry for week ending ${weekEnd.toISOString()} (matched by IDs: ${thingIds.join(
+          ', '
+        )}), or have currentlyTracking = 1`
+      );
 
-    const things = await db.getAllAsync<Thing>(
-      'SELECT DISTINCT * FROM things WHERE id IN (?) OR currentlyTracking = 1',
-      thingIds.join(',')
-    );
+      const placeholders = thingIds.map(() => '?').join(',');
+      const sql = `SELECT DISTINCT * FROM things WHERE id IN (${placeholders}) OR currentlyTracking = 1 ORDER BY createdAt DESC`;
+      things = await db.getAllAsync<Thing>(sql, ...thingIds);
 
-    console.log(`Found ${things.length} Things: ${JSON.stringify(things, null, 2)}`);
+      console.log(`Found ${things.length} Things: ${JSON.stringify(things, null, 2)}`);
+    } else {
+      console.log(`Fetching Things that have currentlyTracking = 1`);
 
-    setTotals(
-      things.map(thing => ({
-        ...thing,
-        count: logEntries.filter(entry => entry.thingId === thing.id).length
-      }))
-    );
+      things = await db.getAllAsync<Thing>(
+        'SELECT * FROM things WHERE currentlyTracking = 1 ORDER BY createdAt DESC'
+      );
+
+      console.log(`Found ${things.length} Things: ${JSON.stringify(things, null, 2)}`);
+    }
+
+    const totals = things.map(thing => ({
+      ...thing,
+      count: logEntries.filter(entry => entry.thingId === thing.id).length
+    }));
+
+    console.log(`Returning totals: ${JSON.stringify(totals, null, 2)}`);
+    setTotals(totals);
   } catch (e) {
     console.error('DB error: ', e);
     logDbContents();

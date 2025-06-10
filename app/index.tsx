@@ -1,13 +1,13 @@
+import { globalStyles } from '@/styles';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useSQLiteContext } from 'expo-sqlite';
 import uuid from 'react-native-uuid';
-import { addThingToDb, deleteThingFromDb } from '@/utils';
+import { addThingToDb, deleteThingFromDb, normaliseFontSize } from '@/utils';
 import {
   Alert,
   FlatList,
-  KeyboardAvoidingView,
-  Platform,
   Pressable,
   StyleSheet,
   Text,
@@ -21,11 +21,37 @@ import { useEffect, useRef, useState } from 'react';
 
 const ListItem = ({ id, setListData, title }: ListItemProps) => {
   const {
+    iconButton,
     text: { color }
   } = useColours();
   const colourScheme = useColorScheme();
   const db = useSQLiteContext();
   const logDbContents = useDbLogger();
+
+  const onPressDeleteButton = async () => {
+    Alert.alert(
+      'Are you sure?',
+      '',
+      [
+        { style: 'cancel', text: 'Cancel' },
+        {
+          onPress: async () => {
+            try {
+              await deleteThingFromDb(db, id);
+              setListData(prev => prev.filter(item => item.id !== id));
+            } catch (e) {
+              console.error('DB error: ', e);
+            }
+
+            logDbContents();
+          },
+          style: 'destructive',
+          text: 'Delete'
+        }
+      ],
+      { userInterfaceStyle: colourScheme === 'dark' ? 'dark' : 'light' }
+    );
+  };
 
   return (
     <View
@@ -36,35 +62,12 @@ const ListItem = ({ id, setListData, title }: ListItemProps) => {
         justifyContent: 'space-between'
       }}
     >
-      <Text style={styles.listItemText}>{title}</Text>
+      <Text style={{ ...styles.listItemText, color }}>{title}</Text>
       <Pressable
-        onPress={async () => {
-          Alert.alert(
-            'Are you sure?',
-            '',
-            [
-              { style: 'cancel', text: 'Cancel' },
-              {
-                onPress: async () => {
-                  try {
-                    await deleteThingFromDb(db, id);
-                    setListData(prev => prev.filter(item => item.id !== id));
-                  } catch (e) {
-                    console.error('DB error: ', e);
-                  }
-
-                  logDbContents();
-                },
-                style: 'destructive',
-                text: 'Delete'
-              }
-            ],
-            { userInterfaceStyle: colourScheme === 'dark' ? 'dark' : 'light' }
-          );
-        }}
-        style={styles.deleteButton}
+        onPress={onPressDeleteButton}
+        style={{ borderColor: iconButton.borderColor, borderRadius: 7, borderWidth: 2, padding: 5 }}
       >
-        <Text style={{ ...styles.deleteButtonText, color }}>Delete</Text>
+        <Ionicons color={iconButton.color} name='trash' size={normaliseFontSize(24)} />
       </Pressable>
     </View>
   );
@@ -73,6 +76,7 @@ const ListItem = ({ id, setListData, title }: ListItemProps) => {
 export default function Index() {
   const [checkingSetupStatus, setCheckingSetupStatus] = useState(true);
   const {
+    button: { primary },
     page: { backgroundColor },
     text: { color }
   } = useColours();
@@ -86,7 +90,10 @@ export default function Index() {
   useEffect(() => {
     const populateListDataStateFromDb = async () => {
       try {
-        const dbThings: Thing[] = await db.getAllAsync('SELECT * from things');
+        const dbThings: Thing[] = await db.getAllAsync(
+          'SELECT * from things ORDER BY createdAt DESC'
+        );
+
         setListData(dbThings);
       } catch (e) {
         console.error('DB error: ', e);
@@ -121,8 +128,8 @@ export default function Index() {
     try {
       await addThingToDb(db, id, now, text);
       setListData(prev => [
-        ...prev,
-        { createdAt: now, currentlyTracking: 1, id, title: text.trim(), updatedAt: now }
+        { createdAt: now, currentlyTracking: 1, id, title: text.trim(), updatedAt: now },
+        ...prev
       ]);
 
       onChangeText('');
@@ -138,16 +145,17 @@ export default function Index() {
   }
 
   return (
-    <SafeAreaView style={{ ...styles.container, backgroundColor }}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.content}
-      >
+    <SafeAreaView style={{ ...globalStyles.screenWrapper, backgroundColor }}>
+      <View style={globalStyles.content}>
         <FlatList
+          contentContainerStyle={{
+            flexGrow: 1,
+            justifyContent: 'center'
+          }}
           data={listData}
           ListHeaderComponent={
-            <>
-              <Text style={{ ...styles.text, color, fontWeight: 'bold', marginBottom: 20 }}>
+            <View style={{ gap: 40 }}>
+              <Text style={{ ...styles.text, color }}>
                 1. Enter the things you would like to track
               </Text>
               <TextInput
@@ -157,7 +165,7 @@ export default function Index() {
                 value={text}
                 placeholder={`Thing ${listData.length + 1}`}
               />
-            </>
+            </View>
           }
           ref={flatListRef}
           renderItem={({ item: { id, title } }) => (
@@ -166,77 +174,50 @@ export default function Index() {
           ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
           style={styles.list}
         />
-      </KeyboardAvoidingView>
-      <View style={{ alignItems: 'center' }}>
-        {listData.length ? (
-          <View>
-            <Text style={{ ...styles.text, color, marginBottom: 20 }}>Finished?</Text>
-            <Pressable
-              onPress={() => router.replace('/dateTimeChooser')}
-              style={styles.nextStepButton}
-            >
-              <Text style={styles.nextStepButtonText}>Go to next step</Text>
-            </Pressable>
-          </View>
-        ) : null}
       </View>
+      {listData.length ? (
+        <View style={{ alignSelf: 'stretch' }}>
+          <Pressable
+            onPress={() => router.replace('/dateTimeChooser')}
+            style={{ ...styles.nextStepButton, ...primary }}
+          >
+            <Text style={{ ...styles.nextStepButtonText, color: primary.color }}>
+              Go to next step
+            </Text>
+          </Pressable>
+        </View>
+      ) : null}
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    paddingBottom: 60,
-    paddingHorizontal: '10%',
-    paddingTop: 40
-  },
-  content: {
-    alignItems: 'center',
-    paddingLeft: 20,
-    paddingRight: 20,
-    paddingTop: 40
-  },
-  deleteButton: {
-    backgroundColor: '#FAF089',
-    borderRadius: 10,
-    padding: 7,
-    width: 85
-  },
-  deleteButtonText: {
-    fontSize: 18,
-    textAlign: 'center'
-  },
   input: {
     borderWidth: 1,
-    fontSize: 20,
+    fontSize: normaliseFontSize(24),
     marginBottom: 40,
     padding: 10
   },
   list: {
-    alignSelf: 'stretch',
-    marginBottom: 20
+    alignSelf: 'stretch'
   },
   listItemText: {
-    color: '#2D3748',
     flexShrink: 1,
-    fontSize: 24,
+    fontSize: normaliseFontSize(24),
     fontWeight: 'bold'
   },
   nextStepButton: {
-    backgroundColor: '#156F6D',
     borderRadius: 10,
-    padding: 10,
-    width: 160
+    borderWidth: 1,
+    padding: 15
   },
   nextStepButtonText: {
-    color: '#F0FEFD',
     fontSize: 18,
+    fontWeight: 'bold',
     textAlign: 'center'
   },
   text: {
-    fontSize: 20,
+    fontSize: normaliseFontSize(24),
     textAlign: 'center'
   }
 });

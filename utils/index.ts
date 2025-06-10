@@ -8,4 +8,5 @@ export { buildStartOfWeekDate, getWeekLabel } from './dateUtils';
 export { fetchAndSetTotals } from './fetchAndSetTotals';
 export { migrateDbIfNeeded } from './migrateDbIfNeeded';
 export { minutesAfterMidnightToTimeString } from './minutesAfterMidnightToTimeString';
+export { normaliseFontSize } from './stylingUtils';
 export { scheduleDailyNotifications } from './scheduleDailyNotifications';

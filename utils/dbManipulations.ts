@@ -10,15 +10,11 @@ export const addLogEntryToDb = async (db: SQLiteDatabase, thingId: string, weekO
 
   if (weekOffset !== 0) {
     const weekStart = buildStartOfWeekDate(now, weekOffset);
+    weekStart.setDate(weekStart.getDate() + 1); // Move 1 day ahead to avoid midnight issues
     dateIso = weekStart.toISOString();
   } else {
     dateIso = now.toISOString();
-  }
-
-  if (weekOffset === 0) {
     console.log('Adding a LogEntry');
-  } else {
-    console.log('Adding a historical LogEntry, weekOffset:', weekOffset);
   }
 
   await db.runAsync(
@@ -86,4 +82,17 @@ export const deleteLogEntryFromDb = async (
 export const deleteThingFromDb = async (db: SQLiteDatabase, id: string) => {
   console.log(`Deleting Thing from DB, id: ${id}`);
   await db.runAsync('DELETE FROM things WHERE id = ?', id);
+};
+
+export const updateCurrentlyTracking = async (
+  db: SQLiteDatabase,
+  newValue: 1 | 0,
+  thingId: string
+) => {
+  const now = new Date().toISOString();
+  await db.runAsync('UPDATE things SET currentlyTracking = ?, updatedAt = ? WHERE id = ?', [
+    newValue,
+    now,
+    thingId
+  ]);
 };
