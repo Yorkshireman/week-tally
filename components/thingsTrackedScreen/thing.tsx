@@ -66,7 +66,11 @@ export const Thing = ({ setThings, thing }: { setThings: SetThings; thing: Thing
     <View
       style={{ ...globalStyles.settingsScreenSection, ...sectionColours, alignItems: 'center' }}
     >
-      <Text style={styles.text}>{thing.title}</Text>
+      <View style={{ flex: 1 }}>
+        <Text numberOfLines={1} style={styles.text}>
+          {thing.title}
+        </Text>
+      </View>
       <View style={{ alignItems: 'center', flexDirection: 'row', gap: 16 }}>
         <Menu
           anchor={
@@ -101,6 +105,6 @@ export const Thing = ({ setThings, thing }: { setThings: SetThings; thing: Thing
 const styles = StyleSheet.create({
   text: {
     fontSize: normaliseFontSize(18),
-    textAlign: 'center'
+    textAlign: 'left'
   }
 });
