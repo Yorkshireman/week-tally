@@ -83,82 +83,78 @@ export default function TotalsScreen() {
   };
 
   return (
-    <SafeAreaView style={{ ...globalStyles.screenWrapper, backgroundColor }}>
-      <View style={globalStyles.content}>
-        <FlatList
-          contentContainerStyle={{ flexGrow: 1, gap: 10, justifyContent: 'center' }}
-          data={totals}
-          ListHeaderComponent={
-            <View style={styles.listHeader}>
-              <Pressable onPress={goBackOneWeek} style={styles.weekButton}>
-                <Ionicons
-                  color={iconButton.color}
-                  name='chevron-back-circle-outline'
-                  size={normaliseFontSize(32)}
-                />
-              </Pressable>
-              <Text style={{ ...styles.text, color }}>{getWeekLabel(weekOffset)}</Text>
-              <Pressable
-                onPress={goForwardOneWeek}
-                disabled={weekOffset === 0}
-                style={{ ...styles.weekButton, opacity: weekOffset === 0 ? 0.5 : 1 }}
-              >
-                <Ionicons
-                  color={iconButton.color}
-                  name='chevron-forward-circle-outline'
-                  size={normaliseFontSize(32)}
-                />
-              </Pressable>
-            </View>
-          }
-          renderItem={({ item: { count, title, id } }) => (
-            <View style={{ alignItems: 'center', flexDirection: 'row' }}>
-              <Pressable
-                onPress={() => {
-                  if (count === 0) return;
-                  deleteLogEntry(id);
-                }}
-                disabled={count === 0}
-                style={styles.countButtonWrapper}
-              >
-                <Ionicons
-                  color={iconButton.color}
-                  name='remove-circle'
-                  size={normaliseFontSize(32)}
-                  style={{ ...styles.countButton, opacity: count === 0 ? 0.5 : 1 }}
-                />
-              </Pressable>
-              <View
-                style={{
-                  alignItems: 'center',
-                  flex: 1,
-                  flexDirection: 'row',
-                  paddingHorizontal: 10
-                }}
-              >
-                <View style={{ flex: 1, paddingHorizontal: 10 }}>
-                  <Text style={{ ...styles.text, color, fontWeight: 'bold', textAlign: 'left' }}>
-                    {title}
-                  </Text>
-                </View>
-                <View style={{ minWidth: 10 }}>
-                  <Text style={{ ...styles.text, color, fontWeight: 'bold' }}>{count}</Text>
-                </View>
-              </View>
-              <Pressable onPress={() => addLogEntry(id)} style={styles.countButtonWrapper}>
-                <Ionicons
-                  color={iconButton.color}
-                  name='add-circle'
-                  size={normaliseFontSize(32)}
-                  style={styles.countButton}
-                />
-              </Pressable>
-            </View>
-          )}
-          ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
-          style={styles.list}
-        />
+    <SafeAreaView style={{ ...globalStyles.screenWrapper, paddingVertical: 0 }}>
+      <View style={{ ...styles.listHeader, width: '100%' }}>
+        <Pressable onPress={goBackOneWeek} style={styles.weekButton}>
+          <Ionicons
+            color={iconButton.color}
+            name='chevron-back-circle-outline'
+            size={normaliseFontSize(32)}
+          />
+        </Pressable>
+        <Text style={{ ...styles.text, color }}>{getWeekLabel(weekOffset)}</Text>
+        <Pressable
+          onPress={goForwardOneWeek}
+          disabled={weekOffset === 0}
+          style={{ ...styles.weekButton, opacity: weekOffset === 0 ? 0.5 : 1 }}
+        >
+          <Ionicons
+            color={iconButton.color}
+            name='chevron-forward-circle-outline'
+            size={normaliseFontSize(32)}
+          />
+        </Pressable>
       </View>
+      <FlatList
+        contentContainerStyle={{ gap: 10 }}
+        data={totals}
+        renderItem={({ item: { count, title, id } }) => (
+          <View style={{ alignItems: 'center', flexDirection: 'row' }}>
+            <Pressable
+              onPress={() => {
+                if (count === 0) return;
+                deleteLogEntry(id);
+              }}
+              disabled={count === 0}
+              style={styles.countButtonWrapper}
+            >
+              <Ionicons
+                color={iconButton.color}
+                name='remove-circle'
+                size={normaliseFontSize(32)}
+                style={{ ...styles.countButton, opacity: count === 0 ? 0.5 : 1 }}
+              />
+            </Pressable>
+            <View
+              style={{
+                alignItems: 'center',
+                flex: 1,
+                flexDirection: 'row',
+                paddingHorizontal: 10
+              }}
+            >
+              <View style={{ flex: 1, paddingHorizontal: 10 }}>
+                <Text style={{ ...styles.text, color, fontWeight: 'bold', textAlign: 'left' }}>
+                  {title}
+                </Text>
+              </View>
+              <View style={{ minWidth: 10 }}>
+                <Text style={{ ...styles.text, color, fontWeight: 'bold' }}>{count}</Text>
+              </View>
+            </View>
+            <Pressable onPress={() => addLogEntry(id)} style={styles.countButtonWrapper}>
+              <Ionicons
+                color={iconButton.color}
+                name='add-circle'
+                size={normaliseFontSize(32)}
+                style={styles.countButton}
+              />
+            </Pressable>
+          </View>
+        )}
+        ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
+        style={styles.list}
+      />
     </SafeAreaView>
   );
 }
