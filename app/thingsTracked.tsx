@@ -28,6 +28,21 @@ export default function ThingsTracked() {
     }, [fetchAndSetThings])
   );
 
+  const renderThings = () => {
+    const trackedThings = things.filter(thing => thing.currentlyTracking);
+    const untrackedThings = things.filter(thing => !thing.currentlyTracking);
+    return (
+      <>
+        {trackedThings.map(thing => (
+          <Thing key={thing.id} thing={thing} />
+        ))}
+        {untrackedThings.map(thing => (
+          <Thing key={thing.id} thing={thing} />
+        ))}
+      </>
+    );
+  };
+
   return (
     <View style={{ ...globalStyles.screenWrapper, gap: 16, paddingVertical: 16 }}>
       <Text
@@ -44,9 +59,7 @@ export default function ThingsTracked() {
         you want to start tracking it again, just toggle it back on.
       </Text>
       <View style={{ gap: 5 }}>
-        {things.map(thing => (
-          <Thing key={thing.id} thing={thing} />
-        ))}
+        {renderThings()}
         <Ionicons
           name='add-circle-outline'
           size={normaliseFontSize(32)}
