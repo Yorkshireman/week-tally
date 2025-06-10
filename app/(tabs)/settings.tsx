@@ -2,7 +2,11 @@ import { Divider } from '@/components';
 import { globalStyles } from '@/styles';
 import { useColours } from '@/hooks';
 import { View } from 'react-native';
-import { ResetAppSection, SelectThingsSection } from '@/components/settingsScreen';
+import {
+  ChangeNotificationTimeSection,
+  ResetAppSection,
+  SelectThingsSection
+} from '@/components/settingsScreen';
 
 export default function Settings() {
   const {
@@ -12,6 +16,8 @@ export default function Settings() {
   return (
     <View style={{ ...globalStyles.screenWrapper, backgroundColor, paddingVertical: 0 }}>
       <View>
+        <ChangeNotificationTimeSection />
+        <Divider />
         <SelectThingsSection />
         <Divider />
         <ResetAppSection />

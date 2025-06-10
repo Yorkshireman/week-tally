@@ -55,6 +55,18 @@ export default function RootLayout() {
                   }}
                 />
                 <Stack.Screen
+                  name='changeNotificationTime'
+                  options={{
+                    ...headerStyles,
+                    headerTitleStyle: {
+                      ...headerStyles.headerTitleStyle,
+                      fontSize: 18
+                    },
+                    presentation: 'modal',
+                    title: 'Choose Your Daily Notification Time'
+                  }}
+                />
+                <Stack.Screen
                   name='editThing'
                   options={{
                     ...headerStyles,
@@ -65,7 +77,7 @@ export default function RootLayout() {
                     presentation: 'modal',
                     title: 'Rename'
                   }}
-                />                
+                />
               </Stack>
               <StatusBar style='dark' />
             </SafeAreaProvider>
