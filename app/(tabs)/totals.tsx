@@ -20,7 +20,6 @@ export default function TotalsScreen() {
   const appState = useRef(AppState.currentState);
   const {
     iconButton,
-    page: { backgroundColor },
     text: { color }
   } = useColours();
   const db = useSQLiteContext();

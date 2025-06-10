@@ -34,10 +34,10 @@ export default function ThingsTracked() {
     return (
       <>
         {trackedThings.map(thing => (
-          <Thing key={thing.id} thing={thing} />
+          <Thing key={thing.id} setThings={setThings} thing={thing} />
         ))}
         {untrackedThings.map(thing => (
-          <Thing key={thing.id} thing={thing} />
+          <Thing key={thing.id} setThings={setThings} thing={thing} />
         ))}
       </>
     );
