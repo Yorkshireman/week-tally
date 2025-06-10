@@ -6,6 +6,7 @@ import { normaliseFontSize } from '@/utils';
 import { Thing as ThingType } from '@/types';
 import { updateCurrentlyTracking } from '@/utils/dbManipulations';
 import { useColours } from '@/hooks';
+import { useRouter } from 'expo-router';
 import { useSQLiteContext } from 'expo-sqlite';
 import { useState } from 'react';
 import { Alert, StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
@@ -21,6 +22,7 @@ export const Thing = ({ setThings, thing }: { setThings: SetThings; thing: Thing
     primitivePrimary,
     settingsScreen: { section: sectionColours }
   } = useColours();
+  const router = useRouter();
 
   const handleDelete = async (id: string) => {
     try {
@@ -86,6 +88,14 @@ export const Thing = ({ setThings, thing }: { setThings: SetThings; thing: Thing
             <Text style={{ fontSize: normaliseFontSize(16), marginBottom: 16 }}>{thing.title}</Text>
             <Divider />
           </View>
+          <Menu.Item
+            leadingIcon='note-edit-outline'
+            onPress={() => {
+              setMenuVisible(false);
+              router.push(`/editThing?id=${thing.id}&title=${encodeURIComponent(thing.title)}`);
+            }}
+            title='Rename'
+          />
           <Menu.Item
             leadingIcon='trash-can-outline'
             onPress={() => {

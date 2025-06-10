@@ -54,6 +54,18 @@ export default function RootLayout() {
                     title: 'Add a new Thing'
                   }}
                 />
+                <Stack.Screen
+                  name='editThing'
+                  options={{
+                    ...headerStyles,
+                    headerTitleStyle: {
+                      ...headerStyles.headerTitleStyle,
+                      fontSize: 18
+                    },
+                    presentation: 'modal',
+                    title: 'Rename'
+                  }}
+                />                
               </Stack>
               <StatusBar style='dark' />
             </SafeAreaProvider>
