@@ -58,6 +58,7 @@ export default function AddThing() {
     <View style={{ ...globalStyles.screenWrapper, paddingVertical: 25 }}>
       <TextInput
         ref={inputRef}
+        returnKeyType='done'
         style={styles.input}
         onChangeText={t => {
           onChangeText(t);

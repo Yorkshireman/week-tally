@@ -159,6 +159,7 @@ export default function Index() {
                 1. Enter the things you would like to track
               </Text>
               <TextInput
+                returnKeyType='done'
                 style={styles.input}
                 onChangeText={onChangeText}
                 onSubmitEditing={onSubmitEditing}

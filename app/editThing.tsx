@@ -1,9 +1,8 @@
 import { globalStyles } from '@/styles';
+import { normaliseFontSize } from '@/utils';
 import { useNavigation } from 'expo-router';
 import { useRoute } from '@react-navigation/native';
 import { useSQLiteContext } from 'expo-sqlite';
-import uuid from 'react-native-uuid';
-import { addThingToDb, normaliseFontSize } from '@/utils';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
 import { useColours, useDbLogger } from '@/hooks';
 import { useEffect, useRef, useState } from 'react';
@@ -72,6 +71,7 @@ export default function EditThing() {
     <View style={{ ...globalStyles.screenWrapper, paddingVertical: 25 }}>
       <TextInput
         ref={inputRef}
+        returnKeyType='done'
         style={styles.input}
         onChangeText={t => {
           onChangeText(t);
