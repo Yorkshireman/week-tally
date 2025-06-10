@@ -33,6 +33,7 @@ const primitiveNeutral = {
 const primitivePrimary = {
   50: '#F0FEFD',
   400: '#00BCB9',
+  600: '#156F6D',
   700: '#005958',
   900: '#00302F'
 };
