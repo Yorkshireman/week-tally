@@ -21,20 +21,22 @@ const Feature = ({ text }: { text: string }) => {
 const PlanContainer = ({
   checked,
   children,
-  onPress
+  onPress,
+  planType
 }: {
   checked: boolean;
   children: ReactNode;
   onPress: () => void;
+  planType?: PlanType;
 }) => {
-  const borderColor = checked ? 'black' : '#A0AEC0';
+  const borderColor = checked ? '#2D3748' : '#A0AEC0';
   return (
     <TouchableOpacity
       onPress={onPress}
       style={{
         alignItems: 'center',
         borderColor,
-        borderRadius: 10,
+        borderRadius: 8,
         borderWidth: 1,
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -43,6 +45,19 @@ const PlanContainer = ({
       }}
     >
       <View>{children}</View>
+      {planType === 'yearly' && (
+        <View
+          style={{
+            backgroundColor: '#E30000',
+            borderRadius: 5,
+            marginRight: -8,
+            paddingHorizontal: 10,
+            paddingVertical: 10
+          }}
+        >
+          <Text style={{ color: 'white', fontSize: 14, fontWeight: 'bold' }}>SAVE 90%</Text>
+        </View>
+      )}
       <Ionicons
         name={checked ? 'checkmark-circle' : 'ellipse-outline'}
         size={32}
@@ -92,6 +107,7 @@ export default function PayWall() {
           <PlanContainer
             checked={selectedPlan === PlanType.yearly}
             onPress={() => setSelectedPlan(PlanType.yearly)}
+            planType={PlanType.yearly}
           >
             <View>
               <Text style={{ fontSize: 18, fontWeight: 'bold' }}>Yearly Plan</Text>
@@ -101,7 +117,7 @@ export default function PayWall() {
                 >
                   $103.48
                 </Text>
-                <Text style={{ fontSize: 18 }}>$11.99 per year</Text>
+                <Text style={{ fontSize: 18 }}>$10.99 per year</Text>
               </View>
             </View>
           </PlanContainer>
@@ -147,7 +163,7 @@ const styles = StyleSheet.create({
   },
   tryForFreeButton: {
     alignItems: 'center',
-    borderRadius: 10,
+    borderRadius: 8,
     flexDirection: 'row',
     justifyContent: 'center',
     padding: 18
