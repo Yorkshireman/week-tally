@@ -117,6 +117,14 @@ export default function Index() {
     populateListDataStateFromDb();
   }, [db, router]);
 
+  const onPressNextStepButton = () => {
+    if (listData.length === 1) {
+      return router.push('/payWall');
+    }
+
+    router.replace('/dateTimeChooser');
+  };
+
   const onSubmitEditing = async () => {
     if (text.trim() === '') {
       return;
@@ -179,7 +187,7 @@ export default function Index() {
       {listData.length ? (
         <View style={{ alignSelf: 'stretch' }}>
           <Pressable
-            onPress={() => router.replace('/dateTimeChooser')}
+            onPress={onPressNextStepButton}
             style={{ ...styles.nextStepButton, ...primary }}
           >
             <Text style={{ ...styles.nextStepButtonText, color: primary.color }}>
