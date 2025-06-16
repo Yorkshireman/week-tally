@@ -4,6 +4,11 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { ReactNode, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
+enum PlanType {
+  yearly = 'yearly',
+  trial = 'trial'
+}
+
 const Feature = ({ text }: { text: string }) => {
   return (
     <View style={{ alignItems: 'flex-start', flexDirection: 'row', gap: 10 }}>
@@ -69,7 +74,7 @@ const TryForFreeButton = () => {
 };
 
 export default function PayWall() {
-  const [selectedPlan, setSelectedPlan] = useState<'yearly' | 'trial'>('trial');
+  const [selectedPlan, setSelectedPlan] = useState<PlanType>(PlanType.trial);
 
   return (
     <View style={styles.page}>
@@ -85,8 +90,8 @@ export default function PayWall() {
         </View>
         <View style={{ alignSelf: 'stretch', gap: 10 }}>
           <PlanContainer
-            checked={selectedPlan === 'yearly'}
-            onPress={() => setSelectedPlan('yearly')}
+            checked={selectedPlan === PlanType.yearly}
+            onPress={() => setSelectedPlan(PlanType.yearly)}
           >
             <View>
               <Text style={{ fontSize: 18, fontWeight: 'bold' }}>Yearly Plan</Text>
@@ -101,8 +106,8 @@ export default function PayWall() {
             </View>
           </PlanContainer>
           <PlanContainer
-            checked={selectedPlan === 'trial'}
-            onPress={() => setSelectedPlan('trial')}
+            checked={selectedPlan === PlanType.trial}
+            onPress={() => setSelectedPlan(PlanType.trial)}
           >
             <View>
               <Text style={{ fontSize: 18, fontWeight: 'bold' }}>7-Day Trial</Text>
