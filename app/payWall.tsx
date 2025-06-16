@@ -55,15 +55,15 @@ export default function PayWall() {
   });
 
   return (
-    <View style={{ ...globalStyles.screenWrapper, backgroundColor: 'white' }}>
+    <View style={styles.page}>
       {canDismiss ? (
         <TouchableOpacity
           onPress={router.back}
           style={{
             padding: 8,
             position: 'absolute',
-            right: 20,
-            top: 20,
+            right: styles.page.paddingHorizontal,
+            top: styles.page.paddingTop,
             zIndex: 10
           }}
           hitSlop={10}
@@ -77,8 +77,8 @@ export default function PayWall() {
             height: 44,
             justifyContent: 'center',
             position: 'absolute',
-            right: 20,
-            top: 20,
+            right: styles.page.paddingHorizontal,
+            top: styles.page.paddingTop,
             width: 44,
             zIndex: 10
           }}
@@ -126,8 +126,15 @@ const styles = StyleSheet.create({
     fontSize: 18,
     textAlign: 'center'
   },
+  page: {
+    backgroundColor: 'white',
+    flex: 1,
+    paddingBottom: 48,
+    paddingHorizontal: 24,
+    paddingTop: 72
+  },
   text: {
-    fontSize: normaliseFontSize(18),
+    fontSize: 18,
     textAlign: 'center'
   },
   tryForFreeButton: {

@@ -80,7 +80,7 @@ export default function RootLayout() {
                 />
                 <Stack.Screen
                   name='payWall'
-                  options={{ headerShown: false, presentation: 'modal' }}
+                  options={{ headerShown: false, presentation: 'fullScreenModal' }}
                 />
               </Stack>
               <StatusBar style='dark' />
