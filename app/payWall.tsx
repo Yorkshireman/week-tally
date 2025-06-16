@@ -4,14 +4,28 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { normaliseFontSize } from '@/utils';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
+const Feature = ({ text }: { text: string }) => {
+  return (
+    <View style={{ alignItems: 'flex-start', flexDirection: 'row', gap: 10 }}>
+      <Ionicons name='checkmark-circle' size={24} color='#00BCB9' />
+      <Text style={{ fontSize: 18 }}>{text}</Text>
+    </View>
+  );
+};
+
 export default function PayWall() {
   return (
     <View style={styles.page}>
       <DismissButton pageStyles={styles.page} />
       <View style={globalStyles.content}>
-        <Text style={{ ...styles.text, marginBottom: 20 }}>
-          Be fleeced by the developers of this app and pay for the privilege of using it.
+        <Text style={{ fontSize: 32, marginBottom: 32, textAlign: 'center' }}>
+          Unlock Premium Access
         </Text>
+        <View style={{ alignSelf: 'stretch', flexDirection: 'column', gap: 18, paddingRight: 10 }}>
+          <Feature text={'Track as many Things as you like'} />
+          <Feature text={'Toggle tracking on/off for individual Things anytime you like'} />
+          <Feature text={'Amend statistics for previous weeks if you make a mistake'} />
+        </View>
       </View>
       <View style={{ alignSelf: 'stretch', gap: 20 }}>
         <TouchableOpacity
@@ -49,10 +63,6 @@ const styles = StyleSheet.create({
     paddingBottom: 48,
     paddingHorizontal: 24,
     paddingTop: 72
-  },
-  text: {
-    fontSize: 18,
-    textAlign: 'center'
   },
   tryForFreeButton: {
     alignItems: 'center',
