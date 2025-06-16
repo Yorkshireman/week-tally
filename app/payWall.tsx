@@ -13,6 +13,44 @@ const Feature = ({ text }: { text: string }) => {
   );
 };
 
+const PlanContainer = ({ children }: { children: React.ReactNode }) => {
+  return (
+    <View
+      style={{
+        alignItems: 'center',
+        backgroundColor: '#F0FEFD',
+        borderRadius: 10,
+        flexDirection: 'row',
+        gap: 10,
+        padding: 20
+      }}
+    >
+      {children}
+    </View>
+  );
+};
+
+const TryForFreeButton = () => {
+  return (
+    <View style={{ alignSelf: 'stretch', gap: 20 }}>
+      <TouchableOpacity
+        onPress={() => {}}
+        style={{
+          ...styles.tryForFreeButton,
+          backgroundColor: '#2078C9'
+        }}
+      >
+        <Text style={{ ...styles.tryForFreeButtonText, color: 'white' }}>Try for Free</Text>
+        <Ionicons
+          name='chevron-forward'
+          size={normaliseFontSize(20)}
+          style={{ ...styles.tryForFreeButtonIcon, color: 'white' }}
+        />
+      </TouchableOpacity>
+    </View>
+  );
+};
+
 export default function PayWall() {
   return (
     <View style={styles.page}>
@@ -27,22 +65,7 @@ export default function PayWall() {
           <Feature text={'Amend statistics for previous weeks if you make a mistake'} />
         </View>
       </View>
-      <View style={{ alignSelf: 'stretch', gap: 20 }}>
-        <TouchableOpacity
-          onPress={() => {}}
-          style={{
-            ...styles.tryForFreeButton,
-            backgroundColor: '#2078C9'
-          }}
-        >
-          <Text style={{ ...styles.tryForFreeButtonText, color: 'white' }}>Try for Free</Text>
-          <Ionicons
-            name='chevron-forward'
-            size={normaliseFontSize(20)}
-            style={{ ...styles.tryForFreeButtonIcon, color: 'white' }}
-          />
-        </TouchableOpacity>
-      </View>
+      <TryForFreeButton />
     </View>
   );
 }
