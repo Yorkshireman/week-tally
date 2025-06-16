@@ -19,13 +19,13 @@ const PlanContainer = ({ children }: { children: ReactNode }) => {
     <View
       style={{
         alignItems: 'center',
-        alignSelf: 'stretch',
         borderColor: 'black',
         borderRadius: 10,
         borderWidth: 1,
         flexDirection: 'row',
         gap: 10,
-        padding: 20
+        paddingHorizontal: 20,
+        paddingVertical: 10
       }}
     >
       {children}
@@ -75,10 +75,27 @@ export default function PayWall() {
           <Feature text={'Toggle tracking on/off for individual Things anytime you like'} />
           <Feature text={'Amend statistics for previous weeks if you make a mistake'} />
         </View>
-        <PlanContainer>
-          <Text style={{ fontSize: 24, fontWeight: 'bold' }}>Premium Plan</Text>
-          <Text style={{ fontSize: 18, color: '#666' }}>$4.99/month</Text>
-        </PlanContainer>
+        <View style={{ alignSelf: 'stretch', gap: 10 }}>
+          <PlanContainer>
+            <View>
+              <Text style={{ fontSize: 18, fontWeight: 'bold' }}>Yearly Plan</Text>
+              <View style={{ flexDirection: 'row', gap: 10, marginTop: 5 }}>
+                <Text
+                  style={{ color: '#718096', fontSize: 18, textDecorationLine: 'line-through' }}
+                >
+                  $103.48
+                </Text>
+                <Text style={{ fontSize: 18 }}>$11.99 per year</Text>
+              </View>
+            </View>
+          </PlanContainer>
+          <PlanContainer>
+            <View>
+              <Text style={{ fontSize: 18, fontWeight: 'bold' }}>3-Day Trial</Text>
+              <Text style={{ fontSize: 18 }}>then $1.99 per week</Text>
+            </View>
+          </PlanContainer>
+        </View>
       </View>
       <TryForFreeButton />
     </View>
