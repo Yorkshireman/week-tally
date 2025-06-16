@@ -2,6 +2,7 @@ import { DismissButton } from '@/components/payWallScreen';
 import { globalStyles } from '@/styles';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { normaliseFontSize } from '@/utils';
+import { ReactNode } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 const Feature = ({ text }: { text: string }) => {
@@ -13,13 +14,15 @@ const Feature = ({ text }: { text: string }) => {
   );
 };
 
-const PlanContainer = ({ children }: { children: React.ReactNode }) => {
+const PlanContainer = ({ children }: { children: ReactNode }) => {
   return (
     <View
       style={{
         alignItems: 'center',
-        backgroundColor: '#F0FEFD',
+        alignSelf: 'stretch',
+        borderColor: 'black',
         borderRadius: 10,
+        borderWidth: 1,
         flexDirection: 'row',
         gap: 10,
         padding: 20
@@ -59,11 +62,23 @@ export default function PayWall() {
         <Text style={{ fontSize: 32, marginBottom: 32, textAlign: 'center' }}>
           Unlock Premium Access
         </Text>
-        <View style={{ alignSelf: 'stretch', flexDirection: 'column', gap: 18, paddingRight: 10 }}>
+        <View
+          style={{
+            alignSelf: 'stretch',
+            flexDirection: 'column',
+            gap: 18,
+            marginBottom: 72,
+            paddingRight: 10
+          }}
+        >
           <Feature text={'Track as many Things as you like'} />
           <Feature text={'Toggle tracking on/off for individual Things anytime you like'} />
           <Feature text={'Amend statistics for previous weeks if you make a mistake'} />
         </View>
+        <PlanContainer>
+          <Text style={{ fontSize: 24, fontWeight: 'bold' }}>Premium Plan</Text>
+          <Text style={{ fontSize: 18, color: '#666' }}>$4.99/month</Text>
+        </PlanContainer>
       </View>
       <TryForFreeButton />
     </View>
