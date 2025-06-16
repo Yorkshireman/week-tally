@@ -1,8 +1,7 @@
 import { DismissButton } from '@/components/payWallScreen';
 import { globalStyles } from '@/styles';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { normaliseFontSize } from '@/utils';
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 const Feature = ({ text }: { text: string }) => {
@@ -14,22 +13,37 @@ const Feature = ({ text }: { text: string }) => {
   );
 };
 
-const PlanContainer = ({ children }: { children: ReactNode }) => {
+const PlanContainer = ({
+  checked,
+  children,
+  onPress
+}: {
+  checked: boolean;
+  children: ReactNode;
+  onPress: () => void;
+}) => {
+  const borderColor = checked ? 'black' : '#A0AEC0';
   return (
-    <View
+    <TouchableOpacity
+      onPress={onPress}
       style={{
         alignItems: 'center',
-        borderColor: 'black',
+        borderColor,
         borderRadius: 10,
         borderWidth: 1,
         flexDirection: 'row',
-        gap: 10,
-        paddingHorizontal: 20,
+        justifyContent: 'space-between',
+        paddingHorizontal: 18,
         paddingVertical: 10
       }}
     >
-      {children}
-    </View>
+      <View>{children}</View>
+      <Ionicons
+        name={checked ? 'checkmark-circle' : 'ellipse-outline'}
+        size={32}
+        color={checked ? '#2078C9' : '#A0AEC0'}
+      />
+    </TouchableOpacity>
   );
 };
 
@@ -46,7 +60,7 @@ const TryForFreeButton = () => {
         <Text style={{ ...styles.tryForFreeButtonText, color: 'white' }}>Try for Free</Text>
         <Ionicons
           name='chevron-forward'
-          size={normaliseFontSize(20)}
+          size={24}
           style={{ ...styles.tryForFreeButtonIcon, color: 'white' }}
         />
       </TouchableOpacity>
@@ -55,6 +69,8 @@ const TryForFreeButton = () => {
 };
 
 export default function PayWall() {
+  const [selectedPlan, setSelectedPlan] = useState<'yearly' | 'trial'>('trial');
+
   return (
     <View style={styles.page}>
       <DismissButton pageStyles={styles.page} />
@@ -62,21 +78,16 @@ export default function PayWall() {
         <Text style={{ fontSize: 32, marginBottom: 32, textAlign: 'center' }}>
           Unlock Premium Access
         </Text>
-        <View
-          style={{
-            alignSelf: 'stretch',
-            flexDirection: 'column',
-            gap: 18,
-            marginBottom: 72,
-            paddingRight: 10
-          }}
-        >
+        <View style={styles.featuresContainer}>
           <Feature text={'Track as many Things as you like'} />
           <Feature text={'Toggle tracking on/off for individual Things anytime you like'} />
-          <Feature text={'Amend statistics for previous weeks if you make a mistake'} />
+          <Feature text={'Amend totals for previous weeks if you make a mistake'} />
         </View>
         <View style={{ alignSelf: 'stretch', gap: 10 }}>
-          <PlanContainer>
+          <PlanContainer
+            checked={selectedPlan === 'yearly'}
+            onPress={() => setSelectedPlan('yearly')}
+          >
             <View>
               <Text style={{ fontSize: 18, fontWeight: 'bold' }}>Yearly Plan</Text>
               <View style={{ flexDirection: 'row', gap: 10, marginTop: 5 }}>
@@ -89,9 +100,12 @@ export default function PayWall() {
               </View>
             </View>
           </PlanContainer>
-          <PlanContainer>
+          <PlanContainer
+            checked={selectedPlan === 'trial'}
+            onPress={() => setSelectedPlan('trial')}
+          >
             <View>
-              <Text style={{ fontSize: 18, fontWeight: 'bold' }}>3-Day Trial</Text>
+              <Text style={{ fontSize: 18, fontWeight: 'bold' }}>7-Day Trial</Text>
               <Text style={{ fontSize: 18 }}>then $1.99 per week</Text>
             </View>
           </PlanContainer>
@@ -111,6 +125,13 @@ const styles = StyleSheet.create({
   backButtonText: {
     fontSize: 18,
     textAlign: 'center'
+  },
+  featuresContainer: {
+    alignSelf: 'stretch',
+    flexDirection: 'column',
+    gap: 18,
+    marginBottom: 48,
+    paddingRight: 48
   },
   page: {
     backgroundColor: 'white',
