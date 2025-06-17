@@ -2,7 +2,7 @@ import { DismissButton } from '@/components/payWallScreen';
 import { globalStyles } from '@/styles';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { ReactNode, useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
 
 enum PlanType {
   yearly = 'yearly',
@@ -130,6 +130,27 @@ export default function PayWall() {
               <Text style={{ fontSize: 18 }}>then $1.99 per week</Text>
             </View>
           </PlanContainer>
+          <View
+            style={{
+              alignItems: 'center',
+              backgroundColor: '#F7FAFC',
+              borderRadius: 8,
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              paddingHorizontal: 18,
+              paddingVertical: 10
+            }}
+          >
+            <Text style={{ fontSize: 18, fontWeight: 'bold', textAlign: 'center' }}>
+              Free Trial Enabled
+            </Text>
+            <Switch
+              trackColor={{ true: '#00ff00' }}
+              // thumbColor={selectedPlan === PlanType.trial ? '#fff' : 'grey'}
+              // ios_backgroundColor={'green'}
+              value={selectedPlan === PlanType.trial}
+            />
+          </View>
         </View>
       </View>
       <TryForFreeButton />
