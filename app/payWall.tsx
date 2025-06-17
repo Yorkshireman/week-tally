@@ -31,7 +31,7 @@ const PlanContainer = ({
   planType?: PlanType;
 }) => {
   const backgroundColor = checked ? '#EBF8FF' : '#fff';
-  const borderColor = checked ? '#2078C9' : '#A0AEC0';
+  const borderColor = checked ? 'blue' : '#A0AEC0';
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -64,7 +64,7 @@ const PlanContainer = ({
       <Ionicons
         name={checked ? 'checkmark-circle' : 'ellipse-outline'}
         size={32}
-        color={checked ? '#2078C9' : '#A0AEC0'}
+        color={checked ? 'blue' : '#A0AEC0'}
       />
     </TouchableOpacity>
   );
@@ -77,7 +77,7 @@ const TryForFreeButton = ({ selectedPlan }: { selectedPlan: PlanType }) => {
         onPress={() => {}}
         style={{
           ...styles.tryForFreeButton,
-          backgroundColor: '#2078C9'
+          backgroundColor: 'blue'
         }}
       >
         <Text style={{ ...styles.tryForFreeButtonText, color: 'white' }}>
