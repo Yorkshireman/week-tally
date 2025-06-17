@@ -150,12 +150,12 @@ export default function PayWall() {
           <View
             style={{
               alignItems: 'center',
-              backgroundColor: '#F7FAFC',
+              backgroundColor: '#EDF2F7',
               borderRadius: 8,
               flexDirection: 'row',
               justifyContent: 'space-between',
               paddingHorizontal: 18,
-              paddingVertical: 10
+              paddingVertical: 12
             }}
           >
             <Text style={{ fontSize: 18, fontWeight: 'bold', textAlign: 'center' }}>
