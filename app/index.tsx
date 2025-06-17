@@ -87,6 +87,8 @@ export default function Index() {
   const router = useRouter();
   const [text, onChangeText] = useState('');
 
+  const userSubscribed = false; // Replace with actual subscription check logic
+
   useEffect(() => {
     const populateListDataStateFromDb = async () => {
       try {
@@ -117,17 +119,15 @@ export default function Index() {
     populateListDataStateFromDb();
   }, [db, router]);
 
-  const onPressNextStepButton = () => {
-    if (listData.length === 1) {
-      return router.push('/payWall');
-    }
-
-    router.replace('/dateTimeChooser');
-  };
+  const onPressNextStepButton = () => router.replace('/dateTimeChooser');
 
   const onSubmitEditing = async () => {
     if (text.trim() === '') {
       return;
+    }
+
+    if (listData.length === 2 && !userSubscribed) {
+      return router.push('/payWall');
     }
 
     const id = uuid.v4();
