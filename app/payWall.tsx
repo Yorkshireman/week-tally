@@ -70,7 +70,7 @@ const PlanContainer = ({
   );
 };
 
-const TryForFreeButton = () => {
+const TryForFreeButton = ({ selectedPlan }: { selectedPlan: PlanType }) => {
   return (
     <View style={{ alignSelf: 'stretch', gap: 20 }}>
       <TouchableOpacity
@@ -80,7 +80,9 @@ const TryForFreeButton = () => {
           backgroundColor: '#2078C9'
         }}
       >
-        <Text style={{ ...styles.tryForFreeButtonText, color: 'white' }}>Try for Free</Text>
+        <Text style={{ ...styles.tryForFreeButtonText, color: 'white' }}>
+          {selectedPlan === PlanType.trial ? 'Try for Free' : 'Unlock Now'}
+        </Text>
         <Ionicons
           name='chevron-forward'
           size={24}
@@ -169,7 +171,7 @@ export default function PayWall() {
           </View>
         </View>
       </View>
-      <TryForFreeButton />
+      <TryForFreeButton selectedPlan={selectedPlan} />
     </View>
   );
 }
@@ -209,7 +211,7 @@ const styles = StyleSheet.create({
     marginLeft: 5
   },
   tryForFreeButtonText: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
     textAlign: 'center'
   }
