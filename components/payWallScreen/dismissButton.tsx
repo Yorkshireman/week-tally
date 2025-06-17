@@ -12,7 +12,7 @@ interface PageStyles {
 
 export const DismissButton = ({ pageStyles }: { pageStyles: PageStyles }) => {
   const [canDismiss, setCanDismiss] = useState(false);
-  const [countdown, setCountdown] = useState(3);
+  const [countdown, setCountdown] = useState(4);
   const spinAnim = useState(new Animated.Value(0))[0];
 
   useEffect(() => {
