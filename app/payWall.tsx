@@ -92,6 +92,14 @@ const TryForFreeButton = () => {
 export default function PayWall() {
   const [selectedPlan, setSelectedPlan] = useState<PlanType>(PlanType.trial);
 
+  const toggleSwitch = () => {
+    if (selectedPlan === PlanType.trial) {
+      setSelectedPlan(PlanType.yearly);
+    } else {
+      setSelectedPlan(PlanType.trial);
+    }
+  };
+
   return (
     <View style={styles.page}>
       <DismissButton pageStyles={styles.page} />
@@ -153,8 +161,7 @@ export default function PayWall() {
             </Text>
             <Switch
               trackColor={{ true: '#00ff00' }}
-              // thumbColor={selectedPlan === PlanType.trial ? '#fff' : 'grey'}
-              // ios_backgroundColor={'green'}
+              onValueChange={toggleSwitch}
               value={selectedPlan === PlanType.trial}
             />
           </View>
