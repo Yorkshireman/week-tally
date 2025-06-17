@@ -1,3 +1,4 @@
+import * as Haptics from 'expo-haptics';
 import { DismissButton } from '@/components/payWallScreen';
 import { globalStyles } from '@/styles';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -106,7 +107,10 @@ export default function PayWall() {
         <View style={{ alignSelf: 'stretch', gap: 10 }}>
           <PlanContainer
             checked={selectedPlan === PlanType.yearly}
-            onPress={() => setSelectedPlan(PlanType.yearly)}
+            onPress={() => {
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              setSelectedPlan(PlanType.yearly);
+            }}
             planType={PlanType.yearly}
           >
             <View>
@@ -123,7 +127,10 @@ export default function PayWall() {
           </PlanContainer>
           <PlanContainer
             checked={selectedPlan === PlanType.trial}
-            onPress={() => setSelectedPlan(PlanType.trial)}
+            onPress={() => {
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              setSelectedPlan(PlanType.trial);
+            }}
           >
             <View>
               <Text style={{ fontSize: 18, fontWeight: 'bold' }}>7-Day Trial</Text>
