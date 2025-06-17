@@ -13,7 +13,7 @@ enum PlanType {
 const Feature = ({ text }: { text: string }) => {
   return (
     <View style={{ alignItems: 'flex-start', flexDirection: 'row', gap: 10 }}>
-      <Ionicons name='checkmark-circle' size={24} color='#00ff00' />
+      <Ionicons name='checkmark-circle' size={24} color='blue' />
       <Text style={{ fontSize: 18 }}>{text}</Text>
     </View>
   );
