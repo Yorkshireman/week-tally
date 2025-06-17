@@ -30,12 +30,14 @@ const PlanContainer = ({
   onPress: () => void;
   planType?: PlanType;
 }) => {
-  const borderColor = checked ? '#2D3748' : '#A0AEC0';
+  const backgroundColor = checked ? '#EBF8FF' : '#fff';
+  const borderColor = checked ? '#2078C9' : '#A0AEC0';
   return (
     <TouchableOpacity
       onPress={onPress}
       style={{
         alignItems: 'center',
+        backgroundColor,
         borderColor,
         borderRadius: 8,
         borderWidth: 1,
