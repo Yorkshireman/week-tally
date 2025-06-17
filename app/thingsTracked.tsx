@@ -10,7 +10,10 @@ import { useCallback, useState } from 'react';
 import { useFocusEffect, useRouter } from 'expo-router';
 
 export default function ThingsTracked() {
-  const { primitiveInfo } = useColours();
+  const {
+    page: { backgroundColor },
+    primitiveInfo
+  } = useColours();
   const db = useSQLiteContext();
   const router = useRouter();
   const [things, setThings] = useState<ThingType[]>([]);
@@ -44,7 +47,14 @@ export default function ThingsTracked() {
   };
 
   return (
-    <ScrollView style={{ ...globalStyles.screenWrapper, marginBottom: 48, paddingVertical: 16 }}>
+    <ScrollView
+      style={{
+        ...globalStyles.screenWrapper,
+        backgroundColor,
+        marginBottom: 48,
+        paddingVertical: 16
+      }}
+    >
       <Text
         style={{
           backgroundColor: primitiveInfo[600],

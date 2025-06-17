@@ -8,7 +8,10 @@ import { useColours, useDbLogger } from '@/hooks';
 import { useEffect, useRef, useState } from 'react';
 
 export default function AddThing() {
-  const { error: errorColours } = useColours();
+  const {
+    error: errorColours,
+    page: { backgroundColor }
+  } = useColours();
   const db = useSQLiteContext();
   const inputRef = useRef<TextInput>(null);
   const logDbContents = useDbLogger();
@@ -55,7 +58,7 @@ export default function AddThing() {
   };
 
   return (
-    <View style={{ ...globalStyles.screenWrapper, paddingVertical: 25 }}>
+    <View style={{ ...globalStyles.screenWrapper, backgroundColor, paddingVertical: 25 }}>
       <TextInput
         ref={inputRef}
         returnKeyType='done'

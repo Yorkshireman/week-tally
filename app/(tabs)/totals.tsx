@@ -20,6 +20,7 @@ export default function TotalsScreen() {
   const appState = useRef(AppState.currentState);
   const {
     iconButton,
+    page: { backgroundColor },
     text: { color }
   } = useColours();
   const db = useSQLiteContext();
@@ -82,7 +83,7 @@ export default function TotalsScreen() {
   };
 
   return (
-    <SafeAreaView style={{ ...globalStyles.screenWrapper, paddingVertical: 0 }}>
+    <SafeAreaView style={{ ...globalStyles.screenWrapper, backgroundColor, paddingVertical: 0 }}>
       <View style={{ ...styles.listHeader, width: '100%' }}>
         <Pressable onPress={goBackOneWeek} style={styles.weekButton}>
           <Ionicons
