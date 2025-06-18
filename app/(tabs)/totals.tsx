@@ -83,7 +83,7 @@ export default function TotalsScreen() {
   };
 
   return (
-    <SafeAreaView style={{ ...globalStyles.screenWrapper, backgroundColor, paddingVertical: 0 }}>
+    <SafeAreaView style={{ ...globalStyles.screenWrapper, backgroundColor }}>
       <View style={{ ...styles.listHeader, width: '100%' }}>
         <Pressable onPress={goBackOneWeek} style={styles.weekButton}>
           <Ionicons

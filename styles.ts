@@ -7,7 +7,7 @@ export const globalStyles = StyleSheet.create({
     justifyContent: 'center'
   },
   headerTitleStyle: {
-    fontSize: 24
+    fontSize: 18
   },
   screenWrapper: {
     flex: 1,

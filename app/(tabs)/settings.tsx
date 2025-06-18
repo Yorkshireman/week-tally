@@ -1,12 +1,12 @@
 import { Divider } from '@/components';
 import { globalStyles } from '@/styles';
 import { useColours } from '@/hooks';
-import { View } from 'react-native';
 import {
   ChangeNotificationTimeSection,
   ResetAppSection,
   SelectThingsSection
 } from '@/components/settingsScreen';
+import { SafeAreaView, View } from 'react-native';
 
 export default function Settings() {
   const {
@@ -14,14 +14,16 @@ export default function Settings() {
   } = useColours();
 
   return (
-    <View style={{ ...globalStyles.screenWrapper, backgroundColor, paddingVertical: 0 }}>
-      <View>
-        <ChangeNotificationTimeSection />
-        <Divider />
-        <SelectThingsSection />
-        <Divider />
-        <ResetAppSection />
+    <SafeAreaView>
+      <View style={{ ...globalStyles.screenWrapper, backgroundColor, paddingVertical: 0 }}>
+        <View>
+          <ChangeNotificationTimeSection />
+          <Divider />
+          <SelectThingsSection />
+          <Divider />
+          <ResetAppSection />
+        </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }

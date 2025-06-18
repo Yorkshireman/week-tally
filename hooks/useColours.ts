@@ -123,9 +123,9 @@ const styles = {
     },
     header: {
       headerStyle: {
-        backgroundColor: primitivePrimary[600]
+        backgroundColor: '#fff'
       },
-      headerTintColor: '#fff'
+      headerTintColor: primitivePrimary[900]
     },
     iconButton: {
       borderColor: primitiveNeutral[700],
