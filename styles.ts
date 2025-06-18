@@ -18,7 +18,6 @@ export const globalStyles = StyleSheet.create({
   settingsScreenSection: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginHorizontal: -25,
     paddingHorizontal: 25,
     paddingVertical: 12
   }

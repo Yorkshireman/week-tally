@@ -14,15 +14,13 @@ export default function Settings() {
   } = useColours();
 
   return (
-    <SafeAreaView>
-      <View style={{ ...globalStyles.screenWrapper, backgroundColor, paddingVertical: 0 }}>
-        <View>
-          <ChangeNotificationTimeSection />
-          <Divider />
-          <SelectThingsSection />
-          <Divider />
-          <ResetAppSection />
-        </View>
+    <SafeAreaView style={{ ...globalStyles.screenWrapper, backgroundColor }}>
+      <View>
+        <ChangeNotificationTimeSection />
+        <Divider />
+        <SelectThingsSection />
+        <Divider />
+        <ResetAppSection />
       </View>
     </SafeAreaView>
   );
