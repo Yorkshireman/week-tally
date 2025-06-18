@@ -32,6 +32,7 @@ const primitiveNeutral = {
 
 const primitivePrimary = {
   50: '#F0FEFD',
+  300: '#1BD9D5',
   400: '#00BCB9',
   600: '#156F6D',
   700: '#005958',
@@ -122,9 +123,9 @@ const styles = {
     },
     header: {
       headerStyle: {
-        backgroundColor: '#fff'
+        backgroundColor: primitivePrimary[600]
       },
-      headerTintColor: primitivePrimary[900]
+      headerTintColor: '#fff'
     },
     iconButton: {
       borderColor: primitiveNeutral[700],
@@ -143,10 +144,10 @@ const styles = {
       }
     },
     tabBar: {
-      tabBarActiveTintColor: primitivePrimary[900],
-      tabBarInactiveTintColor: primitivePrimary[700],
+      tabBarActiveTintColor: '#fff',
+      tabBarInactiveTintColor: '#fff',
       tabBarStyle: {
-        backgroundColor: '#fff',
+        backgroundColor: primitivePrimary[600],
         borderTopColor: primitiveNeutral[300]
       }
     },
