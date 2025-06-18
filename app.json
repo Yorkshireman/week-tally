@@ -15,7 +15,11 @@
         "ITSAppUsesNonExemptEncryption": false
       }
     },
-    "plugins": ["expo-router", "expo-sqlite"],
+    "plugins": [
+      "expo-router",
+      "expo-sqlite",
+      "expo-web-browser"
+    ],
     "experiments": {
       "typedRoutes": true
     },
