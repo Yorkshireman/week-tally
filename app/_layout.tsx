@@ -58,6 +58,7 @@ export default function RootLayout() {
                   name='changeNotificationTime'
                   options={{
                     ...headerStyles,
+                    headerBackTitle: 'Settings',
                     headerTitleStyle: {
                       ...headerStyles.headerTitleStyle,
                       fontSize: 18
