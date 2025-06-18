@@ -106,10 +106,9 @@ export default function TotalsScreen() {
         </Pressable>
       </View>
       <FlatList
-        contentContainerStyle={{ gap: 10 }}
         data={totals}
         renderItem={({ item: { count, title, id } }) => (
-          <View style={{ alignItems: 'center', flexDirection: 'row' }}>
+          <View style={styles.thing}>
             <Pressable
               onPress={() => {
                 if (count === 0) return;
@@ -177,6 +176,13 @@ const styles = StyleSheet.create({
     fontSize: normaliseFontSize(24),
     fontWeight: 'bold',
     textAlign: 'center'
+  },
+  thing: {
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    flexDirection: 'row',
+    padding: 8
   },
   weekButton: {
     padding: 10
