@@ -62,8 +62,7 @@ export default function RootLayout() {
                       ...headerStyles.headerTitleStyle,
                       fontSize: 18
                     },
-                    presentation: 'modal',
-                    title: 'Choose Your Daily Notification Time'
+                    title: 'Daily Notification Time'
                   }}
                 />
                 <Stack.Screen
