@@ -32,6 +32,7 @@ const PlanContainer = ({
 }) => {
   const backgroundColor = checked ? '#EBF8FF' : '#fff';
   const borderColor = checked ? 'blue' : '#A0AEC0';
+
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -48,7 +49,7 @@ const PlanContainer = ({
       }}
     >
       <View>{children}</View>
-      {planType === 'yearly' && (
+      {planType === PlanType.yearly && (
         <View
           style={{
             backgroundColor: '#E30000',
