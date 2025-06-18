@@ -6,8 +6,8 @@ import { ReactNode, useState } from 'react';
 import { StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
 
 enum PlanType {
-  yearly = 'yearly',
-  trial = 'trial'
+  trial = 'trial',
+  yearly = 'yearly'
 }
 
 const Feature = ({ text }: { text: string }) => {
