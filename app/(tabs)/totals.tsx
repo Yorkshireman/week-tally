@@ -134,12 +134,10 @@ export default function TotalsScreen() {
               }}
             >
               <View style={{ flex: 1, paddingHorizontal: 10 }}>
-                <Text style={{ ...styles.text, color, fontWeight: 'bold', textAlign: 'left' }}>
-                  {title}
-                </Text>
+                <Text style={{ ...styles.text, color, textAlign: 'left' }}>{title}</Text>
               </View>
               <View style={{ minWidth: 10 }}>
-                <Text style={{ ...styles.text, color, fontWeight: 'bold' }}>{count}</Text>
+                <Text style={{ ...styles.text, color }}>{count}</Text>
               </View>
             </View>
             <Pressable onPress={() => addLogEntry(id)} style={styles.countButtonWrapper}>
@@ -177,6 +175,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: normaliseFontSize(24),
+    fontWeight: 'bold',
     textAlign: 'center'
   },
   weekButton: {

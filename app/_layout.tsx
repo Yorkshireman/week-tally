@@ -78,6 +78,10 @@ export default function RootLayout() {
                     title: 'Rename'
                   }}
                 />
+                <Stack.Screen
+                  name='payWall'
+                  options={{ headerShown: false, presentation: 'fullScreenModal' }}
+                />
               </Stack>
               <StatusBar style='dark' />
             </SafeAreaProvider>
