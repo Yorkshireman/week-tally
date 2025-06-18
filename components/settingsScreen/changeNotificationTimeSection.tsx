@@ -1,3 +1,4 @@
+import * as Haptics from 'expo-haptics';
 import { globalStyles } from '@/styles';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { normaliseFontSize } from '@/utils';
@@ -14,6 +15,7 @@ export const ChangeNotificationTimeSection = () => {
   const router = useRouter();
 
   const onPress = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     router.push('/changeNotificationTime');
   };
 

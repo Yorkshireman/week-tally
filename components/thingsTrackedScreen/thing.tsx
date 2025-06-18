@@ -1,3 +1,4 @@
+import * as Haptics from 'expo-haptics';
 import { Divider } from '../divider';
 import { globalStyles } from '@/styles';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -77,7 +78,12 @@ export const Thing = ({ setThings, thing }: { setThings: SetThings; thing: Thing
       <View style={{ alignItems: 'center', flexDirection: 'row', gap: 16 }}>
         <Menu
           anchor={
-            <TouchableOpacity onPress={() => setMenuVisible(true)}>
+            <TouchableOpacity
+              onPress={() => {
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                setMenuVisible(true);
+              }}
+            >
               <Ionicons name='ellipsis-vertical' size={24} color={primitivePrimary[900]} />
             </TouchableOpacity>
           }
@@ -91,6 +97,7 @@ export const Thing = ({ setThings, thing }: { setThings: SetThings; thing: Thing
           <Menu.Item
             leadingIcon='note-edit-outline'
             onPress={() => {
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
               setMenuVisible(false);
               router.push(`/editThing?id=${thing.id}&title=${encodeURIComponent(thing.title)}`);
             }}
@@ -99,6 +106,7 @@ export const Thing = ({ setThings, thing }: { setThings: SetThings; thing: Thing
           <Menu.Item
             leadingIcon='trash-can-outline'
             onPress={() => {
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
               setMenuVisible(false);
               showDeleteAlert();
             }}

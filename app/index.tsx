@@ -1,3 +1,4 @@
+import * as Haptics from 'expo-haptics';
 import { globalStyles } from '@/styles';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -29,6 +30,7 @@ const ListItem = ({ id, setListData, title }: ListItemProps) => {
   const logDbContents = useDbLogger();
 
   const onPressDeleteButton = async () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     Alert.alert(
       'Are you sure?',
       '',
@@ -117,13 +119,17 @@ export default function Index() {
     populateListDataStateFromDb();
   }, [db, router]);
 
-  const onPressNextStepButton = () => router.replace('/dateTimeChooser');
+  const onPressNextStepButton = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    router.replace('/dateTimeChooser');
+  };
 
   const onSubmitEditing = async () => {
     if (text.trim() === '') {
       return;
     }
 
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     const id = uuid.v4();
     const now = new Date().toISOString();
 

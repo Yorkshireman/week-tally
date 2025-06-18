@@ -1,3 +1,4 @@
+import * as Haptics from 'expo-haptics';
 import { globalStyles } from '@/styles';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -66,7 +67,10 @@ export default function ConfirmationScreen() {
       </View>
       <View>
         <Pressable
-          onPress={() => router.replace('/totals')}
+          onPress={() => {
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+            router.replace('/totals');
+          }}
           style={{ ...styles.navigationButton, ...primary }}
         >
           <Text style={{ ...styles.navigationButtonText, color: primary.color }}>

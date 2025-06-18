@@ -1,3 +1,4 @@
+import * as Haptics from 'expo-haptics';
 import { globalStyles } from '@/styles';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { normaliseFontSize } from '@/utils';
@@ -73,6 +74,7 @@ export default function ThingsTracked() {
         {renderThings()}
         <TouchableOpacity
           onPress={() => {
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
             router.push('/addThing');
           }}
           style={{ alignSelf: 'center', marginTop: 5 }}

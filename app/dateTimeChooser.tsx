@@ -1,3 +1,4 @@
+import * as Haptics from 'expo-haptics';
 import * as Notifications from 'expo-notifications';
 import { globalStyles } from '@/styles';
 import { normaliseFontSize } from '@/utils';
@@ -98,7 +99,10 @@ export default function DateTimeChooserScreen() {
       </View>
       <View style={{ alignSelf: 'stretch', gap: 20 }}>
         <Pressable
-          onPress={() => router.replace('/confirmation')}
+          onPress={() => {
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+            router.replace('/confirmation');
+          }}
           style={{ ...styles.navigationButton, ...primary }}
         >
           <Text style={{ ...styles.navigationButtonText, color: primary.color }}>
@@ -106,7 +110,10 @@ export default function DateTimeChooserScreen() {
           </Text>
         </Pressable>
         <Pressable
-          onPress={() => router.dismissTo('/')}
+          onPress={() => {
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+            router.dismissTo('/');
+          }}
           style={{ ...styles.backButton, ...secondary }}
         >
           <Text style={{ ...styles.backButtonText, color: secondary.color }}>Go back</Text>

@@ -1,3 +1,4 @@
+import * as Haptics from 'expo-haptics';
 import { globalStyles } from '@/styles';
 import { normaliseFontSize } from '@/utils';
 import { Alert, Pressable, StyleSheet, Text, useColorScheme, View } from 'react-native';
@@ -12,6 +13,7 @@ export const ResetAppSection = () => {
   } = useColours();
 
   const onPress = async () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     Alert.alert(
       'Are you sure?',
       'This will delete all of your data within this app and reset the app to its initial state. Only do this if you are 100% sure. This action cannot be undone.',

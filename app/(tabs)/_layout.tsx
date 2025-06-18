@@ -1,3 +1,4 @@
+import * as Haptics from 'expo-haptics';
 import { globalStyles } from '@/styles';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Tabs } from 'expo-router';
@@ -21,6 +22,11 @@ export default function TabsLayout() {
       }}
     >
       <Tabs.Screen
+        listeners={{
+          tabPress: e => {
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+          }
+        }}
         name='totals'
         options={{
           tabBarIcon: ({ color, focused }) => (
@@ -30,6 +36,11 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
+        listeners={{
+          tabPress: e => {
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+          }
+        }}
         name='settings'
         options={{
           tabBarIcon: ({ color, focused }) => (
