@@ -1,6 +1,5 @@
 import { globalStyles } from '@/styles';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { PAYWALL_TURNED_ON } from '@/config';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useSQLiteContext } from 'expo-sqlite';
@@ -88,8 +87,6 @@ export default function Index() {
   const router = useRouter();
   const [text, onChangeText] = useState('');
 
-  const userSubscribed = false; // Replace with actual subscription check logic
-
   useEffect(() => {
     const populateListDataStateFromDb = async () => {
       try {
@@ -125,10 +122,6 @@ export default function Index() {
   const onSubmitEditing = async () => {
     if (text.trim() === '') {
       return;
-    }
-
-    if (PAYWALL_TURNED_ON && listData.length === 2 && !userSubscribed) {
-      return router.push('/payWall');
     }
 
     const id = uuid.v4();
