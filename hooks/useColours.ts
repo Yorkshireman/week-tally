@@ -36,6 +36,7 @@ const primitivePrimary = {
   400: '#00BCB9',
   600: '#156F6D',
   700: '#005958',
+  800: '#004746',
   900: '#00302F'
 };
 /* eslint-enable sort-keys */

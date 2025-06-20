@@ -31,6 +31,7 @@ export default function RootLayout() {
             <SafeAreaProvider>
               <Stack>
                 <Stack.Screen name='index' options={{ headerShown: false }} />
+                <Stack.Screen name='setupThings' options={{ headerShown: false }} />
                 <Stack.Screen name='dateTimeChooser' options={{ headerShown: false }} />
                 <Stack.Screen name='confirmation' options={{ headerShown: false }} />
                 <Stack.Screen
