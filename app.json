@@ -1,15 +1,14 @@
 {
   "expo": {
-    "name": "times-this-week",
-    "slug": "times-this-week",
+    "name": "Week Tally",
+    "slug": "week-tally",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "timesthisweek",
+    "scheme": "weektally",
     "userInterfaceStyle": "light",
-    "newArchEnabled": true,
     "ios": {
-      "bundleIdentifier": "com.codedegen.times-this-week",
+      "bundleIdentifier": "com.codedegen.week-tally",
       "supportsTablet": true,
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
@@ -39,7 +38,7 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "fb7406c1-78a2-4c39-bde7-e7c7b670878a"
+        "projectId": "64a7aeba-4c2f-45ee-bb5e-a58cb8dc15c0"
       }
     },
     "owner": "codedegen"
