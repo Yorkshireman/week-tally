@@ -53,7 +53,11 @@ export default function ConfirmationScreen() {
   return (
     <SafeAreaView style={{ ...globalStyles.screenWrapper, backgroundColor }}>
       <View style={{ ...globalStyles.content, gap: 20 }}>
-        <Text style={{ ...styles.text, color, fontWeight: 'bold' }}>You&apos;re done!</Text>
+        <Text
+          style={{ ...styles.text, color, fontSize: normaliseFontSize(20), fontWeight: 'bold' }}
+        >
+          You&apos;re done!
+        </Text>
         <Text style={{ ...styles.text, color }}>
           You&apos;ll get daily notifications at {notificationTime} asking you to update your
           totals.

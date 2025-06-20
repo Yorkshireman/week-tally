@@ -144,9 +144,23 @@ export default function SetupThingsScreen() {
           data={listData}
           ListHeaderComponent={
             <View style={{ gap: 40 }}>
-              <Text style={{ ...styles.text, color }}>
-                1. Enter the things you would like to track
+              <Text
+                style={{
+                  ...styles.text,
+                  color,
+                  fontSize: normaliseFontSize(20),
+                  fontWeight: 'bold'
+                }}
+              >
+                Enter the things you would like to track
               </Text>
+              <Text style={{ ...styles.text, color }}>
+                They can be absolutely anything you like, and it is completely private.
+              </Text>
+              <Text style={{ ...styles.text, color }}>
+                You can add as many as you like, and you can always add more later.
+              </Text>
+
               <TextInput
                 returnKeyType='done'
                 style={styles.input}
@@ -207,7 +221,7 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   text: {
-    fontSize: normaliseFontSize(24),
+    fontSize: normaliseFontSize(18),
     textAlign: 'center'
   }
 });

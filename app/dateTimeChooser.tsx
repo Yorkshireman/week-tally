@@ -92,8 +92,16 @@ export default function DateTimeChooserScreen() {
   return (
     <SafeAreaView style={{ ...globalStyles.screenWrapper, backgroundColor }}>
       <View style={globalStyles.content}>
-        <Text style={{ ...styles.text, color, marginBottom: 20 }}>
-          2. Choose when you&apos;d like to be notified each day to update your totals
+        <Text
+          style={{
+            ...styles.text,
+            color,
+            fontSize: normaliseFontSize(20),
+            fontWeight: 'bold',
+            marginBottom: 20
+          }}
+        >
+          Choose when you&apos;d like to be notified each day to update your totals
         </Text>
         <TimePicker selectedTime={selectedTime} onValueChange={onTimePickerValueChange} />
       </View>
@@ -112,7 +120,7 @@ export default function DateTimeChooserScreen() {
         <Pressable
           onPress={() => {
             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-            router.dismissTo('/');
+            router.dismissTo('/setupThings');
           }}
           style={{ ...styles.backButton, ...secondary }}
         >
@@ -144,7 +152,6 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   text: {
-    fontSize: normaliseFontSize(24),
     textAlign: 'center'
   }
 });
