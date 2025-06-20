@@ -15,11 +15,7 @@
         "ITSAppUsesNonExemptEncryption": false
       }
     },
-    "plugins": [
-      "expo-router",
-      "expo-sqlite",
-      "expo-web-browser"
-    ],
+    "plugins": ["expo-router", "expo-sqlite", "expo-web-browser"],
     "experiments": {
       "typedRoutes": true
     },
@@ -29,11 +25,6 @@
         "projectId": "fb7406c1-78a2-4c39-bde7-e7c7b670878a"
       }
     },
-    "owner": "codedegen",
-    "splash": {
-      "backgroundColor": "#F5F8FA",
-      "image": "./assets/images/splash-screen.png",
-      "resizeMode": "cover"
-    }
+    "owner": "codedegen"
   }
 }
