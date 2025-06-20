@@ -1,8 +1,12 @@
+import Background from '../assets/images/background.svg';
+import Logo from '../assets/images/logo.svg';
 import { useColours } from '@/hooks/useColours';
 import { useRouter } from 'expo-router';
 import { useSQLiteContext } from 'expo-sqlite';
-import { ImageBackground, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Dimensions, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useEffect, useState } from 'react';
+
+const { width, height } = Dimensions.get('window');
 
 export default function Index() {
   const [checkingSetupStatus, setCheckingSetupStatus] = useState(true);
@@ -32,37 +36,31 @@ export default function Index() {
   }
 
   return (
-    <ImageBackground
-      source={require('../assets/images/welcome-screen.png')}
-      style={styles.background}
-      resizeMode='cover'
-    >
+    <View style={{ flex: 1 }}>
+      <Background
+        width={width}
+        height={height}
+        style={StyleSheet.absoluteFill}
+        preserveAspectRatio='xMidYMid slice'
+      />
       <View style={styles.container}>
-        <Pressable
-          onPress={() => router.replace('/setupThings')}
-          style={{ ...styles.buttonWrapper, backgroundColor: primitivePrimary[300] }}
-        >
-          <Text
-            style={{
-              ...styles.buttonText,
-
-              color: primitivePrimary[700]
-            }}
+        <View style={{ gap: height * 0.05 }}>
+          <Logo width={width * 0.6} />
+          <Pressable
+            onPress={() => router.replace('/setupThings')}
+            style={{ ...styles.buttonWrapper, backgroundColor: primitivePrimary[300] }}
           >
-            Start your first tally
-          </Text>
-        </Pressable>
+            <Text style={{ ...styles.buttonText, color: primitivePrimary[700] }}>
+              Start your first tally
+            </Text>
+          </Pressable>
+        </View>
       </View>
-    </ImageBackground>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  background: {
-    flex: 1,
-    height: '100%',
-    width: '100%'
-  },
   buttonText: {
     fontSize: 20,
     fontWeight: 'bold',
@@ -76,6 +74,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
     padding: 22,
-    paddingBottom: 48
+    paddingBottom: '10%'
   }
 });
