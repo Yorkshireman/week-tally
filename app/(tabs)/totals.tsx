@@ -4,6 +4,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ThingWithLogEntriesCount } from '@/types';
 import { useIsFocused } from '@react-navigation/native';
+import { useRouter } from 'expo-router';
 import { useSQLiteContext } from 'expo-sqlite';
 import {
   addLogEntryToDb,
@@ -12,7 +13,15 @@ import {
   getWeekLabel,
   normaliseFontSize
 } from '@/utils';
-import { AppState, FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
+import {
+  AppState,
+  FlatList,
+  Pressable,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View
+} from 'react-native';
 import { useColours, useDbLogger } from '@/hooks';
 import { useEffect, useRef, useState } from 'react';
 
@@ -21,11 +30,13 @@ export default function TotalsScreen() {
   const {
     iconButton,
     page: { backgroundColor },
+    primitiveInfo,
     text: { color }
   } = useColours();
   const db = useSQLiteContext();
   const isFocused = useIsFocused();
   const logDbContents = useDbLogger();
+  const router = useRouter();
   const [totals, setTotals] = useState<ThingWithLogEntriesCount[]>();
   const [weekOffset, setWeekOffset] = useState<number>(0);
 
@@ -150,6 +161,21 @@ export default function TotalsScreen() {
           </View>
         )}
         ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
+        ListFooterComponent={
+          <TouchableOpacity
+            onPress={() => {
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              router.push('/addThing');
+            }}
+            style={{ alignSelf: 'center', marginTop: 10 }}
+          >
+            <Ionicons
+              name='add-circle-outline'
+              size={normaliseFontSize(48)}
+              color={primitiveInfo[600]}
+            />
+          </TouchableOpacity>
+        }
         style={styles.list}
       />
     </SafeAreaView>
