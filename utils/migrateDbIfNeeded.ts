@@ -1,9 +1,9 @@
 import { dbSetupString } from '@/constants';
 import { SQLiteDatabase } from 'expo-sqlite';
-import { migrateDbToV4, migrateDbToV5 } from '@/migrations';
+import { migrateDbToV4, migrateDbToV5, migrateDbToV6 } from '@/migrations';
 
 export const migrateDbIfNeeded = async (db: SQLiteDatabase) => {
-  const DATABASE_VERSION = 5;
+  const DATABASE_VERSION = 6;
   const row = await db.getFirstAsync<{ user_version: number }>('PRAGMA user_version');
   let currentDbVersion = row?.user_version ?? 0;
 
@@ -18,6 +18,10 @@ export const migrateDbIfNeeded = async (db: SQLiteDatabase) => {
 
   if (currentDbVersion < 5) {
     await migrateDbToV5(db);
+  }
+
+  if (currentDbVersion < 6) {
+    await migrateDbToV6(db);
   }
 
   if (currentDbVersion === 0) {

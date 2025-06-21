@@ -1,1 +1,1 @@
-export const PAYWALL_TURNED_ON = true;
+export const PAYWALL_TURNED_ON = false;

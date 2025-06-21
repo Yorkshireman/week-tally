@@ -6,11 +6,19 @@ export const useDbLogger = () => {
 
   return useCallback(
     async function logDbContents() {
-      const timeNow = new Date().toISOString();
-      const things = await db.getAllAsync('SELECT * FROM things');
-      const settings = await db.getAllAsync('SELECT * FROM settings');
-      const entries = await db.getAllAsync('SELECT * FROM entries');
-      console.log('DB contents:', JSON.stringify({ entries, settings, things, timeNow }, null, 2));
+      try {
+        const timeNow = new Date().toISOString();
+        const deviceAppInfo = await db.getAllAsync('SELECT * FROM deviceAppInfo');
+        const entries = await db.getAllAsync('SELECT * FROM entries');
+        const settings = await db.getAllAsync('SELECT * FROM settings');
+        const things = await db.getAllAsync('SELECT * FROM things');
+        console.log(
+          'Full DB contents: \n',
+          JSON.stringify({ deviceAppInfo, entries, settings, things, timeNow }, null, 2)
+        );
+      } catch (e) {
+        console.error('Error logging DB contents: ', e);
+      }
     },
     [db]
   );

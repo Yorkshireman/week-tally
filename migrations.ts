@@ -1,9 +1,16 @@
+import { PAYWALL_TURNED_ON } from './config';
 import { SQLiteDatabase } from 'expo-sqlite';
 
-async function columnExists(db: SQLiteDatabase, table: string, column: string) {
+const columnExists = async (db: SQLiteDatabase, table: string, column: string) => {
   const columns = await db.getAllAsync<{ name: string }>(`PRAGMA table_info(${table})`);
   return columns.some(col => col.name === column);
-}
+};
+
+const tableExists = async (db: SQLiteDatabase, name: string) => {
+  return await db.getFirstAsync<{ name: string }>(
+    `SELECT name FROM sqlite_master WHERE type='table' AND name='${name}';`
+  );
+};
 
 export const migrateDbToV4 = async (db: SQLiteDatabase) => {
   console.log('Migrating database to version 4');
@@ -32,4 +39,32 @@ export const migrateDbToV5 = async (db: SQLiteDatabase) => {
     );
     console.log('Added currentlyTracking column to things table');
   }
+};
+
+export const migrateDbToV6 = async (db: SQLiteDatabase) => {
+  console.log('Migrating database to version 6');
+
+  const deviceAppInfoTableExists = await tableExists(db, 'deviceAppInfo');
+
+  if (!deviceAppInfoTableExists) {
+    await db.execAsync(`
+      CREATE TABLE deviceAppInfo (
+        installedWhilePaywallTurnedOn BOOLEAN NOT NULL DEFAULT 1
+      );
+    `);
+
+    await db.execAsync(`
+      INSERT INTO deviceAppInfo (installedWhilePaywallTurnedOn) VALUES (${
+        PAYWALL_TURNED_ON ? 1 : 0
+      });
+    `);
+
+    console.log(
+      `Created deviceAppInfo table and set installedWhilePaywallTurnedOn to ${
+        PAYWALL_TURNED_ON ? 1 : 0
+      }`
+    );
+  }
+
+  console.log('Database migration to version 6 completed');
 };
