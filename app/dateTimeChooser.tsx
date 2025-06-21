@@ -7,7 +7,7 @@ import { Setting } from '../types';
 import { TimePicker } from '../components';
 import { useRouter } from 'expo-router';
 import { useSQLiteContext } from 'expo-sqlite';
-import { Alert, Linking, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Alert, Linking, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useColours, useDbLogger } from '@/hooks';
 import { useEffect, useState } from 'react';
 
@@ -114,7 +114,7 @@ export default function DateTimeChooserScreen() {
         <TimePicker selectedTime={selectedTime} onValueChange={onTimePickerValueChange} />
       </View>
       <View style={{ alignSelf: 'stretch', gap: 20 }}>
-        <Pressable
+        <TouchableOpacity
           onPress={() => {
             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
             router.replace('/confirmation');
@@ -124,8 +124,8 @@ export default function DateTimeChooserScreen() {
           <Text style={{ ...styles.navigationButtonText, color: primary.color }}>
             Go to next step
           </Text>
-        </Pressable>
-        <Pressable
+        </TouchableOpacity>
+        <TouchableOpacity
           onPress={() => {
             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
             router.dismissTo('/setupThings');
@@ -133,7 +133,7 @@ export default function DateTimeChooserScreen() {
           style={{ ...styles.backButton, ...secondary }}
         >
           <Text style={{ ...styles.backButtonText, color: secondary.color }}>Go back</Text>
-        </Pressable>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );

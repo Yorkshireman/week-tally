@@ -8,7 +8,7 @@ import {
   normaliseFontSize,
   scheduleDailyNotifications
 } from '@/utils';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useColours, useDbLogger } from '@/hooks';
 import { useEffect, useState } from 'react';
 
@@ -63,24 +63,19 @@ export default function ConfirmationScreen() {
           totals.
         </Text>
         <Text style={{ ...styles.text, color }}>
-          The totals reset to zero at midnight every Sunday.
-        </Text>
-        <Text style={{ ...styles.text, color }}>
           Come back here anytime to view or update your running totals if you missed a notification.
         </Text>
       </View>
       <View>
-        <Pressable
+        <TouchableOpacity
           onPress={() => {
             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
             router.replace('/totals');
           }}
           style={{ ...styles.navigationButton, ...primary }}
         >
-          <Text style={{ ...styles.navigationButtonText, color: primary.color }}>
-            Roger! Take me to my running totals
-          </Text>
-        </Pressable>
+          <Text style={{ ...styles.navigationButtonText, color: primary.color }}>Go to Totals</Text>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );

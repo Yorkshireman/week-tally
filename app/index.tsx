@@ -3,7 +3,7 @@ import Logo from '../assets/images/logo.svg';
 import { useColours } from '@/hooks/useColours';
 import { useRouter } from 'expo-router';
 import { useSQLiteContext } from 'expo-sqlite';
-import { Dimensions, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useEffect, useState } from 'react';
 
 const { width, height } = Dimensions.get('window');
@@ -46,14 +46,14 @@ export default function Index() {
       <View style={styles.container}>
         <View style={{ gap: height * 0.05 }}>
           <Logo width={width * 0.6} />
-          <Pressable
+          <TouchableOpacity
             onPress={() => router.replace('/setupThings')}
             style={{ ...styles.buttonWrapper, backgroundColor: primitivePrimary[300] }}
           >
             <Text style={{ ...styles.buttonText, color: primitivePrimary[700] }}>
               Start your first tally
             </Text>
-          </Pressable>
+          </TouchableOpacity>
         </View>
       </View>
     </View>

@@ -4,7 +4,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { normaliseFontSize } from '@/utils';
 import { useColours } from '@/hooks';
 import { useRouter } from 'expo-router';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export const SelectThingsSection = () => {
   const {
@@ -23,7 +23,7 @@ export const SelectThingsSection = () => {
   return (
     <View style={{ ...globalStyles.settingsScreenSection, ...sectionColours }}>
       <Text style={{ ...styles.text, color }}>Things tracked</Text>
-      <Pressable onPress={onPress}>
+      <TouchableOpacity onPress={onPress}>
         <View style={{ flexDirection: 'row', gap: 5 }}>
           <Text style={{ ...styles.text, color }}>Select</Text>
           <Ionicons
@@ -33,7 +33,7 @@ export const SelectThingsSection = () => {
             style={{ alignSelf: 'flex-end', paddingBottom: 1 }}
           />
         </View>
-      </Pressable>
+      </TouchableOpacity>
     </View>
   );
 };

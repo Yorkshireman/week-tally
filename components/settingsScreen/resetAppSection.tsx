@@ -1,7 +1,7 @@
 import * as Haptics from 'expo-haptics';
 import { globalStyles } from '@/styles';
 import { normaliseFontSize } from '@/utils';
-import { Alert, Pressable, StyleSheet, Text, useColorScheme, View } from 'react-native';
+import { Alert, StyleSheet, Text, TouchableOpacity, useColorScheme, View } from 'react-native';
 import { useColours, useResetApp } from '@/hooks';
 
 export const ResetAppSection = () => {
@@ -37,9 +37,9 @@ export const ResetAppSection = () => {
     <View
       style={{ ...globalStyles.settingsScreenSection, justifyContent: 'center', ...sectionColours }}
     >
-      <Pressable onPress={onPress}>
+      <TouchableOpacity onPress={onPress}>
         <Text style={{ ...styles.text, color }}>Reset the app</Text>
-      </Pressable>
+      </TouchableOpacity>
     </View>
   );
 };

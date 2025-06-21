@@ -9,11 +9,10 @@ import { addThingToDb, deleteThingFromDb, normaliseFontSize } from '@/utils';
 import {
   Alert,
   FlatList,
-  KeyboardAvoidingView,
-  Pressable,
   StyleSheet,
   Text,
   TextInput,
+  TouchableOpacity,
   useColorScheme,
   View
 } from 'react-native';
@@ -69,12 +68,12 @@ const ListItem = ({ id, setListData, title }: ListItemProps) => {
       }}
     >
       <Text style={{ ...styles.listItemText, color }}>{title}</Text>
-      <Pressable
+      <TouchableOpacity
         onPress={onPressDeleteButton}
         style={{ borderColor: iconButton.borderColor, borderRadius: 7, borderWidth: 2, padding: 5 }}
       >
         <Ionicons color={iconButton.color} name='trash' size={normaliseFontSize(24)} />
-      </Pressable>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -181,14 +180,14 @@ export default function SetupThingsScreen() {
       />
       {listData.length ? (
         <View style={{ alignSelf: 'stretch' }}>
-          <Pressable
+          <TouchableOpacity
             onPress={onPressNextStepButton}
             style={{ ...styles.nextStepButton, ...primary }}
           >
             <Text style={{ ...styles.nextStepButtonText, color: primary.color }}>
               Go to next step
             </Text>
-          </Pressable>
+          </TouchableOpacity>
         </View>
       ) : null}
     </SafeAreaView>
