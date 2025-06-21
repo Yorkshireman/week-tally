@@ -6,7 +6,6 @@
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "weektally",
-    "userInterfaceStyle": "auto",
     "ios": {
       "bundleIdentifier": "com.codedegen.week-tally",
       "supportsTablet": true,
@@ -41,6 +40,7 @@
         "projectId": "64a7aeba-4c2f-45ee-bb5e-a58cb8dc15c0"
       }
     },
-    "owner": "codedegen"
+    "owner": "codedegen",
+    "userInterfaceStyle": "auto"
   }
 }

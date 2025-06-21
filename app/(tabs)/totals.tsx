@@ -165,19 +165,21 @@ export default function TotalsScreen() {
         )}
         ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
         ListFooterComponent={
-          <TouchableOpacity
-            onPress={() => {
-              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-              router.push('/addThing');
-            }}
-            style={{ alignSelf: 'center', marginTop: 10 }}
-          >
-            <Ionicons
-              color={addButtonColor}
-              name='add-circle-outline'
-              size={normaliseFontSize(48)}
-            />
-          </TouchableOpacity>
+          weekOffset ? null : (
+            <TouchableOpacity
+              onPress={() => {
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                router.push('/addThing');
+              }}
+              style={{ alignSelf: 'center', marginTop: 10 }}
+            >
+              <Ionicons
+                color={addButtonColor}
+                name='add-circle-outline'
+                size={normaliseFontSize(48)}
+              />
+            </TouchableOpacity>
+          )
         }
         style={styles.list}
       />
