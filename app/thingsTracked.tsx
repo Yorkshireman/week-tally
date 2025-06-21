@@ -55,7 +55,6 @@ export default function ThingsTracked() {
       style={{
         ...globalStyles.screenWrapper,
         backgroundColor,
-        marginBottom: 48,
         paddingVertical: 16
       }}
     >
@@ -84,6 +83,7 @@ export default function ThingsTracked() {
         >
           <Ionicons name='add-circle-outline' size={normaliseFontSize(48)} color={addButtonColor} />
         </TouchableOpacity>
+        <View style={{ height: 32 }} />
       </View>
     </ScrollView>
   );
