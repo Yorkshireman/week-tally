@@ -7,7 +7,7 @@ import { Setting } from '../types';
 import { TimePicker } from '../components';
 import { useRouter } from 'expo-router';
 import { useSQLiteContext } from 'expo-sqlite';
-import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Alert, Linking, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useColours, useDbLogger } from '@/hooks';
 import { useEffect, useState } from 'react';
 
@@ -20,7 +20,15 @@ const ensurePermissions = async () => {
     if (result.status !== 'granted') {
       Alert.alert(
         'Notifications Disabled',
-        'Enable notifications in Settings to get your daily check-ins.'
+        'Enable notifications for this app to get your daily check-in notification. This will help you keep your weekly totals up to date and will be the only notification you receive from this app.',
+        [
+          {
+            onPress: () => Linking.openURL('app-settings:'),
+            style: 'cancel',
+            text: 'Open App Settings'
+          },
+          { style: 'cancel', text: 'Cancel' }
+        ]
       );
 
       return false;
