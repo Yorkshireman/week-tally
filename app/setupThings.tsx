@@ -59,9 +59,11 @@ const ListItem = ({ id, setListData, title }: ListItemProps) => {
     <View
       style={{
         alignItems: 'center',
+        backgroundColor: '#fff',
+        borderRadius: 8,
         flexDirection: 'row',
-        gap: 40,
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        padding: 8
       }}
     >
       <Text style={{ ...styles.listItemText, color }}>{title}</Text>
