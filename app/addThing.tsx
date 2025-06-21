@@ -9,7 +9,6 @@ import { useEffect, useRef, useState } from 'react';
 
 export default function AddThing() {
   const {
-    error: errorColours,
     input,
     page: { backgroundColor }
   } = useColours();
@@ -73,7 +72,9 @@ export default function AddThing() {
         value={text}
         placeholder={'Thing'}
       />
-      {error && <Text style={{ ...styles.errorText, color: errorColours[500] }}>{error}</Text>}
+      {error && (
+        <Text style={{ ...styles.errorText, color: input.validationErrorText.color }}>{error}</Text>
+      )}
     </View>
   );
 }
