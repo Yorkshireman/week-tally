@@ -9,6 +9,7 @@ import { addThingToDb, deleteThingFromDb, normaliseFontSize } from '@/utils';
 import {
   Alert,
   FlatList,
+  KeyboardAvoidingView,
   Pressable,
   StyleSheet,
   Text,
@@ -139,51 +140,45 @@ export default function SetupThingsScreen() {
 
   return (
     <SafeAreaView style={{ ...globalStyles.screenWrapper, backgroundColor }}>
-      <View style={globalStyles.content}>
-        <FlatList
-          contentContainerStyle={{
-            flexGrow: 1,
-            justifyContent: 'center'
-          }}
-          data={listData}
-          ListHeaderComponent={
-            <View style={{ gap: 40 }}>
-              <Text
-                style={{
-                  ...styles.text,
-                  color,
-                  fontSize: normaliseFontSize(20),
-                  fontWeight: 'bold'
-                }}
-              >
-                Enter the things you would like to track
-              </Text>
-              <Text style={{ ...styles.text, color }}>
-                They can be absolutely anything you like, and it is completely private.
-              </Text>
-              <Text style={{ ...styles.text, color }}>
-                You can add as many as you like, and you can always add more later.
-              </Text>
+      <FlatList
+        data={listData}
+        ListHeaderComponent={
+          <View style={{ gap: 40 }}>
+            <Text
+              style={{
+                ...styles.text,
+                color,
+                fontSize: normaliseFontSize(20),
+                fontWeight: 'bold'
+              }}
+            >
+              Enter the things you would like to track
+            </Text>
+            <Text style={{ ...styles.text, color }}>
+              They can be absolutely anything you like, and it is completely private.
+            </Text>
+            <Text style={{ ...styles.text, color }}>
+              You can add as many as you like, and you can always add more later.
+            </Text>
 
-              <TextInput
-                returnKeyType='done'
-                style={{ ...styles.input, ...input }}
-                onChangeText={onChangeText}
-                onSubmitEditing={onSubmitEditing}
-                placeholderTextColor={input.placeholderTextColor}
-                value={text}
-                placeholder={`Thing ${listData.length + 1}`}
-              />
-            </View>
-          }
-          ref={flatListRef}
-          renderItem={({ item: { id, title } }) => (
-            <ListItem key={id} id={id} setListData={setListData} title={title} />
-          )}
-          ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
-          style={styles.list}
-        />
-      </View>
+            <TextInput
+              returnKeyType='done'
+              style={{ ...styles.input, ...input }}
+              onChangeText={onChangeText}
+              onSubmitEditing={onSubmitEditing}
+              placeholderTextColor={input.placeholderTextColor}
+              value={text}
+              placeholder={`Thing ${listData.length + 1}`}
+            />
+          </View>
+        }
+        ref={flatListRef}
+        renderItem={({ item: { id, title } }) => (
+          <ListItem key={id} id={id} setListData={setListData} title={title} />
+        )}
+        ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
+        style={styles.list}
+      />
       {listData.length ? (
         <View style={{ alignSelf: 'stretch' }}>
           <Pressable
