@@ -8,8 +8,10 @@ export const ResetAppSection = () => {
   const colourScheme = useColorScheme();
   const resetApp = useResetApp();
   const {
-    primitiveError,
-    settingsScreen: { section: sectionColours }
+    settingsScreen: {
+      resetApp: { color },
+      section: sectionColours
+    }
   } = useColours();
 
   const onPress = async () => {
@@ -36,7 +38,7 @@ export const ResetAppSection = () => {
       style={{ ...globalStyles.settingsScreenSection, justifyContent: 'center', ...sectionColours }}
     >
       <Pressable onPress={onPress}>
-        <Text style={{ ...styles.text, color: primitiveError[500] }}>Reset the app</Text>
+        <Text style={{ ...styles.text, color }}>Reset the app</Text>
       </Pressable>
     </View>
   );

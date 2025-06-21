@@ -1,3 +1,4 @@
+import * as Haptics from 'expo-haptics';
 import * as Notifications from 'expo-notifications';
 import { globalStyles } from '@/styles';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -5,7 +6,7 @@ import { Setting } from '../types';
 import { TimePicker } from '../components';
 import { useRouter } from 'expo-router';
 import { useSQLiteContext } from 'expo-sqlite';
-import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import {
   mapMinsAfterMidnightToTimeString,
   normaliseFontSize,
@@ -64,8 +65,14 @@ export default function ChangeNotificationTimeScreen() {
     setup();
   }, [db]);
 
+  const onCancelPress = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    router.back();
+  };
+
   const onSavePress = async () => {
     try {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
       await Notifications.cancelAllScheduledNotificationsAsync();
       await db.runAsync(
         'INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)',
@@ -99,12 +106,12 @@ export default function ChangeNotificationTimeScreen() {
         <TimePicker selectedTime={selectedTime} onValueChange={onTimePickerValueChange} />
       </View>
       <View style={{ alignSelf: 'stretch', gap: 20 }}>
-        <Pressable onPress={onSavePress} style={{ ...styles.navigationButton, ...primary }}>
-          <Text style={{ ...styles.navigationButtonText, color: primary.color }}>Save</Text>
-        </Pressable>
-        <Pressable onPress={() => router.back()} style={{ ...styles.backButton, ...secondary }}>
+        <TouchableOpacity onPress={onSavePress} style={{ ...styles.navigationButton, ...primary }}>
+          <Text style={{ ...styles.navigationButtonText, ...primary }}>Save</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={onCancelPress} style={{ ...styles.backButton, ...secondary }}>
           <Text style={{ ...styles.backButtonText, color: secondary.color }}>Cancel</Text>
-        </Pressable>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );

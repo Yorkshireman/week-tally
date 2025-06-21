@@ -10,18 +10,29 @@ import { useColours } from '@/hooks';
 import { useRouter } from 'expo-router';
 import { useSQLiteContext } from 'expo-sqlite';
 import { useState } from 'react';
-import { Alert, StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
+import {
+  Alert,
+  StyleSheet,
+  Switch,
+  Text,
+  TouchableOpacity,
+  useColorScheme,
+  View
+} from 'react-native';
 
 type SetThings = React.Dispatch<React.SetStateAction<ThingType[]>>;
 
 export const Thing = ({ setThings, thing }: { setThings: SetThings; thing: ThingType }) => {
+  const colourScheme = useColorScheme();
   const db = useSQLiteContext();
   const [isEnabled, setIsEnabled] = useState(Boolean(thing.currentlyTracking));
   const [menuVisible, setMenuVisible] = useState(false);
   const {
     primitiveNeutral,
     primitivePrimary,
-    settingsScreen: { section: sectionColours }
+    settingsScreen: { section: sectionColours },
+    text: { color },
+    thingsTrackedScreen: { menuButton }
   } = useColours();
   const router = useRouter();
 
@@ -46,7 +57,7 @@ export const Thing = ({ setThings, thing }: { setThings: SetThings; thing: Thing
           text: 'Delete'
         }
       ],
-      { cancelable: true }
+      { cancelable: true, userInterfaceStyle: colourScheme === 'dark' ? 'dark' : 'light' }
     );
   };
 
@@ -68,10 +79,15 @@ export const Thing = ({ setThings, thing }: { setThings: SetThings; thing: Thing
 
   return (
     <View
-      style={{ ...globalStyles.settingsScreenSection, ...sectionColours, alignItems: 'center' }}
+      style={{
+        ...globalStyles.settingsScreenSection,
+        ...sectionColours,
+        alignItems: 'center',
+        borderRadius: 8
+      }}
     >
       <View style={{ flex: 1 }}>
-        <Text numberOfLines={1} style={styles.text}>
+        <Text numberOfLines={1} style={{ ...styles.text, color }}>
           {thing.title}
         </Text>
       </View>
@@ -84,14 +100,16 @@ export const Thing = ({ setThings, thing }: { setThings: SetThings; thing: Thing
                 setMenuVisible(true);
               }}
             >
-              <Ionicons name='ellipsis-vertical' size={24} color={primitivePrimary[900]} />
+              <Ionicons name='ellipsis-vertical' size={24} color={menuButton.color} />
             </TouchableOpacity>
           }
           visible={menuVisible}
           onDismiss={() => setMenuVisible(false)}
         >
           <View style={{ maxWidth: 250, paddingHorizontal: 16, paddingVertical: 6 }}>
-            <Text style={{ fontSize: normaliseFontSize(16), marginBottom: 16 }}>{thing.title}</Text>
+            <Text style={{ color, fontSize: normaliseFontSize(16), marginBottom: 16 }}>
+              {thing.title}
+            </Text>
             <Divider />
           </View>
           <Menu.Item
@@ -102,6 +120,7 @@ export const Thing = ({ setThings, thing }: { setThings: SetThings; thing: Thing
               router.push(`/editThing?id=${thing.id}&title=${encodeURIComponent(thing.title)}`);
             }}
             title='Rename'
+            titleStyle={{ color }}
           />
           <Menu.Item
             leadingIcon='trash-can-outline'
@@ -111,6 +130,7 @@ export const Thing = ({ setThings, thing }: { setThings: SetThings; thing: Thing
               showDeleteAlert();
             }}
             title='Delete'
+            titleStyle={{ color }}
           />
         </Menu>
         <Switch
@@ -127,7 +147,8 @@ export const Thing = ({ setThings, thing }: { setThings: SetThings; thing: Thing
 
 const styles = StyleSheet.create({
   text: {
-    fontSize: normaliseFontSize(18),
+    fontSize: normaliseFontSize(22),
+    fontWeight: 'bold',
     textAlign: 'left'
   }
 });

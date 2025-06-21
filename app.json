@@ -6,7 +6,7 @@
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "weektally",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "auto",
     "ios": {
       "bundleIdentifier": "com.codedegen.week-tally",
       "supportsTablet": true,

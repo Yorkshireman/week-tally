@@ -30,8 +30,11 @@ export default function TotalsScreen() {
   const {
     iconButton,
     page: { backgroundColor },
-    primitiveInfo,
-    text: { color }
+    text: { color },
+    thingSection: thingSectionColours,
+    totalsScreen: {
+      addButton: { color: addButtonColor }
+    }
   } = useColours();
   const db = useSQLiteContext();
   const isFocused = useIsFocused();
@@ -119,7 +122,7 @@ export default function TotalsScreen() {
       <FlatList
         data={totals}
         renderItem={({ item: { count, title, id } }) => (
-          <View style={styles.thing}>
+          <View style={{ ...styles.thing, ...thingSectionColours }}>
             <Pressable
               onPress={() => {
                 if (count === 0) return;
@@ -170,9 +173,9 @@ export default function TotalsScreen() {
             style={{ alignSelf: 'center', marginTop: 10 }}
           >
             <Ionicons
+              color={addButtonColor}
               name='add-circle-outline'
               size={normaliseFontSize(48)}
-              color={primitiveInfo[600]}
             />
           </TouchableOpacity>
         }
@@ -205,7 +208,6 @@ const styles = StyleSheet.create({
   },
   thing: {
     alignItems: 'center',
-    backgroundColor: '#fff',
     borderRadius: 8,
     flexDirection: 'row',
     padding: 8

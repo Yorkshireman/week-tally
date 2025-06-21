@@ -9,7 +9,8 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 export const SelectThingsSection = () => {
   const {
     primitiveNeutral,
-    settingsScreen: { section: sectionColours }
+    settingsScreen: { section: sectionColours },
+    text: { color }
   } = useColours();
 
   const router = useRouter();
@@ -21,10 +22,10 @@ export const SelectThingsSection = () => {
 
   return (
     <View style={{ ...globalStyles.settingsScreenSection, ...sectionColours }}>
-      <Text style={styles.text}>Things tracked</Text>
+      <Text style={{ ...styles.text, color }}>Things tracked</Text>
       <Pressable onPress={onPress}>
         <View style={{ flexDirection: 'row', gap: 5 }}>
-          <Text style={styles.text}>Select</Text>
+          <Text style={{ ...styles.text, color }}>Select</Text>
           <Ionicons
             color={primitiveNeutral[400]}
             name='chevron-forward'

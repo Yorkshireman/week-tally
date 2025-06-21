@@ -9,7 +9,7 @@ import { useEffect, useRef, useState } from 'react';
 
 export default function EditThing() {
   const {
-    error: errorColours,
+    input,
     page: { backgroundColor }
   } = useColours();
   const db = useSQLiteContext();
@@ -75,7 +75,7 @@ export default function EditThing() {
       <TextInput
         ref={inputRef}
         returnKeyType='done'
-        style={styles.input}
+        style={{ ...styles.input, ...input }}
         onChangeText={t => {
           onChangeText(t);
           if (error) setError(null);
@@ -84,7 +84,9 @@ export default function EditThing() {
         value={text}
         placeholder={'Thing'}
       />
-      {error && <Text style={{ ...styles.errorText, color: errorColours[500] }}>{error}</Text>}
+      {error && (
+        <Text style={{ ...styles.errorText, color: input.validationErrorText.color }}>{error}</Text>
+      )}
     </View>
   );
 }

@@ -23,7 +23,8 @@ import { useEffect, useRef, useState } from 'react';
 const ListItem = ({ id, setListData, title }: ListItemProps) => {
   const {
     iconButton,
-    text: { color }
+    text: { color },
+    thingSection: { backgroundColor }
   } = useColours();
   const colourScheme = useColorScheme();
   const db = useSQLiteContext();
@@ -59,11 +60,11 @@ const ListItem = ({ id, setListData, title }: ListItemProps) => {
     <View
       style={{
         alignItems: 'center',
-        backgroundColor: '#fff',
+        backgroundColor,
         borderRadius: 8,
         flexDirection: 'row',
         justifyContent: 'space-between',
-        padding: 8
+        padding: 10
       }}
     >
       <Text style={{ ...styles.listItemText, color }}>{title}</Text>
@@ -80,6 +81,7 @@ const ListItem = ({ id, setListData, title }: ListItemProps) => {
 export default function SetupThingsScreen() {
   const {
     button: { primary },
+    input,
     page: { backgroundColor },
     text: { color }
   } = useColours();
@@ -165,9 +167,10 @@ export default function SetupThingsScreen() {
 
               <TextInput
                 returnKeyType='done'
-                style={styles.input}
+                style={{ ...styles.input, ...input }}
                 onChangeText={onChangeText}
                 onSubmitEditing={onSubmitEditing}
+                placeholderTextColor={input.placeholderTextColor}
                 value={text}
                 placeholder={`Thing ${listData.length + 1}`}
               />

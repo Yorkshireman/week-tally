@@ -13,7 +13,10 @@ import { useFocusEffect, useRouter } from 'expo-router';
 export default function ThingsTracked() {
   const {
     page: { backgroundColor },
-    primitiveInfo
+    thingsTrackedScreen: {
+      addButton: { color: addButtonColor },
+      infoBoxBackgroundColour
+    }
   } = useColours();
   const db = useSQLiteContext();
   const router = useRouter();
@@ -58,7 +61,7 @@ export default function ThingsTracked() {
     >
       <Text
         style={{
-          backgroundColor: primitiveInfo[600],
+          backgroundColor: infoBoxBackgroundColour,
           borderRadius: 10,
           color: 'white',
           fontSize: normaliseFontSize(16),
@@ -79,11 +82,7 @@ export default function ThingsTracked() {
           }}
           style={{ alignSelf: 'center', marginTop: 5 }}
         >
-          <Ionicons
-            name='add-circle-outline'
-            size={normaliseFontSize(48)}
-            color={primitiveInfo[600]}
-          />
+          <Ionicons name='add-circle-outline' size={normaliseFontSize(48)} color={addButtonColor} />
         </TouchableOpacity>
       </View>
     </ScrollView>

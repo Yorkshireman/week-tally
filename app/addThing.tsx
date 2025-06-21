@@ -10,6 +10,7 @@ import { useEffect, useRef, useState } from 'react';
 export default function AddThing() {
   const {
     error: errorColours,
+    input,
     page: { backgroundColor }
   } = useColours();
   const db = useSQLiteContext();
@@ -62,7 +63,8 @@ export default function AddThing() {
       <TextInput
         ref={inputRef}
         returnKeyType='done'
-        style={styles.input}
+        style={{ ...styles.input, ...input }}
+        placeholderTextColor={input.placeholderTextColor}
         onChangeText={t => {
           onChangeText(t);
           if (error) setError(null);

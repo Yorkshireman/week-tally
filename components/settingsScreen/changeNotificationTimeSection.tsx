@@ -9,7 +9,8 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 export const ChangeNotificationTimeSection = () => {
   const {
     primitiveNeutral,
-    settingsScreen: { section: sectionColours }
+    settingsScreen: { section: sectionColours },
+    text: { color }
   } = useColours();
 
   const router = useRouter();
@@ -21,10 +22,10 @@ export const ChangeNotificationTimeSection = () => {
 
   return (
     <View style={{ ...globalStyles.settingsScreenSection, ...sectionColours }}>
-      <Text style={styles.text}>Daily Notification Time</Text>
+      <Text style={{ ...styles.text, color }}>Daily Notification Time</Text>
       <Pressable onPress={onPress}>
         <View style={{ flexDirection: 'row', gap: 5 }}>
-          <Text style={styles.text}>Select</Text>
+          <Text style={{ ...styles.text, color }}>Select</Text>
           <Ionicons
             color={primitiveNeutral[400]}
             name='chevron-forward'
