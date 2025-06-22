@@ -1,12 +1,12 @@
 import * as Haptics from 'expo-haptics';
-import { globalStyles } from '@/styles';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { normaliseFontSize } from '@/utils';
-import { useColours } from '@/hooks';
 import { useRouter } from 'expo-router';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useColours, useGlobalStyles } from '@/hooks';
 
 export const SelectThingsSection = () => {
+  const globalStyles = useGlobalStyles();
   const {
     primitiveNeutral,
     settingsScreen: { section: sectionColours },

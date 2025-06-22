@@ -1,10 +1,9 @@
-import { globalStyles } from '@/styles';
 import { normaliseFontSize } from '@/utils';
 import { useNavigation } from 'expo-router';
 import { useRoute } from '@react-navigation/native';
 import { useSQLiteContext } from 'expo-sqlite';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
-import { useColours, useDbLogger } from '@/hooks';
+import { useColours, useDbLogger, useGlobalStyles } from '@/hooks';
 import { useEffect, useRef, useState } from 'react';
 
 export default function EditThing() {
@@ -13,6 +12,7 @@ export default function EditThing() {
     page: { backgroundColor }
   } = useColours();
   const db = useSQLiteContext();
+  const globalStyles = useGlobalStyles();
   const inputRef = useRef<TextInput>(null);
   const logDbContents = useDbLogger();
   const navigation = useNavigation();

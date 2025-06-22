@@ -1,10 +1,9 @@
-import { globalStyles } from '@/styles';
 import { useNavigation } from 'expo-router';
 import { useSQLiteContext } from 'expo-sqlite';
 import uuid from 'react-native-uuid';
 import { addThingToDb, normaliseFontSize } from '@/utils';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
-import { useColours, useDbLogger } from '@/hooks';
+import { useColours, useDbLogger, useGlobalStyles } from '@/hooks';
 import { useEffect, useRef, useState } from 'react';
 
 export default function AddThing() {
@@ -13,6 +12,7 @@ export default function AddThing() {
     page: { backgroundColor }
   } = useColours();
   const db = useSQLiteContext();
+  const globalStyles = useGlobalStyles();
   const inputRef = useRef<TextInput>(null);
   const logDbContents = useDbLogger();
   const navigation = useNavigation();
@@ -58,7 +58,14 @@ export default function AddThing() {
   };
 
   return (
-    <View style={{ ...globalStyles.screenWrapper, backgroundColor, paddingVertical: 25 }}>
+    <View
+      style={{
+        ...globalStyles.screenWrapper,
+        alignSelf: 'auto', // for iPad - find a better way to handle this
+        backgroundColor,
+        paddingVertical: 25
+      }}
+    >
       <TextInput
         ref={inputRef}
         returnKeyType='done'

@@ -1,5 +1,4 @@
 import * as Haptics from 'expo-haptics';
-import { globalStyles } from '@/styles';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -17,7 +16,7 @@ import {
   View
 } from 'react-native';
 import { ListItemProps, Thing } from '../types';
-import { useColours, useDbLogger } from '@/hooks';
+import { useColours, useDbLogger, useGlobalStyles } from '@/hooks';
 import { useEffect, useRef, useState } from 'react';
 
 const ListItem = ({ id, setListData, title }: ListItemProps) => {
@@ -87,6 +86,7 @@ export default function SetupThingsScreen() {
   } = useColours();
   const db = useSQLiteContext();
   const flatListRef = useRef<FlatList>(null);
+  const globalStyles = useGlobalStyles();
   const [listData, setListData] = useState<Thing[]>([]);
   const logDbContents = useDbLogger();
   const router = useRouter();
@@ -215,7 +215,7 @@ const styles = StyleSheet.create({
     padding: 15
   },
   nextStepButtonText: {
-    fontSize: 18,
+    fontSize: normaliseFontSize(18),
     fontWeight: 'bold',
     textAlign: 'center'
   },

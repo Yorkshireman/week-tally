@@ -1,4 +1,3 @@
-import { globalStyles } from '@/styles';
 import { migrateDbIfNeeded } from '@/utils';
 import { NotificationsListener } from '@/components';
 import { PaperProvider } from 'react-native-paper';
@@ -7,9 +6,7 @@ import { SQLiteProvider } from 'expo-sqlite';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { Suspense } from 'react';
-import { useColours } from '@/hooks';
-
-const { headerTitleStyle } = globalStyles;
+import { useColours, useGlobalStyles } from '@/hooks';
 
 const Fallback = () => {
   console.log('DB not ready, rendering Fallback component');
@@ -17,6 +14,7 @@ const Fallback = () => {
 };
 
 export default function RootLayout() {
+  const { headerTitleStyle } = useGlobalStyles();
   const { header } = useColours();
   const headerStyles = {
     ...header,

@@ -1,13 +1,12 @@
 import * as Haptics from 'expo-haptics';
-import { globalStyles } from '@/styles';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { normaliseFontSize } from '@/utils';
 import { Thing } from '@/components/thingsTrackedScreen';
 import { Thing as ThingType } from '@/types';
-import { useColours } from '@/hooks';
 import { useSQLiteContext } from 'expo-sqlite';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { useCallback, useState } from 'react';
+import { useColours, useGlobalStyles } from '@/hooks';
 import { useFocusEffect, useRouter } from 'expo-router';
 
 export default function ThingsTracked() {
@@ -19,6 +18,7 @@ export default function ThingsTracked() {
     }
   } = useColours();
   const db = useSQLiteContext();
+  const globalStyles = useGlobalStyles();
   const router = useRouter();
   const [things, setThings] = useState<ThingType[]>([]);
 

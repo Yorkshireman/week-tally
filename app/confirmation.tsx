@@ -1,5 +1,4 @@
 import * as Haptics from 'expo-haptics';
-import { globalStyles } from '@/styles';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useSQLiteContext } from 'expo-sqlite';
@@ -9,7 +8,7 @@ import {
   scheduleDailyNotifications
 } from '@/utils';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { useColours, useDbLogger } from '@/hooks';
+import { useColours, useDbLogger, useGlobalStyles } from '@/hooks';
 import { useEffect, useState } from 'react';
 
 export default function ConfirmationScreen() {
@@ -19,6 +18,7 @@ export default function ConfirmationScreen() {
     text: { color }
   } = useColours();
   const db = useSQLiteContext();
+  const globalStyles = useGlobalStyles();
   const logDbContents = useDbLogger();
   const [notificationTime, setNotificationTime] = useState<string | null>(null);
   const router = useRouter();
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
     padding: 15
   },
   navigationButtonText: {
-    fontSize: 18,
+    fontSize: normaliseFontSize(18),
     fontWeight: 'bold',
     textAlign: 'center'
   },

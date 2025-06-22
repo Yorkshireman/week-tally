@@ -1,12 +1,10 @@
 import * as Haptics from 'expo-haptics';
-import { globalStyles } from '@/styles';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Tabs } from 'expo-router';
-import { useColours } from '@/hooks';
-
-const { headerTitleStyle } = globalStyles;
+import { useColours, useGlobalStyles } from '@/hooks';
 
 export default function TabsLayout() {
+  const { headerTitleStyle } = useGlobalStyles();
   const { header, tabBar } = useColours();
 
   const headerStyles = {

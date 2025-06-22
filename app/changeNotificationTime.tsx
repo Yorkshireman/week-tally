@@ -1,6 +1,5 @@
 import * as Haptics from 'expo-haptics';
 import * as Notifications from 'expo-notifications';
-import { globalStyles } from '@/styles';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Setting } from '../types';
 import { TimePicker } from '../components';
@@ -12,7 +11,7 @@ import {
   normaliseFontSize,
   scheduleDailyNotifications
 } from '@/utils';
-import { useColours, useDbLogger } from '@/hooks';
+import { useColours, useDbLogger, useGlobalStyles } from '@/hooks';
 import { useEffect, useState } from 'react';
 
 const ensurePermissions = async () => {
@@ -42,6 +41,7 @@ export default function ChangeNotificationTimeScreen() {
   } = useColours();
   const [currentAskTime, setCurrentAskTime] = useState('');
   const db = useSQLiteContext();
+  const globalStyles = useGlobalStyles();
   const logDbContents = useDbLogger();
   const [selectedTime, setSelectedTime] = useState<string>('1080');
   const router = useRouter();

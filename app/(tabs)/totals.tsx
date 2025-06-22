@@ -1,5 +1,4 @@
 import * as Haptics from 'expo-haptics';
-import { globalStyles } from '@/styles';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ThingWithLogEntriesCount } from '@/types';
@@ -22,7 +21,7 @@ import {
   TouchableOpacity,
   View
 } from 'react-native';
-import { useColours, useDbLogger } from '@/hooks';
+import { useColours, useDbLogger, useGlobalStyles } from '@/hooks';
 import { useEffect, useRef, useState } from 'react';
 
 export default function TotalsScreen() {
@@ -37,6 +36,7 @@ export default function TotalsScreen() {
     }
   } = useColours();
   const db = useSQLiteContext();
+  const globalStyles = useGlobalStyles();
   const isFocused = useIsFocused();
   const logDbContents = useDbLogger();
   const router = useRouter();
@@ -192,7 +192,7 @@ const styles = StyleSheet.create({
     fontSize: normaliseFontSize(32),
     padding: 5
   },
-  countButtonWrapper: { alignItems: 'center', width: 40 },
+  countButtonWrapper: { alignItems: 'center', minWidth: 40 },
   list: {
     alignSelf: 'stretch'
   },

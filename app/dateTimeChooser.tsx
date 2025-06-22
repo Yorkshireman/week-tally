@@ -1,6 +1,5 @@
 import * as Haptics from 'expo-haptics';
 import * as Notifications from 'expo-notifications';
-import { globalStyles } from '@/styles';
 import { normaliseFontSize } from '@/utils';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Setting } from '../types';
@@ -8,7 +7,7 @@ import { TimePicker } from '../components';
 import { useRouter } from 'expo-router';
 import { useSQLiteContext } from 'expo-sqlite';
 import { Alert, Linking, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { useColours, useDbLogger } from '@/hooks';
+import { useColours, useDbLogger, useGlobalStyles } from '@/hooks';
 import { useEffect, useState } from 'react';
 
 const ensurePermissions = async () => {
@@ -45,6 +44,7 @@ export default function DateTimeChooserScreen() {
     button: { primary, secondary }
   } = useColours();
   const db = useSQLiteContext();
+  const globalStyles = useGlobalStyles();
   const logDbContents = useDbLogger();
   const [selectedTime, setSelectedTime] = useState<string>('1080');
   const router = useRouter();
@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
     padding: 15
   },
   backButtonText: {
-    fontSize: 18,
+    fontSize: normaliseFontSize(18),
     textAlign: 'center'
   },
   navigationButton: {
@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
     padding: 15
   },
   navigationButtonText: {
-    fontSize: 18,
+    fontSize: normaliseFontSize(18),
     fontWeight: 'bold',
     textAlign: 'center'
   },

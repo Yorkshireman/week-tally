@@ -1,14 +1,14 @@
 import { Divider } from '@/components';
-import { globalStyles } from '@/styles';
-import { useColours } from '@/hooks';
 import {
   ChangeNotificationTimeSection,
   ResetAppSection,
   SelectThingsSection
 } from '@/components/settingsScreen';
 import { SafeAreaView, View } from 'react-native';
+import { useColours, useGlobalStyles } from '@/hooks';
 
 export default function Settings() {
+  const globalStyles = useGlobalStyles();
   const {
     page: { backgroundColor }
   } = useColours();

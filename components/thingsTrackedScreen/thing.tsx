@@ -1,12 +1,10 @@
 import * as Haptics from 'expo-haptics';
 import { Divider } from '../divider';
-import { globalStyles } from '@/styles';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Menu } from 'react-native-paper';
 import { normaliseFontSize } from '@/utils';
 import { Thing as ThingType } from '@/types';
 import { updateCurrentlyTracking } from '@/utils/dbManipulations';
-import { useColours } from '@/hooks';
 import { useRouter } from 'expo-router';
 import { useSQLiteContext } from 'expo-sqlite';
 import { useState } from 'react';
@@ -19,12 +17,14 @@ import {
   useColorScheme,
   View
 } from 'react-native';
+import { useColours, useGlobalStyles } from '@/hooks';
 
 type SetThings = React.Dispatch<React.SetStateAction<ThingType[]>>;
 
 export const Thing = ({ setThings, thing }: { setThings: SetThings; thing: ThingType }) => {
   const colourScheme = useColorScheme();
   const db = useSQLiteContext();
+  const globalStyles = useGlobalStyles();
   const [isEnabled, setIsEnabled] = useState(Boolean(thing.currentlyTracking));
   const [menuVisible, setMenuVisible] = useState(false);
   const {

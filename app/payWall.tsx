@@ -1,7 +1,7 @@
 import * as Haptics from 'expo-haptics';
 import { DismissButton } from '@/components/payWallScreen';
-import { globalStyles } from '@/styles';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { useGlobalStyles } from '@/hooks';
 import { ReactNode, useState } from 'react';
 import { StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
 
@@ -95,6 +95,7 @@ const TryForFreeButton = ({ selectedPlan }: { selectedPlan: PlanType }) => {
 };
 
 export default function PayWall() {
+  const globalStyles = useGlobalStyles();
   const [selectedPlan, setSelectedPlan] = useState<PlanType>(PlanType.trial);
 
   const toggleSwitch = () => {

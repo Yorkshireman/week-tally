@@ -1,11 +1,11 @@
 import * as Haptics from 'expo-haptics';
-import { globalStyles } from '@/styles';
 import { normaliseFontSize } from '@/utils';
 import { Alert, StyleSheet, Text, TouchableOpacity, useColorScheme, View } from 'react-native';
-import { useColours, useResetApp } from '@/hooks';
+import { useColours, useGlobalStyles, useResetApp } from '@/hooks';
 
 export const ResetAppSection = () => {
   const colourScheme = useColorScheme();
+  const globalStyles = useGlobalStyles();
   const resetApp = useResetApp();
   const {
     settingsScreen: {

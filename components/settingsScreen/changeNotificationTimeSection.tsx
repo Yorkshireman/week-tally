@@ -1,12 +1,12 @@
 import * as Haptics from 'expo-haptics';
-import { globalStyles } from '@/styles';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { normaliseFontSize } from '@/utils';
-import { useColours } from '@/hooks';
 import { useRouter } from 'expo-router';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useColours, useGlobalStyles } from '@/hooks';
 
 export const ChangeNotificationTimeSection = () => {
+  const globalStyles = useGlobalStyles();
   const {
     primitiveNeutral,
     settingsScreen: { section: sectionColours },
@@ -21,7 +21,7 @@ export const ChangeNotificationTimeSection = () => {
   };
 
   return (
-    <View style={{ ...globalStyles.settingsScreenSection, ...sectionColours }}>
+    <View style={{ ...globalStyles.settingsScreenSection, ...sectionColours, gap: 48 }}>
       <Text style={{ ...styles.text, color }}>Daily Notification Time</Text>
       <TouchableOpacity onPress={onPress}>
         <View style={{ flexDirection: 'row', gap: 5 }}>
