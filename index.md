@@ -14,5 +14,4 @@ In Settings, tap **Daily Notification Time** and follow the instructions.
 
 ## Report a Bug or Request a Feature
 
-Please open a new Issue here:
-https://github.com/Yorkshireman/week-tally/issues/new
+Please open a new Issue here: <https://github.com/Yorkshireman/week-tally/issues/new>
