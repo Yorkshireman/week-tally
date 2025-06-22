@@ -7,7 +7,7 @@ This privacy policy explains how Week Tally ("we", "our") handles your data.
 ## Data We Collect
 
 - **Nothing personal.** Week Tally does _not_ collect, store, or share any personal information.
-- All data (your activity logs and settings) is stored locally on your device.
+- All data is stored locally on your device.
 
 ## Third-Party Services
 
