@@ -1,4 +1,4 @@
-# Welcome to your Expo app 👋
+# Welcome to Week Tally 👋
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
@@ -49,7 +49,7 @@ Join our community of developers creating universal apps.
 - [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
 - [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
 
-## Project Dev Notes
+## Dev Notes
 
 ### How to manually add a log entry to the database
 
@@ -71,3 +71,11 @@ await db.execAsync(
 - `eas build --platform ios --profile preview`
 - Navigate to latest build: https://expo.dev/accounts/codedegen/projects/times-this-week/builds
 - Click "Install" and follow instructions
+
+### How to create a production build
+
+- `eas build --platform ios --profile production`
+
+### How to submit a production build to Apple App Store Connect
+
+- `eas submit --platform ios`
