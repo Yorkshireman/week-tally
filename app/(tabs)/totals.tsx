@@ -1,5 +1,4 @@
 import * as Haptics from 'expo-haptics';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ThingWithLogEntriesCount } from '@/types';
@@ -10,9 +9,11 @@ import {
   addLogEntryToDb,
   deleteLogEntryFromDb,
   fetchAndSetTotals,
+  getAddLogEntryCount,
   getWeekLabel,
+  incrementAddLogEntryCount,
   normaliseFontSize,
-  promptForRating
+  promptForRatingIfAppropriate
 } from '@/utils';
 import {
   AppState,
@@ -25,37 +26,6 @@ import {
 } from 'react-native';
 import { useColours, useDbLogger, useGlobalStyles } from '@/hooks';
 import { useEffect, useRef, useState } from 'react';
-
-const getAddLogEntryCount = async (): Promise<number | null> => {
-  try {
-    const jsonValue = await AsyncStorage.getItem('addLogEntryCount');
-    return jsonValue != null ? JSON.parse(jsonValue) : null;
-  } catch (e) {
-    console.error(`Error getting addLogEntryCount from AsyncStorage:`, e);
-    return null;
-  }
-};
-
-const incrementAddLogEntryCount = async (currentAddLogEntryCount: number | null) => {
-  try {
-    const newCount = currentAddLogEntryCount ? currentAddLogEntryCount + 1 : 1;
-    await AsyncStorage.setItem('addLogEntryCount', newCount.toString());
-  } catch (e) {
-    console.error(`Error incrementing addLogEntryCount in AsyncStorage:`, e);
-  }
-};
-
-const promptForRatingIfAppropriate = async (currentAddLogEntryCount: number | null) => {
-  if (currentAddLogEntryCount === null) {
-    return await promptForRating();
-  }
-
-  if (currentAddLogEntryCount > 0 && currentAddLogEntryCount % 10 === 0) {
-    return await promptForRating();
-  }
-
-  return null;
-};
 
 export default function TotalsScreen() {
   const appState = useRef(AppState.currentState);
