@@ -1,4 +1,5 @@
 import * as Haptics from 'expo-haptics';
+import { Chart } from '@/components';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ThingWithLogEntriesCount } from '@/types';
@@ -104,6 +105,7 @@ export default function TotalsScreen() {
 
   return (
     <SafeAreaView style={{ ...globalStyles.screenWrapper, backgroundColor }}>
+      <Chart totals={totals} />
       <View style={{ ...styles.listHeader, width: '100%' }}>
         <Pressable onPress={goBackOneWeek} style={styles.weekButton}>
           <Ionicons
