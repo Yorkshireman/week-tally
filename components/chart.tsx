@@ -65,7 +65,7 @@ export const Chart = ({ totals }: { totals: ThingWithLogEntriesCount[] }) => {
   return (
     <View style={{ height: 150 }}>
       <CartesianChart data={chartData} xKey='week' yKeys={['total']}>
-        {({ points }) => <Line points={points.total} color='red' strokeWidth={3} />}
+        {({ points }) => <Line points={points.total} color='#1BD9D5' strokeWidth={3} />}
       </CartesianChart>
     </View>
   );
