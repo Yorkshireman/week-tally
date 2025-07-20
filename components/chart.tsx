@@ -3,7 +3,7 @@ import { type SQLiteDatabase } from 'expo-sqlite';
 import { useDbLogger } from '@/hooks';
 import { useSQLiteContext } from 'expo-sqlite';
 import { View } from 'react-native';
-import { CartesianChart, Line } from 'victory-native';
+import { Area, CartesianChart } from 'victory-native';
 import type { LogEntry, ThingWithLogEntriesCount } from '@/types';
 import { useEffect, useState } from 'react';
 
@@ -56,16 +56,22 @@ export const Chart = ({ totals }: { totals: ThingWithLogEntriesCount[] }) => {
   useEffect(() => {
     fetchAndSetChartData(db, logDbContents, setChartData);
   }, [db, logDbContents, totals]);
-  console.log('========== chartData ==========');
-  console.log(JSON.stringify(chartData, null, 2));
-  console.log('========== end ===========');
 
   if (!chartData) return null;
 
   return (
     <View style={{ height: 150 }}>
       <CartesianChart data={chartData} xKey='week' yKeys={['total']}>
-        {({ points }) => <Line points={points.total} color='#1BD9D5' strokeWidth={3} />}
+        {({ chartBounds, points }) => (
+          <Area
+            animate={{ duration: 300, type: 'timing' }}
+            color='#1BD9D5'
+            curveType='linear'
+            opacity={0.5}
+            points={points.total}
+            y0={chartBounds.bottom}
+          />
+        )}
       </CartesianChart>
     </View>
   );
