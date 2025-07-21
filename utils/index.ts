@@ -4,7 +4,7 @@ export {
   deleteLogEntryFromDb,
   deleteThingFromDb
 } from './dbManipulations';
-export { buildStartOfWeekDate, getWeekLabel } from './dateUtils';
+export { buildStartOfWeekDate, buildWeekOffsetsArray, getWeekLabel } from './dateUtils';
 export { fetchAndSetTotals } from './fetchAndSetTotals';
 export { getAddLogEntryCount } from './getAddLogEntryCount';
 export { incrementAddLogEntryCount } from './incrementAddLogEntryCount';

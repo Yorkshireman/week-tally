@@ -7,6 +7,10 @@ export const buildStartOfWeekDate = (now: Date, weekOffset = 0): Date => {
   return startOfWeek;
 };
 
+export const buildWeekOffsetsArray = (numWeeks: number): number[] => {
+  return Array.from({ length: numWeeks }, (_, i) => -numWeeks + i + 1);
+};
+
 export const getWeekLabel = (offset: number) => {
   if (offset === 0) return 'This week';
   if (offset === -1) return 'Last week';

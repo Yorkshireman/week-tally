@@ -1,9 +1,9 @@
-import { buildStartOfWeekDate } from '@/utils';
 import { type SQLiteDatabase } from 'expo-sqlite';
 import { useColours } from '@/hooks';
 import { useFont } from '@shopify/react-native-skia';
 import { useSQLiteContext } from 'expo-sqlite';
 import { Area, CartesianChart } from 'victory-native';
+import { buildStartOfWeekDate, buildWeekOffsetsArray } from '@/utils';
 import type { LogEntry, ThingWithLogEntriesCount } from '@/types';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useEffect, useState } from 'react';
@@ -24,9 +24,30 @@ enum ChartScale {
 const fetchAndSetChartData = async (
   db: SQLiteDatabase,
   setChartData: React.Dispatch<React.SetStateAction<ChartDataItem[] | null>>,
-  weekOffsets = [-4, -3, -2, -1, 0]
+  scale: ChartScale
 ) => {
   const now = new Date();
+
+  let numWeeks;
+  switch (scale) {
+    case ChartScale.ONE_MONTH:
+      numWeeks = 4;
+      break;
+    case ChartScale.THREE_MONTHS:
+      numWeeks = 13;
+      break;
+    case ChartScale.SIX_MONTHS:
+      numWeeks = 26;
+      break;
+    case ChartScale.ONE_YEAR:
+      numWeeks = 52;
+      break;
+    case ChartScale.MAX:
+      numWeeks = 104; // 2 years, or you could fetch from DB for true max
+      break;
+  }
+
+  const weekOffsets = buildWeekOffsetsArray(numWeeks);
 
   const chartDataPromises = weekOffsets.map(async (weekOffset, i) => {
     const weekStart = buildStartOfWeekDate(now, weekOffset);
@@ -101,8 +122,8 @@ export const Chart = ({ totals }: { totals?: ThingWithLogEntriesCount[] }) => {
   const [selectedScale, setSelectedScale] = useState<ChartScale>(ChartScale.ONE_MONTH);
 
   useEffect(() => {
-    fetchAndSetChartData(db, setChartData);
-  }, [db, totals]);
+    fetchAndSetChartData(db, setChartData, selectedScale);
+  }, [db, totals, selectedScale]);
 
   if (!chartData) return null;
 
