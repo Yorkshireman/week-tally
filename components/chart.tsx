@@ -63,13 +63,18 @@ export const Chart = ({ totals }: { totals?: ThingWithLogEntriesCount[] }) => {
 
   if (!chartData) return null;
 
+  const maxTotal = Math.max(...chartData.map(({ total }) => total), 0);
+
   return (
     <View style={{ height: 150 }}>
       <CartesianChart
-        axisOptions={{
-          font
-        }}
         data={chartData}
+        domain={{ y: [0, maxTotal + 1] }}
+        yAxis={[
+          {
+            font
+          }
+        ]}
         xKey='week'
         yKeys={['total']}
       >
