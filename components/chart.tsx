@@ -15,9 +15,9 @@ type ChartDataItem = {
 };
 
 enum ChartScale {
-  ONE_MONTH = '1M',
-  THREE_MONTHS = '3M',
-  SIX_MONTHS = '6M',
+  FOUR_WEEKS = '4W',
+  TWELVE_WEEKS = '12W',
+  TWENTY_FOUR_WEEKS = '24W',
   ONE_YEAR = '1Y',
   MAX = 'Max'
 }
@@ -31,14 +31,14 @@ const fetchAndSetChartData = async (
 
   let numWeeks;
   switch (scale) {
-    case ChartScale.ONE_MONTH:
+    case ChartScale.FOUR_WEEKS:
       numWeeks = 4;
       break;
-    case ChartScale.THREE_MONTHS:
-      numWeeks = 13;
+    case ChartScale.TWELVE_WEEKS:
+      numWeeks = 12;
       break;
-    case ChartScale.SIX_MONTHS:
-      numWeeks = 26;
+    case ChartScale.TWENTY_FOUR_WEEKS:
+      numWeeks = 24;
       break;
     case ChartScale.ONE_YEAR:
       numWeeks = 52;
@@ -120,7 +120,7 @@ export const Chart = ({ totals }: { totals?: ThingWithLogEntriesCount[] }) => {
   const [chartData, setChartData] = useState<ChartDataItem[] | null>(null);
   const db = useSQLiteContext();
   const font = useFont(require('../assets/fonts/inter-medium.ttf'), 12);
-  const [selectedScale, setSelectedScale] = useState<ChartScale>(ChartScale.ONE_MONTH);
+  const [selectedScale, setSelectedScale] = useState<ChartScale>(ChartScale.FOUR_WEEKS);
 
   useEffect(() => {
     fetchAndSetChartData(db, setChartData, selectedScale);
@@ -133,10 +133,6 @@ export const Chart = ({ totals }: { totals?: ThingWithLogEntriesCount[] }) => {
   const firstWeekMonday = buildStartOfWeekDate(now, weekOffset);
   const xAxisText = format(firstWeekMonday, "EEEE do MMMM ''yy");
 
-  console.log(
-    'Week indexes:',
-    chartData.map(item => item.week)
-  );
   const maxTotal = Math.max(...chartData.map(({ total }) => total), 0);
   const tickValues = Array.from({ length: maxTotal + 1 }, (_, i) => i);
 
