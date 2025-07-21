@@ -1,16 +1,19 @@
 import { buildStartOfWeekDate } from '@/utils';
 import { type SQLiteDatabase } from 'expo-sqlite';
-import { useDbLogger } from '@/hooks';
 import { useSQLiteContext } from 'expo-sqlite';
 import { View } from 'react-native';
 import { Area, CartesianChart } from 'victory-native';
 import type { LogEntry, ThingWithLogEntriesCount } from '@/types';
 import { useEffect, useState } from 'react';
 
+type ChartDataItem = {
+  total: number;
+  week: number;
+};
+
 const fetchAndSetChartData = async (
   db: SQLiteDatabase,
-  logDbContents: Function,
-  setChartData: any,
+  setChartData: React.Dispatch<React.SetStateAction<ChartDataItem[] | null>>,
   weekOffsets = [-4, -3, -2, -1, 0]
 ) => {
   const now = new Date();
@@ -40,7 +43,7 @@ const fetchAndSetChartData = async (
       return { total: logEntries.filter(entry => entry.thingId === thingId).length, week: i };
     } catch (e) {
       console.error('DB error: ', e);
-      logDbContents();
+      return { total: 0, week: i };
     }
   });
 
@@ -49,13 +52,12 @@ const fetchAndSetChartData = async (
 };
 
 export const Chart = ({ totals }: { totals?: ThingWithLogEntriesCount[] }) => {
-  const [chartData, setChartData] = useState<any[] | null>(null);
+  const [chartData, setChartData] = useState<ChartDataItem[] | null>(null);
   const db = useSQLiteContext();
-  const logDbContents = useDbLogger();
 
   useEffect(() => {
-    fetchAndSetChartData(db, logDbContents, setChartData);
-  }, [db, logDbContents, totals]);
+    fetchAndSetChartData(db, setChartData);
+  }, [db, totals]);
 
   if (!chartData) return null;
 
