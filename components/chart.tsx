@@ -1,3 +1,4 @@
+import { format } from 'date-fns'; // If you have date-fns, otherwise use toLocaleDateString
 import { type SQLiteDatabase } from 'expo-sqlite';
 import { useColours } from '@/hooks';
 import { useFont } from '@shopify/react-native-skia';
@@ -125,8 +126,20 @@ export const Chart = ({ totals }: { totals?: ThingWithLogEntriesCount[] }) => {
     fetchAndSetChartData(db, setChartData, selectedScale);
   }, [db, totals, selectedScale]);
 
-  if (!chartData) return null;
+  if (!chartData || chartData.length === 0) return null;
 
+  // Get the week index of the first item
+  const firstWeekIndex = chartData[0].week;
+  const now = new Date();
+  // Get the Monday of the first week in the range
+  const firstWeekMonday = buildStartOfWeekDate(now, firstWeekIndex);
+  // Format dates with day of week
+  const firstWeekLabel = format(firstWeekMonday, "EEEE do MMM ''yy"); // e.g. "Monday 21st Jul '25"
+
+  console.log(
+    'Week indexes:',
+    chartData.map(item => item.week)
+  );
   const maxTotal = Math.max(...chartData.map(({ total }) => total), 0);
   const tickValues = Array.from({ length: maxTotal + 1 }, (_, i) => i);
 
@@ -155,6 +168,7 @@ export const Chart = ({ totals }: { totals?: ThingWithLogEntriesCount[] }) => {
           />
         )}
       </CartesianChart>
+      <Text style={styles.xAxisText}>From {firstWeekLabel} to now</Text>
       <View style={styles.scaleSelectorsContainer}>
         {Object.values(ChartScale).map(scale => (
           <ScaleSelector
@@ -178,5 +192,9 @@ const styles = StyleSheet.create({
   scaleSelectorsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between'
+  },
+  xAxisText: {
+    fontSize: 12,
+    textAlign: 'center'
   }
 });
