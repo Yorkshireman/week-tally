@@ -1,16 +1,25 @@
 import { buildStartOfWeekDate } from '@/utils';
 import { type SQLiteDatabase } from 'expo-sqlite';
+import { useColours } from '@/hooks';
 import { useFont } from '@shopify/react-native-skia';
 import { useSQLiteContext } from 'expo-sqlite';
-import { View } from 'react-native';
 import { Area, CartesianChart } from 'victory-native';
 import type { LogEntry, ThingWithLogEntriesCount } from '@/types';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useEffect, useState } from 'react';
 
 type ChartDataItem = {
   total: number;
   week: number;
 };
+
+enum ChartScale {
+  ONE_MONTH = '1M',
+  THREE_MONTHS = '3M',
+  SIX_MONTHS = '6M',
+  ONE_YEAR = '1Y',
+  MAX = 'Max'
+}
 
 const fetchAndSetChartData = async (
   db: SQLiteDatabase,
@@ -52,10 +61,41 @@ const fetchAndSetChartData = async (
   setChartData(resolvedChartData);
 };
 
+const ScaleSelector = ({
+  scale,
+  selectedScale,
+  setSelectedScale
+}: {
+  scale: ChartScale;
+  selectedScale: ChartScale;
+  setSelectedScale: React.Dispatch<React.SetStateAction<ChartScale>>;
+}) => {
+  const {
+    chart: { scaleSelectorSelected },
+    page
+  } = useColours();
+
+  const _styles =
+    scale === selectedScale
+      ? {
+          ...styles.scaleSelector,
+          backgroundColor: scaleSelectorSelected.backgroundColor,
+          borderWidth: 1
+        }
+      : { ...styles.scaleSelector, borderColor: page.backgroundColor };
+
+  return (
+    <TouchableOpacity onPress={() => setSelectedScale(scale)} style={_styles}>
+      <Text>{scale}</Text>
+    </TouchableOpacity>
+  );
+};
+
 export const Chart = ({ totals }: { totals?: ThingWithLogEntriesCount[] }) => {
   const [chartData, setChartData] = useState<ChartDataItem[] | null>(null);
   const db = useSQLiteContext();
   const font = useFont(require('../assets/fonts/inter-medium.ttf'), 12);
+  const [selectedScale, setSelectedScale] = useState<ChartScale>(ChartScale.ONE_MONTH);
 
   useEffect(() => {
     fetchAndSetChartData(db, setChartData);
@@ -66,7 +106,7 @@ export const Chart = ({ totals }: { totals?: ThingWithLogEntriesCount[] }) => {
   const maxTotal = Math.max(...chartData.map(({ total }) => total), 0);
 
   return (
-    <View style={{ height: 150 }}>
+    <View style={{ height: 175 }}>
       <CartesianChart
         data={chartData}
         domain={{ y: [0, maxTotal + 1] }}
@@ -89,6 +129,28 @@ export const Chart = ({ totals }: { totals?: ThingWithLogEntriesCount[] }) => {
           />
         )}
       </CartesianChart>
+      <View style={styles.scaleSelectorsContainer}>
+        {Object.values(ChartScale).map(scale => (
+          <ScaleSelector
+            key={scale}
+            scale={scale}
+            selectedScale={selectedScale}
+            setSelectedScale={setSelectedScale}
+          />
+        ))}
+      </View>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  scaleSelector: {
+    borderRadius: 12,
+    borderWidth: 1,
+    padding: 8
+  },
+  scaleSelectorsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  }
+});

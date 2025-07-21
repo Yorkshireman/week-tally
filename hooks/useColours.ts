@@ -65,6 +65,7 @@ const styles = {
         color: '#fff'
       }
     },
+    chart: {},
     divider: {
       backgroundColor: primitiveNeutral[500]
     },
@@ -149,6 +150,13 @@ const styles = {
       warning: {
         backgroundColor: primitiveError[500],
         color: '#fff'
+      }
+    },
+    chart: {
+      scaleSelectorSelected: {
+        backgroundColor: primitiveInfo[100],
+        borderColor: primitivePrimary[600],
+        color: primitiveNeutral[700]
       }
     },
     divider: {
