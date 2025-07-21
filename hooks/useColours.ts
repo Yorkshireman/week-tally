@@ -153,6 +153,7 @@ const styles = {
       }
     },
     chart: {
+      areaColour: primitiveInfo[300],
       scaleSelectorSelected: {
         backgroundColor: primitiveInfo[100],
         borderColor: primitivePrimary[600],

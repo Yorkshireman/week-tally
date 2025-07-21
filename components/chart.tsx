@@ -92,6 +92,9 @@ const ScaleSelector = ({
 };
 
 export const Chart = ({ totals }: { totals?: ThingWithLogEntriesCount[] }) => {
+  const {
+    chart: { areaColour }
+  } = useColours();
   const [chartData, setChartData] = useState<ChartDataItem[] | null>(null);
   const db = useSQLiteContext();
   const font = useFont(require('../assets/fonts/inter-medium.ttf'), 12);
@@ -121,7 +124,7 @@ export const Chart = ({ totals }: { totals?: ThingWithLogEntriesCount[] }) => {
         {({ chartBounds, points }) => (
           <Area
             animate={{ duration: 300, type: 'timing' }}
-            color='#1BD9D5'
+            color={areaColour}
             curveType='linear'
             opacity={0.5}
             points={points.total}
