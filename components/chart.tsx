@@ -48,7 +48,7 @@ const fetchAndSetChartData = async (
   setChartData(resolvedChartData);
 };
 
-export const Chart = ({ totals }: { totals: ThingWithLogEntriesCount[] }) => {
+export const Chart = ({ totals }: { totals?: ThingWithLogEntriesCount[] }) => {
   const [chartData, setChartData] = useState<any[] | null>(null);
   const db = useSQLiteContext();
   const logDbContents = useDbLogger();
