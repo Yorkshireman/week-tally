@@ -106,10 +106,10 @@ export const Chart = ({ totals }: { totals?: ThingWithLogEntriesCount[] }) => {
   const maxTotal = Math.max(...chartData.map(({ total }) => total), 0);
 
   return (
-    <View style={{ height: 175 }}>
+    <View style={{ height: 190 }}>
       <CartesianChart
         data={chartData}
-        domain={{ y: [0, maxTotal + 1] }}
+        domain={{ y: [0, maxTotal + 0.1] }}
         yAxis={[
           {
             font
