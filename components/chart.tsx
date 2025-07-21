@@ -128,6 +128,7 @@ export const Chart = ({ totals }: { totals?: ThingWithLogEntriesCount[] }) => {
   if (!chartData) return null;
 
   const maxTotal = Math.max(...chartData.map(({ total }) => total), 0);
+  const tickValues = Array.from({ length: maxTotal + 1 }, (_, i) => i);
 
   return (
     <View style={{ height: 190 }}>
@@ -136,7 +137,8 @@ export const Chart = ({ totals }: { totals?: ThingWithLogEntriesCount[] }) => {
         domain={{ y: [0, maxTotal + 0.1] }}
         yAxis={[
           {
-            font
+            font,
+            tickValues
           }
         ]}
         xKey='week'
