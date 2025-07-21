@@ -1,5 +1,6 @@
 import { buildStartOfWeekDate } from '@/utils';
 import { type SQLiteDatabase } from 'expo-sqlite';
+import { useFont } from '@shopify/react-native-skia';
 import { useSQLiteContext } from 'expo-sqlite';
 import { View } from 'react-native';
 import { Area, CartesianChart } from 'victory-native';
@@ -54,6 +55,7 @@ const fetchAndSetChartData = async (
 export const Chart = ({ totals }: { totals?: ThingWithLogEntriesCount[] }) => {
   const [chartData, setChartData] = useState<ChartDataItem[] | null>(null);
   const db = useSQLiteContext();
+  const font = useFont(require('../assets/fonts/inter-medium.ttf'), 12);
 
   useEffect(() => {
     fetchAndSetChartData(db, setChartData);
@@ -63,7 +65,14 @@ export const Chart = ({ totals }: { totals?: ThingWithLogEntriesCount[] }) => {
 
   return (
     <View style={{ height: 150 }}>
-      <CartesianChart data={chartData} xKey='week' yKeys={['total']}>
+      <CartesianChart
+        axisOptions={{
+          font
+        }}
+        data={chartData}
+        xKey='week'
+        yKeys={['total']}
+      >
         {({ chartBounds, points }) => (
           <Area
             animate={{ duration: 300, type: 'timing' }}
