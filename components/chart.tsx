@@ -128,13 +128,10 @@ export const Chart = ({ totals }: { totals?: ThingWithLogEntriesCount[] }) => {
 
   if (!chartData || chartData.length === 0) return null;
 
-  // Get the week index of the first item
-  const firstWeekIndex = chartData[0].week;
   const now = new Date();
-  // Get the Monday of the first week in the range
-  const firstWeekMonday = buildStartOfWeekDate(now, firstWeekIndex);
-  // Format dates with day of week
-  const firstWeekLabel = format(firstWeekMonday, "EEEE do MMM ''yy"); // e.g. "Monday 21st Jul '25"
+  const weekOffset = -chartData[chartData.length - 1].week;
+  const firstWeekMonday = buildStartOfWeekDate(now, weekOffset);
+  const xAxisText = format(firstWeekMonday, "EEEE do MMMM ''yy");
 
   console.log(
     'Week indexes:',
@@ -168,7 +165,7 @@ export const Chart = ({ totals }: { totals?: ThingWithLogEntriesCount[] }) => {
           />
         )}
       </CartesianChart>
-      <Text style={styles.xAxisText}>From {firstWeekLabel} to now</Text>
+      <Text style={styles.xAxisText}>From {xAxisText} to now</Text>
       <View style={styles.scaleSelectorsContainer}>
         {Object.values(ChartScale).map(scale => (
           <ScaleSelector
@@ -194,7 +191,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between'
   },
   xAxisText: {
+    bottom: 10,
     fontSize: 12,
+    position: 'relative',
     textAlign: 'center'
   }
 });
