@@ -18,7 +18,7 @@ enum ChartScale {
   FOUR_WEEKS = '4W',
   TWELVE_WEEKS = '12W',
   TWENTY_FOUR_WEEKS = '24W',
-  ONE_YEAR = '1Y',
+  FIFTY_TWO_WEEKS = '52W',
   MAX = 'Max'
 }
 
@@ -40,7 +40,7 @@ const fetchAndSetChartData = async (
     case ChartScale.TWENTY_FOUR_WEEKS:
       numWeeks = 24;
       break;
-    case ChartScale.ONE_YEAR:
+    case ChartScale.FIFTY_TWO_WEEKS:
       numWeeks = 52;
       break;
     case ChartScale.MAX:
