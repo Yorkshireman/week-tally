@@ -65,7 +65,14 @@ const styles = {
         color: '#fff'
       }
     },
-    chart: {},
+    chart: {
+      areaColour: '#fff',
+      scaleSelectorSelected: {
+        backgroundColor: primitiveNeutral[600],
+        borderColor: primitiveNeutral[100],
+        color: primitiveNeutral[700]
+      }
+    },
     divider: {
       backgroundColor: primitiveNeutral[500]
     },
