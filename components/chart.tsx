@@ -22,20 +22,26 @@ enum ChartScale {
   MAX = 'Max'
 }
 
-const fetchAndSetChartData = async (
-  db: SQLiteDatabase,
-  setChartData: React.Dispatch<React.SetStateAction<ChartDataItem[] | null>>,
-  scale: ChartScale
-) => {
+const fetchAndSetChartData = async ({
+  db,
+  selectedScale,
+  selectedThingId,
+  setChartData
+}: {
+  db: SQLiteDatabase;
+  selectedScale: ChartScale;
+  selectedThingId: string;
+  setChartData: React.Dispatch<React.SetStateAction<ChartDataItem[] | null>>;
+}) => {
   const now = new Date();
 
   let numWeeks: number;
-  if (scale === ChartScale.MAX) {
+  if (selectedScale === ChartScale.MAX) {
     let earliestEntry: LogEntry | null = null;
     try {
       earliestEntry = await db.getFirstAsync(
         'SELECT * FROM entries WHERE thingId = ? ORDER BY timestamp ASC LIMIT 1',
-        '89596d1d-9783-4df6-9759-11a62707245f'
+        selectedThingId
       );
     } catch (error) {
       console.error('Error fetching earliest entry:', error);
@@ -55,7 +61,7 @@ const fetchAndSetChartData = async (
       numWeeks = 4;
     }
   } else {
-    switch (scale) {
+    switch (selectedScale) {
       case ChartScale.FOUR_WEEKS:
         numWeeks = 4;
         break;
@@ -80,12 +86,12 @@ const fetchAndSetChartData = async (
 
     try {
       console.log(
-        `Fetching LogEntries with thingId 89596d1d-9783-4df6-9759-11a62707245f for week starting ${weekStart.toISOString()} and ending ${weekEnd.toISOString()}`
+        `Fetching LogEntries with thingId ${selectedThingId} for week starting ${weekStart.toISOString()} and ending ${weekEnd.toISOString()}`
       );
 
       const logEntries = await db.getAllAsync<LogEntry>(
         'SELECT * FROM entries WHERE thingId = ? AND timestamp >= ? AND timestamp < ?',
-        '89596d1d-9783-4df6-9759-11a62707245f',
+        selectedThingId,
         weekStart.toISOString(),
         weekEnd.toISOString()
       );
@@ -93,7 +99,7 @@ const fetchAndSetChartData = async (
       console.log(
         `Found ${
           logEntries.length
-        } LogEntries for the week with thingId 89596d1d-9783-4df6-9759-11a62707245f: ${JSON.stringify(
+        } LogEntries for the week with thingId ${selectedThingId}: ${JSON.stringify(
           logEntries,
           null,
           2
@@ -141,7 +147,13 @@ const ScaleSelector = ({
   );
 };
 
-export const Chart = ({ totals }: { totals?: ThingWithLogEntriesCount[] }) => {
+export const Chart = ({
+  selectedThingId,
+  totals
+}: {
+  selectedThingId: string;
+  totals?: ThingWithLogEntriesCount[];
+}) => {
   const {
     chart: { areaColour }
   } = useColours();
@@ -151,8 +163,8 @@ export const Chart = ({ totals }: { totals?: ThingWithLogEntriesCount[] }) => {
   const [selectedScale, setSelectedScale] = useState<ChartScale>(ChartScale.FOUR_WEEKS);
 
   useEffect(() => {
-    fetchAndSetChartData(db, setChartData, selectedScale);
-  }, [db, totals, selectedScale]);
+    fetchAndSetChartData({ db, selectedScale, selectedThingId, setChartData });
+  }, [db, selectedThingId, totals, selectedScale]);
 
   if (!chartData || chartData.length === 0) return null;
 

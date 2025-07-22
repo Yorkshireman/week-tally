@@ -121,7 +121,7 @@ export default function TotalsScreen() {
 
   return (
     <SafeAreaView style={{ ...globalStyles.screenWrapper, backgroundColor }}>
-      <Chart totals={totals} />
+      {selectedThing && <Chart selectedThingId={selectedThing.id} totals={totals} />}
       <View style={{ ...styles.listHeader, width: '100%' }}>
         <Pressable onPress={goBackOneWeek} style={styles.weekButton}>
           <Ionicons
@@ -145,7 +145,8 @@ export default function TotalsScreen() {
       </View>
       <FlatList
         data={totals}
-        renderItem={({ item: { count, title, id } }) => {
+        renderItem={({ item: thing }) => {
+          const { count, title, id } = thing;
           const isSelected = selectedThing?.id === id;
           const wrapperStyles = isSelected
             ? {
@@ -154,7 +155,7 @@ export default function TotalsScreen() {
                 ...styles.selectedThing,
                 ...selectedThingColours
               }
-            : { ...styles.thing, ...thingSectionColours };
+            : { ...styles.thing, ...thingSectionColours, borderColor: backgroundColor };
 
           return (
             <View style={wrapperStyles}>
@@ -181,9 +182,15 @@ export default function TotalsScreen() {
                   paddingHorizontal: 10
                 }}
               >
-                <View style={{ flex: 1, paddingHorizontal: 10 }}>
+                <Pressable
+                  onPress={() => {
+                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                    setSelectedThing(thing);
+                  }}
+                  style={{ flex: 1, paddingHorizontal: 10 }}
+                >
                   <Text style={{ ...styles.text, color, textAlign: 'left' }}>{title}</Text>
-                </View>
+                </Pressable>
                 <View style={{ minWidth: 10 }}>
                   <Text style={{ ...styles.text, color }}>{count}</Text>
                 </View>
@@ -250,6 +257,7 @@ const styles = StyleSheet.create({
   thing: {
     alignItems: 'center',
     borderRadius: 8,
+    borderWidth: 2,
     flexDirection: 'row',
     padding: 8
   },
