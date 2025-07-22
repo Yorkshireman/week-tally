@@ -31,10 +31,16 @@ const fetchAndSetChartData = async (
 
   let numWeeks;
   if (scale === ChartScale.MAX) {
-    const earliestEntry = await db.getFirstAsync<LogEntry>(
-      'SELECT * FROM entries WHERE thingId = ? ORDER BY timestamp ASC LIMIT 1',
-      '89596d1d-9783-4df6-9759-11a62707245f'
-    );
+    let earliestEntry: LogEntry | null = null;
+    try {
+      earliestEntry = await db.getFirstAsync(
+        'SELECT * FROM entries WHERE thingId = ? ORDER BY timestamp ASC LIMIT 1',
+        '89596d1d-9783-4df6-9759-11a62707245f'
+      );
+    } catch (error) {
+      console.error('Error fetching earliest entry:', error);
+      return setChartData([{ total: 0, week: 0 }]);
+    }
 
     if (earliestEntry) {
       const earliestDate = new Date(earliestEntry.timestamp);
