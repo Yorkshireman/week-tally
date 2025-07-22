@@ -29,7 +29,7 @@ const fetchAndSetChartData = async (
 ) => {
   const now = new Date();
 
-  let numWeeks;
+  let numWeeks: number;
   if (scale === ChartScale.MAX) {
     let earliestEntry: LogEntry | null = null;
     try {
@@ -47,7 +47,6 @@ const fetchAndSetChartData = async (
       const diffMs = now.getTime() - earliestDate.getTime();
       const diffWeeks = Math.ceil(diffMs / (7 * 24 * 60 * 60 * 1000));
       numWeeks = Math.max(diffWeeks, 1);
-      console.log({ numWeeks });
     } else {
       console.warn(
         'fetchAndSetChartData(): No entries found for the specified thingId, defaulting to 4 weeks'
