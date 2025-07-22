@@ -201,7 +201,7 @@ export const Chart = ({
           />
         )}
       </CartesianChart>
-      <Text style={styles.xAxisText}>From {xAxisText} to now</Text>
+      <Text style={styles.xAxisText}>From {xAxisText}</Text>
       <View style={styles.scaleSelectorsContainer}>
         {Object.values(ChartScale).map(scale => (
           <ScaleSelector
