@@ -78,43 +78,54 @@ const fetchAndSetChartData = async ({
   }
 
   const weekOffsets = buildWeekOffsetsArray(numWeeks);
+  const earliestWeekOffset = weekOffsets[0];
 
-  const chartDataPromises = weekOffsets.map(async (weekOffset, i) => {
-    const weekStart = buildStartOfWeekDate(now, weekOffset);
-    const weekEnd = new Date(weekStart);
-    weekEnd.setDate(weekEnd.getDate() + 7);
+  const earliestWeekStart = buildStartOfWeekDate(now, earliestWeekOffset);
+  const currentWeekStart = buildStartOfWeekDate(now, 0);
+  const currentWeekEnd = new Date(currentWeekStart);
+  currentWeekEnd.setDate(currentWeekEnd.getDate() + 7);
 
-    try {
-      console.log(
-        `Fetching LogEntries with thingId ${selectedThingId} for week starting ${weekStart.toISOString()} and ending ${weekEnd.toISOString()}`
-      );
+  try {
+    console.log(
+      `Fetching LogEntries with thingId ${selectedThingId} for week starting ${earliestWeekStart.toISOString()} and ending ${currentWeekEnd.toISOString()}`
+    );
 
-      const logEntries = await db.getAllAsync<LogEntry>(
-        'SELECT * FROM entries WHERE thingId = ? AND timestamp >= ? AND timestamp < ?',
-        selectedThingId,
-        weekStart.toISOString(),
-        weekEnd.toISOString()
-      );
+    const logEntries = await db.getAllAsync<LogEntry>(
+      'SELECT * FROM entries WHERE thingId = ? AND timestamp >= ? AND timestamp < ?',
+      selectedThingId,
+      earliestWeekStart.toISOString(),
+      currentWeekEnd.toISOString()
+    );
 
-      console.log(
-        `Found ${
-          logEntries.length
-        } LogEntries for the week with thingId ${selectedThingId}: ${JSON.stringify(
-          logEntries,
-          null,
-          2
-        )}`
-      );
+    console.log(
+      `Found ${
+        logEntries.length
+      } LogEntries for the period with thingId ${selectedThingId}: ${JSON.stringify(
+        logEntries,
+        null,
+        2
+      )}`
+    );
 
-      return { total: logEntries.length, week: i };
-    } catch (e) {
-      console.error('DB error: ', e);
-      return { total: 0, week: i };
+    const weekCounts: Record<number, number> = {};
+    for (const entry of logEntries) {
+      const entryDate = new Date(entry.timestamp);
+      const diffMs = currentWeekStart.getTime() - buildStartOfWeekDate(entryDate, 0).getTime();
+      const weekOffset = -Math.round(diffMs / (7 * 24 * 60 * 60 * 1000));
+      weekCounts[weekOffset] = (weekCounts[weekOffset] || 0) + 1;
     }
-  });
 
-  const resolvedChartData = await Promise.all(chartDataPromises);
-  setChartData(resolvedChartData);
+    const chartData: ChartDataItem[] = weekOffsets.map((weekOffset, i) => ({
+      total: weekCounts[weekOffset] || 0,
+      week: i
+    }));
+
+    setChartData(chartData);
+  } catch (e) {
+    console.error('DB error: ', e);
+    setChartData([{ total: 0, week: 0 }]);
+    return;
+  }
 };
 
 const ScaleSelector = ({
