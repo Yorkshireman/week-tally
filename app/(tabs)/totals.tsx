@@ -36,7 +36,8 @@ export default function TotalsScreen() {
     text: { color },
     thingSection: thingSectionColours,
     totalsScreen: {
-      addButton: { color: addButtonColor }
+      addButton: { color: addButtonColor },
+      selectedThing: selectedThingColours
     }
   } = useColours();
   const db = useSQLiteContext();
@@ -45,7 +46,22 @@ export default function TotalsScreen() {
   const logDbContents = useDbLogger();
   const router = useRouter();
   const [totals, setTotals] = useState<ThingWithLogEntriesCount[]>();
+  const [selectedThing, setSelectedThing] = useState<ThingWithLogEntriesCount>();
   const [weekOffset, setWeekOffset] = useState<number>(0);
+
+  useEffect(() => {
+    const fetchFirstCurrentlyTrackedThing = async () => {
+      const thing = await db.getFirstAsync<ThingWithLogEntriesCount>(
+        'SELECT * FROM things WHERE currentlyTracking = 1 ORDER BY createdAt DESC LIMIT 1'
+      );
+
+      if (thing) {
+        setSelectedThing(thing);
+      }
+    };
+
+    fetchFirstCurrentlyTrackedThing();
+  }, [db]);
 
   useEffect(() => {
     if (isFocused) {
@@ -129,48 +145,60 @@ export default function TotalsScreen() {
       </View>
       <FlatList
         data={totals}
-        renderItem={({ item: { count, title, id } }) => (
-          <View style={{ ...styles.thing, ...thingSectionColours }}>
-            <Pressable
-              onPress={() => {
-                if (count === 0) return;
-                deleteLogEntry(id);
-              }}
-              disabled={count === 0}
-              style={styles.countButtonWrapper}
-            >
-              <Ionicons
-                color={iconButton.color}
-                name='remove-circle'
-                size={normaliseFontSize(32)}
-                style={{ ...styles.countButton, opacity: count === 0 ? 0.5 : 1 }}
-              />
-            </Pressable>
-            <View
-              style={{
-                alignItems: 'center',
-                flex: 1,
-                flexDirection: 'row',
-                paddingHorizontal: 10
-              }}
-            >
-              <View style={{ flex: 1, paddingHorizontal: 10 }}>
-                <Text style={{ ...styles.text, color, textAlign: 'left' }}>{title}</Text>
+        renderItem={({ item: { count, title, id } }) => {
+          const isSelected = selectedThing?.id === id;
+          const wrapperStyles = isSelected
+            ? {
+                ...styles.thing,
+                ...thingSectionColours,
+                ...styles.selectedThing,
+                ...selectedThingColours
+              }
+            : { ...styles.thing, ...thingSectionColours };
+
+          return (
+            <View style={wrapperStyles}>
+              <Pressable
+                onPress={() => {
+                  if (count === 0) return;
+                  deleteLogEntry(id);
+                }}
+                disabled={count === 0}
+                style={styles.countButtonWrapper}
+              >
+                <Ionicons
+                  color={iconButton.color}
+                  name='remove-circle'
+                  size={normaliseFontSize(32)}
+                  style={{ ...styles.countButton, opacity: count === 0 ? 0.5 : 1 }}
+                />
+              </Pressable>
+              <View
+                style={{
+                  alignItems: 'center',
+                  flex: 1,
+                  flexDirection: 'row',
+                  paddingHorizontal: 10
+                }}
+              >
+                <View style={{ flex: 1, paddingHorizontal: 10 }}>
+                  <Text style={{ ...styles.text, color, textAlign: 'left' }}>{title}</Text>
+                </View>
+                <View style={{ minWidth: 10 }}>
+                  <Text style={{ ...styles.text, color }}>{count}</Text>
+                </View>
               </View>
-              <View style={{ minWidth: 10 }}>
-                <Text style={{ ...styles.text, color }}>{count}</Text>
-              </View>
+              <Pressable onPress={() => addLogEntry(id)} style={styles.countButtonWrapper}>
+                <Ionicons
+                  color={iconButton.color}
+                  name='add-circle'
+                  size={normaliseFontSize(32)}
+                  style={styles.countButton}
+                />
+              </Pressable>
             </View>
-            <Pressable onPress={() => addLogEntry(id)} style={styles.countButtonWrapper}>
-              <Ionicons
-                color={iconButton.color}
-                name='add-circle'
-                size={normaliseFontSize(32)}
-                style={styles.countButton}
-              />
-            </Pressable>
-          </View>
-        )}
+          );
+        }}
         ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
         ListFooterComponent={
           weekOffset ? null : (
@@ -210,6 +238,9 @@ const styles = StyleSheet.create({
     gap: 20,
     justifyContent: 'space-between',
     marginBottom: 20
+  },
+  selectedThing: {
+    borderWidth: 2
   },
   text: {
     fontSize: normaliseFontSize(24),

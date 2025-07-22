@@ -139,6 +139,9 @@ const styles = {
     totalsScreen: {
       addButton: {
         color: primitiveNeutral[200]
+      },
+      selectedThing: {
+        borderColor: primitiveInfo[300]
       }
     }
   },
@@ -230,6 +233,9 @@ const styles = {
     totalsScreen: {
       addButton: {
         color: primitivePrimary[600]
+      },
+      selectedThing: {
+        borderColor: primitiveInfo[300]
       }
     }
   }
