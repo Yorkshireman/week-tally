@@ -30,22 +30,40 @@ const fetchAndSetChartData = async (
   const now = new Date();
 
   let numWeeks;
-  switch (scale) {
-    case ChartScale.FOUR_WEEKS:
+  if (scale === ChartScale.MAX) {
+    const earliestEntry = await db.getFirstAsync<LogEntry>(
+      'SELECT * FROM entries WHERE thingId = ? ORDER BY timestamp ASC LIMIT 1',
+      '89596d1d-9783-4df6-9759-11a62707245f'
+    );
+
+    if (earliestEntry) {
+      const earliestDate = new Date(earliestEntry.timestamp);
+      const diffMs = now.getTime() - earliestDate.getTime();
+      const diffWeeks = Math.ceil(diffMs / (7 * 24 * 60 * 60 * 1000));
+      numWeeks = Math.max(diffWeeks, 1);
+      console.log({ numWeeks });
+    } else {
+      console.warn(
+        'fetchAndSetChartData(): No entries found for the specified thingId, defaulting to 4 weeks'
+      );
+
       numWeeks = 4;
-      break;
-    case ChartScale.TWELVE_WEEKS:
-      numWeeks = 12;
-      break;
-    case ChartScale.TWENTY_FOUR_WEEKS:
-      numWeeks = 24;
-      break;
-    case ChartScale.FIFTY_TWO_WEEKS:
-      numWeeks = 52;
-      break;
-    case ChartScale.MAX:
-      numWeeks = 104; // 2 years, or you could fetch from DB for true max
-      break;
+    }
+  } else {
+    switch (scale) {
+      case ChartScale.FOUR_WEEKS:
+        numWeeks = 4;
+        break;
+      case ChartScale.TWELVE_WEEKS:
+        numWeeks = 12;
+        break;
+      case ChartScale.TWENTY_FOUR_WEEKS:
+        numWeeks = 24;
+        break;
+      case ChartScale.FIFTY_TWO_WEEKS:
+        numWeeks = 52;
+        break;
+    }
   }
 
   const weekOffsets = buildWeekOffsetsArray(numWeeks);
@@ -57,22 +75,27 @@ const fetchAndSetChartData = async (
 
     try {
       console.log(
-        `Fetching LogEntries for week starting ${weekStart.toISOString()} and ending ${weekEnd.toISOString()}`
+        `Fetching LogEntries with thingId 89596d1d-9783-4df6-9759-11a62707245f for week starting ${weekStart.toISOString()} and ending ${weekEnd.toISOString()}`
       );
 
       const logEntries = await db.getAllAsync<LogEntry>(
-        'SELECT * FROM entries WHERE timestamp >= ? AND timestamp < ?',
+        'SELECT * FROM entries WHERE thingId = ? AND timestamp >= ? AND timestamp < ?',
+        '89596d1d-9783-4df6-9759-11a62707245f',
         weekStart.toISOString(),
         weekEnd.toISOString()
       );
 
       console.log(
-        `Found ${logEntries.length} LogEntries for the week: ${JSON.stringify(logEntries, null, 2)}`
+        `Found ${
+          logEntries.length
+        } LogEntries for the week with thingId 89596d1d-9783-4df6-9759-11a62707245f: ${JSON.stringify(
+          logEntries,
+          null,
+          2
+        )}`
       );
 
-      // only Cycling
-      const thingId = '89596d1d-9783-4df6-9759-11a62707245f';
-      return { total: logEntries.filter(entry => entry.thingId === thingId).length, week: i };
+      return { total: logEntries.length, week: i };
     } catch (e) {
       console.error('DB error: ', e);
       return { total: 0, week: i };
