@@ -21,20 +21,21 @@ export const ChangeNotificationTimeSection = () => {
   };
 
   return (
-    <View style={{ ...globalStyles.settingsScreenSection, ...sectionColours, gap: 48 }}>
+    <TouchableOpacity
+      onPress={onPress}
+      style={{ ...globalStyles.settingsScreenSection, ...sectionColours, gap: 48 }}
+    >
       <Text style={{ ...styles.text, color }}>Daily Notification Time</Text>
-      <TouchableOpacity onPress={onPress}>
-        <View style={{ flexDirection: 'row', gap: 5 }}>
-          <Text style={{ ...styles.text, color }}>Select</Text>
-          <Ionicons
-            color={primitiveNeutral[400]}
-            name='chevron-forward'
-            size={normaliseFontSize(20)}
-            style={{ alignSelf: 'flex-end', paddingBottom: 1 }}
-          />
-        </View>
-      </TouchableOpacity>
-    </View>
+      <View style={{ flexDirection: 'row', gap: 5 }}>
+        <Text style={{ ...styles.text, color }}>Select</Text>
+        <Ionicons
+          color={primitiveNeutral[400]}
+          name='chevron-forward'
+          size={normaliseFontSize(20)}
+          style={{ alignSelf: 'flex-end', paddingBottom: 1 }}
+        />
+      </View>
+    </TouchableOpacity>
   );
 };
 
