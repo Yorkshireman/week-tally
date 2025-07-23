@@ -1,3 +1,16 @@
+export type ChartDataItem = {
+  total: number;
+  week: number;
+};
+
+export enum ChartScale {
+  FOUR_WEEKS = '4W',
+  TWELVE_WEEKS = '12W',
+  TWENTY_FOUR_WEEKS = '24W',
+  FIFTY_TWO_WEEKS = '52W',
+  MAX = 'Max'
+}
+
 export type LogEntry = {
   id: string;
   thingId: string;
