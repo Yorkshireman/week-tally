@@ -71,7 +71,7 @@ export const Chart = ({
   const now = new Date();
   const weekOffset = -chartData[chartData.length - 1].week;
   const firstWeekMonday = buildStartOfWeekDate(now, weekOffset);
-  const xAxisText = format(firstWeekMonday, "EEEE do MMMM ''yy");
+  const firstWeekLabel = format(firstWeekMonday, "EE do MMM ''yy");
 
   const maxTotal = Math.max(...chartData.map(({ total }) => total), 0);
   const tickValues = Array.from({ length: maxTotal + 1 }, (_, i) => i);
@@ -79,9 +79,11 @@ export const Chart = ({
   const middleIndex = Math.floor(chartData.length / 2);
   const middleWeek = chartData[middleIndex]?.week;
   const middleWeekStartDate = buildStartOfWeekDate(now, -middleWeek);
-  const middleWeekLastDayDate = new Date(middleWeekStartDate);
-  middleWeekLastDayDate.setDate(middleWeekLastDayDate.getDate() + 6);
-  const middleWeekLabel = format(middleWeekLastDayDate, "do MMMM ''yy");
+  const middleWeekSunday = new Date(middleWeekStartDate);
+  middleWeekSunday.setDate(middleWeekSunday.getDate() + 6);
+  const middleWeekLabel = format(middleWeekSunday, "do MMM ''yy");
+
+  const nowLabel = format(now, "EE do MMM ''yy");
 
   return (
     <View style={{ height: 190 }}>
@@ -111,9 +113,12 @@ export const Chart = ({
         )}
       </CartesianChart>
       <View style={styles.xAxisTickLabelsWrapper}>
-        <Text style={{ ...styles.xAxisTickLabels, ...xAxisTickLabel }}>{middleWeekLabel}</Text>
+        <Text style={{ ...styles.xAxisTickLabels, ...xAxisTickLabel }}>{firstWeekLabel}</Text>
+        {selectedScale !== ChartScale.FOUR_WEEKS && (
+          <Text style={{ ...styles.xAxisTickLabels, ...xAxisTickLabel }}>{middleWeekLabel}</Text>
+        )}
+        <Text style={{ ...styles.xAxisTickLabels, ...xAxisTickLabel }}>{nowLabel}</Text>
       </View>
-      <Text style={{ ...styles.xAxisText, color }}>From {xAxisText}</Text>
       <View style={styles.scaleSelectorsContainer}>
         {Object.values(ChartScale).map(scale => (
           <ScaleSelector
@@ -138,14 +143,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between'
   },
-  xAxisText: {
-    bottom: 10,
-    fontSize: 12,
-    position: 'relative',
-    textAlign: 'center'
-  },
   xAxisTickLabels: {
     fontSize: 12
   },
-  xAxisTickLabelsWrapper: { alignItems: 'center', bottom: 18, position: 'relative' }
+  xAxisTickLabelsWrapper: {
+    bottom: 18,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    position: 'relative'
+  }
 });
