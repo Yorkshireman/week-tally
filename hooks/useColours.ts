@@ -66,7 +66,8 @@ const styles = {
       }
     },
     chart: {
-      areaColour: '#fff',
+      areaColour: primitiveInfo[300],
+      lineColor: primitiveNeutral[400],
       scaleSelectorSelected: {
         backgroundColor: primitiveNeutral[600],
         borderColor: primitiveNeutral[100],
@@ -164,6 +165,7 @@ const styles = {
     },
     chart: {
       areaColour: primitiveInfo[300],
+      lineColor: primitiveNeutral[400],
       scaleSelectorSelected: {
         backgroundColor: primitiveInfo[100],
         borderColor: primitivePrimary[600],

@@ -19,7 +19,8 @@ const ScaleSelector = ({
 }) => {
   const {
     chart: { scaleSelectorSelected },
-    page
+    page,
+    text: { color }
   } = useColours();
 
   const _styles =
@@ -39,7 +40,7 @@ const ScaleSelector = ({
       }}
       style={_styles}
     >
-      <Text>{scale}</Text>
+      <Text style={{ color }}>{scale}</Text>
     </TouchableOpacity>
   );
 };
@@ -52,7 +53,8 @@ export const Chart = ({
   totals?: ThingWithLogEntriesCount[];
 }) => {
   const {
-    chart: { areaColour }
+    chart: { areaColour, lineColor },
+    text: { color }
   } = useColours();
   const [chartData, setChartData] = useState<ChartDataItem[] | null>(null);
   const font = useFont(require('../assets/fonts/inter-medium.ttf'), 12);
@@ -82,6 +84,8 @@ export const Chart = ({
         yAxis={[
           {
             font,
+            labelColor: color,
+            lineColor,
             tickValues
           }
         ]}
@@ -99,7 +103,7 @@ export const Chart = ({
           />
         )}
       </CartesianChart>
-      <Text style={styles.xAxisText}>From {xAxisText}</Text>
+      <Text style={{ ...styles.xAxisText, color }}>From {xAxisText}</Text>
       <View style={styles.scaleSelectorsContainer}>
         {Object.values(ChartScale).map(scale => (
           <ScaleSelector
