@@ -72,6 +72,9 @@ const styles = {
         backgroundColor: primitiveNeutral[600],
         borderColor: primitiveNeutral[100],
         color: primitiveNeutral[700]
+      },
+      xAxisTickLabel: {
+        color: primitiveNeutral[400]
       }
     },
     divider: {
@@ -169,6 +172,9 @@ const styles = {
       scaleSelectorSelected: {
         backgroundColor: primitiveInfo[100],
         borderColor: primitivePrimary[600],
+        color: primitiveNeutral[700]
+      },
+      xAxisTickLabel: {
         color: primitiveNeutral[700]
       }
     },

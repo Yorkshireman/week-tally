@@ -53,7 +53,7 @@ export const Chart = ({
   totals?: ThingWithLogEntriesCount[];
 }) => {
   const {
-    chart: { areaColour, lineColor },
+    chart: { areaColour, lineColor, xAxisTickLabel },
     text: { color }
   } = useColours();
   const [chartData, setChartData] = useState<ChartDataItem[] | null>(null);
@@ -75,6 +75,13 @@ export const Chart = ({
 
   const maxTotal = Math.max(...chartData.map(({ total }) => total), 0);
   const tickValues = Array.from({ length: maxTotal + 1 }, (_, i) => i);
+
+  const middleIndex = Math.floor(chartData.length / 2);
+  const middleWeek = chartData[middleIndex]?.week;
+  const middleWeekStartDate = buildStartOfWeekDate(now, -middleWeek);
+  const middleWeekLastDayDate = new Date(middleWeekStartDate);
+  middleWeekLastDayDate.setDate(middleWeekLastDayDate.getDate() + 6);
+  const middleWeekLabel = format(middleWeekLastDayDate, "do MMMM ''yy");
 
   return (
     <View style={{ height: 190 }}>
@@ -103,6 +110,9 @@ export const Chart = ({
           />
         )}
       </CartesianChart>
+      <View style={styles.xAxisTickLabelsWrapper}>
+        <Text style={{ ...styles.xAxisTickLabels, ...xAxisTickLabel }}>{middleWeekLabel}</Text>
+      </View>
       <Text style={{ ...styles.xAxisText, color }}>From {xAxisText}</Text>
       <View style={styles.scaleSelectorsContainer}>
         {Object.values(ChartScale).map(scale => (
@@ -133,5 +143,9 @@ const styles = StyleSheet.create({
     fontSize: 12,
     position: 'relative',
     textAlign: 'center'
-  }
+  },
+  xAxisTickLabels: {
+    fontSize: 12
+  },
+  xAxisTickLabelsWrapper: { alignItems: 'center', bottom: 18, position: 'relative' }
 });
