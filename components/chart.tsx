@@ -114,7 +114,7 @@ export const Chart = ({
       </CartesianChart>
       <View style={styles.xAxisTickLabelsWrapper}>
         <Text style={{ ...styles.xAxisTickLabels, ...xAxisTickLabel }}>{firstWeekLabel}</Text>
-        {selectedScale !== ChartScale.FOUR_WEEKS && (
+        {selectedScale !== ChartScale.FOUR_WEEKS && chartData.length > 4 && (
           <Text style={{ ...styles.xAxisTickLabels, ...xAxisTickLabel }}>{middleWeekLabel}</Text>
         )}
         <Text style={{ ...styles.xAxisTickLabels, ...xAxisTickLabel }}>{nowLabel}</Text>
