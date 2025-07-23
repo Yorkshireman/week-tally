@@ -38,6 +38,9 @@ export const useFetchAndSetChartData = ({
           const diffMs = now.getTime() - earliestDate.getTime();
           const diffWeeks = Math.ceil(diffMs / (7 * 24 * 60 * 60 * 1000));
           numWeeks = Math.max(diffWeeks, 1);
+          // when chart only has one week of log entries, and is set to Max, tell it to
+          // chart the last two weeks, otherwise it visually looks like a bug to the user
+          numWeeks = numWeeks === 1 ? 2 : numWeeks;
         } else {
           console.warn(
             'fetchAndSetChartData(): No entries found for the specified thingId, defaulting to 4 weeks'
