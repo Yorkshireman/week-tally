@@ -1,4 +1,5 @@
 import { PAYWALL_TURNED_ON } from './config';
+import { setDbSettingsShowChart } from '@/utils/dbManipulations';
 import { SQLiteDatabase } from 'expo-sqlite';
 
 const columnExists = async (db: SQLiteDatabase, table: string, column: string) => {
@@ -67,4 +68,9 @@ export const migrateDbToV6 = async (db: SQLiteDatabase) => {
   }
 
   console.log('Database migration to version 6 completed');
+};
+
+export const migrateDbToV7 = async (db: SQLiteDatabase) => {
+  console.log('Migrating database to version 7');
+  await setDbSettingsShowChart(db, true);
 };
