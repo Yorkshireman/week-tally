@@ -2,10 +2,17 @@ export {
   addLogEntryToDb,
   addThingToDb,
   deleteLogEntryFromDb,
-  deleteThingFromDb
+  deleteThingFromDb,
+  setDbSettingsChartThingId
 } from './dbManipulations';
 export { buildStartOfWeekDate, buildWeekOffsetsArray, getWeekLabel } from './dateUtils';
 export { fetchAndSetTotals } from './fetchAndSetTotals';
+export {
+  fetchDbChartThingId,
+  fetchDbFirstCurrentlyTrackedThing,
+  fetchDbShowChartSetting,
+  fetchDbThingById
+} from './dbQueries';
 export { getAddLogEntryCount } from './getAddLogEntryCount';
 export { incrementAddLogEntryCount } from './incrementAddLogEntryCount';
 export { mapMinsAfterMidnightToTimeString } from './mapMinsAfterMidnightToTimeString';

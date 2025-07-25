@@ -10,11 +10,16 @@ import {
   addLogEntryToDb,
   deleteLogEntryFromDb,
   fetchAndSetTotals,
+  fetchDbChartThingId,
+  fetchDbFirstCurrentlyTrackedThing,
+  fetchDbShowChartSetting,
+  fetchDbThingById,
   getAddLogEntryCount,
   getWeekLabel,
   incrementAddLogEntryCount,
   normaliseFontSize,
-  promptForRatingIfAppropriate
+  promptForRatingIfAppropriate,
+  setDbSettingsChartThingId
 } from '@/utils';
 import {
   AppState,
@@ -45,26 +50,52 @@ export default function TotalsScreen() {
   const isFocused = useIsFocused();
   const logDbContents = useDbLogger();
   const router = useRouter();
+  const [showChart, setShowChart] = useState<boolean>(true);
   const [totals, setTotals] = useState<ThingWithLogEntriesCount[]>();
   const [selectedThing, setSelectedThing] = useState<ThingWithLogEntriesCount>();
   const [weekOffset, setWeekOffset] = useState<number>(0);
 
   useEffect(() => {
-    const fetchFirstCurrentlyTrackedThing = async () => {
-      const thing = await db.getFirstAsync<ThingWithLogEntriesCount>(
-        'SELECT * FROM things WHERE currentlyTracking = 1 ORDER BY createdAt DESC LIMIT 1'
-      );
-
-      if (thing) {
-        setSelectedThing(thing);
-      }
-    };
-
-    fetchFirstCurrentlyTrackedThing();
-  }, [db]);
-
-  useEffect(() => {
     if (isFocused) {
+      fetchDbShowChartSetting(db).then(isEnabled => {
+        if (isEnabled) {
+          setShowChart(true);
+          fetchDbChartThingId(db).then(thingId => {
+            if (thingId) {
+              fetchDbThingById(db, thingId).then(thing => {
+                if (thing) {
+                  setSelectedThing(thing);
+                } else {
+                  fetchDbFirstCurrentlyTrackedThing(db).then(thing => {
+                    if (!thing) {
+                      setSelectedThing(undefined);
+                      return;
+                    }
+
+                    setDbSettingsChartThingId(db, thing.id);
+                    setSelectedThing(thing);
+                  });
+                }
+              });
+            } else {
+              fetchDbFirstCurrentlyTrackedThing(db).then(thing => {
+                if (!thing) {
+                  setSelectedThing(undefined);
+                  return;
+                }
+
+                setDbSettingsChartThingId(db, thing.id);
+                setSelectedThing(thing);
+              });
+            }
+          });
+        } else {
+          setShowChart(false);
+          setSelectedThing(undefined);
+          setDbSettingsChartThingId(db, '');
+        }
+      });
+
       fetchAndSetTotals(db, logDbContents, setTotals, weekOffset);
     }
     // Listen for app coming to the foreground
@@ -119,9 +150,11 @@ export default function TotalsScreen() {
     setWeekOffset(prev => Math.min(prev + 1, 0));
   };
 
+  const renderChart = showChart && selectedThing;
+
   return (
     <SafeAreaView style={{ ...globalStyles.screenWrapper, backgroundColor }}>
-      {selectedThing && <Chart selectedThingId={selectedThing.id} totals={totals} />}
+      {renderChart && <Chart selectedThingId={selectedThing.id} totals={totals} />}
       <View style={{ ...styles.listHeader, width: '100%' }}>
         <Pressable onPress={goBackOneWeek} style={styles.weekButton}>
           <Ionicons
@@ -186,6 +219,7 @@ export default function TotalsScreen() {
                   onPress={() => {
                     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
                     setSelectedThing(thing);
+                    setDbSettingsChartThingId(db, id);
                   }}
                   style={{ flex: 1, paddingHorizontal: 10 }}
                 >

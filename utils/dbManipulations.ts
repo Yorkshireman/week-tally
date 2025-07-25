@@ -97,6 +97,19 @@ export const setDbSettingsShowChart = async (db: SQLiteDatabase, value: boolean)
   }
 };
 
+export const setDbSettingsChartThingId = async (db: SQLiteDatabase, thingId: string) => {
+  try {
+    console.log('Setting DB Chart Thing ID to: ', thingId);
+    await db.runAsync(
+      'INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)',
+      'chartThingId',
+      thingId
+    );
+  } catch (e) {
+    console.error('Error setting DB Chart Thing ID: ', e);
+  }
+};
+
 export const updateCurrentlyTracking = async (
   db: SQLiteDatabase,
   newValue: 1 | 0,
