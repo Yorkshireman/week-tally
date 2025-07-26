@@ -11,6 +11,11 @@ export enum ChartScale {
   MAX = 'Max'
 }
 
+export type ChartScaleSetting = {
+  key: 'chartScale';
+  value: ChartScale;
+};
+
 export type LogEntry = {
   id: string;
   thingId: string;

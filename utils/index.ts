@@ -9,6 +9,7 @@ export {
 export { buildStartOfWeekDate, buildWeekOffsetsArray, getWeekLabel } from './dateUtils';
 export { fetchAndSetTotals } from './fetchAndSetTotals';
 export {
+  fetchDbSettingsChartScale,
   fetchDbChartThingId,
   fetchDbFirstCurrentlyTrackedThing,
   fetchDbShowChartSetting,

@@ -2,12 +2,12 @@ import * as Haptics from 'expo-haptics';
 import { format } from 'date-fns';
 import { useFont } from '@shopify/react-native-skia';
 import { useSQLiteContext } from 'expo-sqlite';
-import { useState } from 'react';
 import { Area, CartesianChart } from 'victory-native';
-import { buildStartOfWeekDate, setDbSettingsChartScale } from '@/utils';
+import { buildStartOfWeekDate, fetchDbSettingsChartScale, setDbSettingsChartScale } from '@/utils';
 import { ChartDataItem, ChartScale, ThingWithLogEntriesCount } from '@/types';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useColours, useFetchAndSetChartData } from '@/hooks';
+import { useEffect, useState } from 'react';
 
 const ScaleSelector = ({
   scale,
@@ -16,7 +16,7 @@ const ScaleSelector = ({
 }: {
   scale: ChartScale;
   selectedScale: ChartScale;
-  setSelectedScale: React.Dispatch<React.SetStateAction<ChartScale>>;
+  setSelectedScale: React.Dispatch<React.SetStateAction<ChartScale | null>>;
 }) => {
   const db = useSQLiteContext();
   const {
@@ -60,8 +60,9 @@ export const Chart = ({
     text: { color }
   } = useColours();
   const [chartData, setChartData] = useState<ChartDataItem[] | null>(null);
+  const db = useSQLiteContext();
   const font = useFont(require('../assets/fonts/inter-medium.ttf'), 12);
-  const [selectedScale, setSelectedScale] = useState<ChartScale>(ChartScale.FOUR_WEEKS);
+  const [selectedScale, setSelectedScale] = useState<ChartScale | null>(null);
   useFetchAndSetChartData({
     selectedScale,
     selectedThingId,
@@ -69,7 +70,21 @@ export const Chart = ({
     totals
   });
 
-  if (!chartData || chartData.length === 0) return null;
+  useEffect(() => {
+    const fetchChartScale = async () => {
+      const scale = await fetchDbSettingsChartScale(db);
+      if (scale) {
+        setSelectedScale(scale);
+      } else {
+        setSelectedScale(ChartScale.MAX);
+        setDbSettingsChartScale(db, ChartScale.MAX);
+      }
+    };
+
+    fetchChartScale();
+  }, [db]);
+
+  if (!chartData || !selectedScale || chartData.length === 0) return null;
 
   const now = new Date();
   const weekOffset = -chartData[chartData.length - 1].week;

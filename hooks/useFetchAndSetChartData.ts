@@ -9,7 +9,7 @@ export const useFetchAndSetChartData = ({
   setChartData,
   totals
 }: {
-  selectedScale: ChartScale;
+  selectedScale: ChartScale | null;
   selectedThingId: string;
   setChartData: React.Dispatch<React.SetStateAction<ChartDataItem[] | null>>;
   totals?: ThingWithLogEntriesCount[];
@@ -18,9 +18,11 @@ export const useFetchAndSetChartData = ({
 
   useEffect(() => {
     const run = async () => {
-      const now = new Date();
+      if (!selectedScale) return;
 
+      const now = new Date();
       let numWeeks: number;
+
       if (selectedScale === ChartScale.MAX) {
         let earliestEntry: LogEntry | null = null;
         try {

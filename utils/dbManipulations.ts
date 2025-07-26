@@ -1,7 +1,7 @@
 import { buildStartOfWeekDate } from './dateUtils';
-import { ChartScale, LogEntry } from '@/types';
 import { SQLiteDatabase } from 'expo-sqlite';
 import uuid from 'react-native-uuid';
+import { ChartScale, LogEntry } from '@/types';
 
 export const addLogEntryToDb = async (db: SQLiteDatabase, thingId: string, weekOffset: number) => {
   let dateIso: string;
