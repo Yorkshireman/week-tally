@@ -1,9 +1,10 @@
 import * as Haptics from 'expo-haptics';
-import { buildStartOfWeekDate } from '@/utils';
 import { format } from 'date-fns';
 import { useFont } from '@shopify/react-native-skia';
+import { useSQLiteContext } from 'expo-sqlite';
 import { useState } from 'react';
 import { Area, CartesianChart } from 'victory-native';
+import { buildStartOfWeekDate, setDbSettingsChartScale } from '@/utils';
 import { ChartDataItem, ChartScale, ThingWithLogEntriesCount } from '@/types';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useColours, useFetchAndSetChartData } from '@/hooks';
@@ -17,6 +18,7 @@ const ScaleSelector = ({
   selectedScale: ChartScale;
   setSelectedScale: React.Dispatch<React.SetStateAction<ChartScale>>;
 }) => {
+  const db = useSQLiteContext();
   const {
     chart: { scaleSelectorSelected },
     page,
@@ -34,9 +36,10 @@ const ScaleSelector = ({
 
   return (
     <TouchableOpacity
-      onPress={() => {
+      onPress={async () => {
         setSelectedScale(scale);
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        await setDbSettingsChartScale(db, scale);
       }}
       style={_styles}
     >

@@ -3,6 +3,7 @@ export {
   addThingToDb,
   deleteLogEntryFromDb,
   deleteThingFromDb,
+  setDbSettingsChartScale,
   setDbSettingsChartThingId
 } from './dbManipulations';
 export { buildStartOfWeekDate, buildWeekOffsetsArray, getWeekLabel } from './dateUtils';

@@ -1,5 +1,5 @@
 import { buildStartOfWeekDate } from './dateUtils';
-import { LogEntry } from '@/types';
+import { ChartScale, LogEntry } from '@/types';
 import { SQLiteDatabase } from 'expo-sqlite';
 import uuid from 'react-native-uuid';
 
@@ -94,6 +94,19 @@ export const setDbSettingsShowChart = async (db: SQLiteDatabase, value: 'true' |
     );
   } catch (e) {
     console.error('Error setting db showChard value: ', e);
+  }
+};
+
+export const setDbSettingsChartScale = async (db: SQLiteDatabase, scale: ChartScale) => {
+  try {
+    console.log('Setting DB Chart Scale to: ', scale);
+    await db.runAsync(
+      'INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)',
+      'chartScale',
+      scale
+    );
+  } catch (e) {
+    console.error('Error setting DB Chart Scale: ', e);
   }
 };
 
