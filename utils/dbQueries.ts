@@ -1,5 +1,5 @@
 import { SQLiteDatabase } from 'expo-sqlite';
-import type { Setting, ThingWithLogEntriesCount } from '@/types';
+import type { Setting, ShowChartSetting, ThingWithLogEntriesCount } from '@/types';
 
 export const fetchDbChartThingId = async (db: SQLiteDatabase) => {
   try {
@@ -22,11 +22,11 @@ export const fetchDbChartThingId = async (db: SQLiteDatabase) => {
 export const fetchDbShowChartSetting = async (db: SQLiteDatabase) => {
   console.log('Fetching DB Chart Visible setting');
   try {
-    const result = await db.getFirstAsync<Setting>(
+    const result = await db.getFirstAsync<ShowChartSetting>(
       'SELECT value FROM settings WHERE key = ?',
       'showChart'
     );
-    console.log('DB Chart Visible setting result: ', result);
+    console.log('DB Chart Visible setting query result.value: ', result?.value);
     if (!result || !result.value) {
       return null;
     }

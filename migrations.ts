@@ -72,5 +72,5 @@ export const migrateDbToV6 = async (db: SQLiteDatabase) => {
 
 export const migrateDbToV7 = async (db: SQLiteDatabase) => {
   console.log('Migrating database to version 7');
-  await setDbSettingsShowChart(db, true);
+  await setDbSettingsShowChart(db, 'true');
 };

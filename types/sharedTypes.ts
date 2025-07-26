@@ -26,6 +26,11 @@ export type Setting = {
   value: string;
 };
 
+export type ShowChartSetting = {
+  key: 'showChart';
+  value: 'true' | 'false';
+};
+
 export type Thing = {
   createdAt: string;
   currentlyTracking: number;

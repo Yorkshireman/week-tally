@@ -6,5 +6,6 @@ export {
   LogEntry,
   NotificationDataType,
   Setting,
+  ShowChartSetting,
   Thing
 } from './sharedTypes';

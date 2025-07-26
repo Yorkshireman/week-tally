@@ -1,6 +1,6 @@
 import { normaliseFontSize } from '@/utils';
 import { setDbSettingsShowChart } from '@/utils/dbManipulations';
-import type { Setting } from '@/types';
+import { ShowChartSetting } from '@/types';
 import { useSQLiteContext } from 'expo-sqlite';
 import { StyleSheet, Switch, Text, View } from 'react-native';
 import { useColours, useGlobalStyles } from '@/hooks';
@@ -20,7 +20,7 @@ export const ChartSettingsSection = () => {
   useEffect(() => {
     const fetchDbSettings = async () => {
       try {
-        const result: Setting | null = await db.getFirstAsync(
+        const result: ShowChartSetting | null = await db.getFirstAsync(
           'SELECT value FROM settings WHERE key = ?',
           'showChart'
         );
@@ -43,9 +43,9 @@ export const ChartSettingsSection = () => {
     setIsEnabled(previousState => !previousState);
     try {
       if (isEnabled) {
-        await setDbSettingsShowChart(db, false);
+        await setDbSettingsShowChart(db, 'false');
       } else {
-        await setDbSettingsShowChart(db, true);
+        await setDbSettingsShowChart(db, 'true');
       }
     } catch (error) {
       console.error('Error updating Chart Visible setting: ', error);

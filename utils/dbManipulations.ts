@@ -84,13 +84,13 @@ export const deleteThingFromDb = async (db: SQLiteDatabase, id: string) => {
   await db.runAsync('DELETE FROM things WHERE id = ?', id);
 };
 
-export const setDbSettingsShowChart = async (db: SQLiteDatabase, value: boolean) => {
+export const setDbSettingsShowChart = async (db: SQLiteDatabase, value: 'true' | 'false') => {
   try {
     console.log('Setting DB showChart value to: ', value);
     await db.runAsync(
       'INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)',
       'showChart',
-      value.toString()
+      value
     );
   } catch (e) {
     console.error('Error setting db showChard value: ', e);
