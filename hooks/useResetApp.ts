@@ -1,5 +1,5 @@
 import * as Notifications from 'expo-notifications';
-import { dbSetupString } from '@/constants';
+import { migrateDbIfNeeded } from '@/utils';
 import { useDbLogger } from './useDbLogger';
 import { useRouter } from 'expo-router';
 import { useSQLiteContext } from 'expo-sqlite';
@@ -15,8 +15,9 @@ export const useResetApp = () => {
       await db.execAsync('DROP TABLE IF EXISTS things;');
       await db.execAsync('DROP TABLE IF EXISTS settings;');
       await db.execAsync('DROP TABLE IF EXISTS entries;');
-      await db.execAsync(dbSetupString);
-      console.log('DB cleared');
+      await db.execAsync('PRAGMA user_version = 0');
+      await migrateDbIfNeeded(db);
+      console.log('Database cleared and migrated if needed');
       logDbContents();
       router.replace('/');
     } catch (e) {
