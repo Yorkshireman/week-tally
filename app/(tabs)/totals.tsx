@@ -3,15 +3,12 @@ import { Chart } from '@/components';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ThingWithLogEntriesCount } from '@/types';
-import { useIsFocused } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
 import { useSQLiteContext } from 'expo-sqlite';
+import { useState } from 'react';
 import {
   addLogEntryToDb,
   deleteLogEntryFromDb,
-  fetchAndSetTotals,
-  fetchDbChartThingId,
-  fetchDbSettingsShowChart,
   getAddLogEntryCount,
   getWeekLabel,
   incrementAddLogEntryCount,
@@ -19,20 +16,15 @@ import {
   promptForRatingIfAppropriate,
   setDbSettingsChartThingId
 } from '@/utils';
+import { FlatList, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import {
-  AppState,
-  FlatList,
-  Pressable,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View
-} from 'react-native';
-import { useColours, useDbLogger, useGlobalStyles } from '@/hooks';
-import { useEffect, useRef, useState } from 'react';
+  useColours,
+  useFetchAndSetTotals,
+  useGlobalStyles,
+  useSetShowChartAndChartThingId
+} from '@/hooks';
 
 export default function TotalsScreen() {
-  const appState = useRef(AppState.currentState);
   const {
     iconButton,
     page: { backgroundColor },
@@ -46,77 +38,28 @@ export default function TotalsScreen() {
   const [chartThingId, setChartThingId] = useState<string | null>(null);
   const db = useSQLiteContext();
   const globalStyles = useGlobalStyles();
-  const isFocused = useIsFocused();
-  const logDbContents = useDbLogger();
   const router = useRouter();
   const [showChart, setShowChart] = useState<boolean>(true);
   const [totals, setTotals] = useState<ThingWithLogEntriesCount[]>();
   const [weekOffset, setWeekOffset] = useState<number>(0);
-
-  useEffect(() => {
-    const fetchAndSetShowChart = async () => {
-      const isEnabled = await fetchDbSettingsShowChart(db);
-      setShowChart(!!isEnabled);
-    };
-
-    fetchAndSetShowChart();
-  }, [db, isFocused]);
-
-  useEffect(() => {
-    if (!showChart) {
-      setDbSettingsChartThingId(db, '').then(() => setChartThingId(null));
-      return;
-    }
-
-    const fetchAndSetChartThingId = async () => {
-      const chartThingId = await fetchDbChartThingId(db);
-
-      if (totals?.find(t => t.id === chartThingId)) {
-        setChartThingId(chartThingId);
-      } else {
-        const firstTrackedThing = totals?.[0];
-
-        if (firstTrackedThing) {
-          setChartThingId(firstTrackedThing.id);
-          await setDbSettingsChartThingId(db, firstTrackedThing.id);
-        } else {
-          setChartThingId(null);
-        }
-      }
-    };
-
-    fetchAndSetChartThingId();
-  }, [db, isFocused, showChart, totals]);
-
-  useEffect(() => {
-    fetchAndSetTotals(db, setTotals, weekOffset);
-    // Listen for app coming to the foreground
-    const subscription = AppState.addEventListener('change', nextAppState => {
-      if (appState.current.match(/inactive|background/) && nextAppState === 'active' && isFocused) {
-        fetchAndSetTotals(db, setTotals, weekOffset);
-        setWeekOffset(0);
-      }
-
-      appState.current = nextAppState;
-    });
-
-    return () => {
-      subscription.remove();
-    };
-  }, [db, isFocused, weekOffset]);
+  useFetchAndSetTotals({ setTotals, setWeekOffset, weekOffset });
+  useSetShowChartAndChartThingId({
+    setChartThingId,
+    setShowChart,
+    showChart,
+    totals
+  });
 
   const addLogEntry = async (id: string) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     try {
       await addLogEntryToDb(db, id, weekOffset);
-      logDbContents();
       setTotals(prev => prev?.map(t => (t.id === id ? { ...t, count: t.count + 1 } : t)));
       const currentAddLogEntryCount = await getAddLogEntryCount();
       await promptForRatingIfAppropriate(currentAddLogEntryCount);
       await incrementAddLogEntryCount(currentAddLogEntryCount);
     } catch (e) {
       console.error('DB error: ', e);
-      logDbContents();
     }
   };
 
@@ -128,8 +71,6 @@ export default function TotalsScreen() {
     } catch (e) {
       console.error('DB error: ', e);
     }
-
-    logDbContents();
   };
 
   const goBackOneWeek = () => {
