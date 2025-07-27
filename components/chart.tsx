@@ -1,20 +1,13 @@
 import * as Haptics from 'expo-haptics';
 import { format } from 'date-fns';
 import { useFont } from '@shopify/react-native-skia';
-import { useIsFocused } from '@react-navigation/native';
 import { useSQLiteContext } from 'expo-sqlite';
+import { useState } from 'react';
 import { Area, CartesianChart } from 'victory-native';
-import {
-  buildStartOfWeekDate,
-  fetchDbSettingsChartScale,
-  fetchDbSettingsChartSize,
-  setDbSettingsChartScale,
-  setDbSettingsChartSize
-} from '@/utils';
+import { buildStartOfWeekDate, setDbSettingsChartScale } from '@/utils';
 import { ChartDataItem, ChartScale, ChartSize, ThingWithLogEntriesCount } from '@/types';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { useColours, useFetchAndSetChartData } from '@/hooks';
-import { useEffect, useState } from 'react';
+import { useColours, useFetchAndSetChartData, useFetchAndSetChartSettings } from '@/hooks';
 
 const ScaleSelector = ({
   scale,
@@ -68,43 +61,15 @@ export const Chart = ({
   } = useColours();
   const [chartData, setChartData] = useState<ChartDataItem[] | null>(null);
   const [chartSize, setChartSize] = useState<ChartSize>();
-  const db = useSQLiteContext();
   const font = useFont(require('../assets/fonts/inter-medium.ttf'), 12);
-  const isFocused = useIsFocused();
   const [selectedScale, setSelectedScale] = useState<ChartScale | null>(null);
+  useFetchAndSetChartSettings({ setChartSize, setSelectedScale });
   useFetchAndSetChartData({
     selectedScale,
     selectedThingId,
     setChartData,
     totals
   });
-
-  useEffect(() => {
-    const fetchChartScale = async () => {
-      const scale = await fetchDbSettingsChartScale(db);
-      if (scale) {
-        setSelectedScale(scale);
-      } else {
-        setSelectedScale(ChartScale.MAX);
-        setDbSettingsChartScale(db, ChartScale.MAX);
-      }
-    };
-
-    const fetchChartSize = async () => {
-      const size = await fetchDbSettingsChartSize(db);
-      if (size) {
-        setChartSize(size);
-      } else {
-        setDbSettingsChartSize(db, ChartSize.MEDIUM);
-        setChartSize(ChartSize.MEDIUM);
-      }
-    };
-
-    if (isFocused) {
-      fetchChartScale();
-      fetchChartSize();
-    }
-  }, [db, isFocused]);
 
   if (!chartData || !chartSize || !selectedScale || chartData.length === 0) return null;
 
