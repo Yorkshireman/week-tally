@@ -1,3 +1,8 @@
+export enum ChartCurveType {
+  LINEAR = 'linear',
+  NATURAL = 'natural'
+}
+
 export type ChartDataItem = {
   total: number;
   week: number;
@@ -10,6 +15,11 @@ export enum ChartScale {
   FIFTY_TWO_WEEKS = '52W',
   MAX = 'Max'
 }
+
+export type ChartCurveTypeSetting = {
+  key: 'chartCurveType';
+  value: ChartCurveType;
+};
 
 export type ChartScaleSetting = {
   key: 'chartScale';

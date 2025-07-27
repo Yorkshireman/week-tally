@@ -1,5 +1,6 @@
 import { SQLiteDatabase } from 'expo-sqlite';
 import type {
+  ChartCurveTypeSetting,
   ChartScaleSetting,
   ChartSizeSetting,
   Setting,
@@ -21,6 +22,24 @@ export const fetchDbChartThingId = async (db: SQLiteDatabase) => {
     return result.value;
   } catch (error) {
     console.error('Error fetching DB Chart Thing ID: ', error);
+    return null;
+  }
+};
+
+export const fetchDbSettingsChartCurveType = async (db: SQLiteDatabase) => {
+  try {
+    const result = await db.getFirstAsync<ChartCurveTypeSetting | null>(
+      'SELECT value FROM settings WHERE key = ?',
+      'chartCurveType'
+    );
+
+    if (!result || !result.value) {
+      return null;
+    }
+
+    return result.value;
+  } catch (error) {
+    console.error('Error fetching DB Chart Curve Type: ', error);
     return null;
   }
 };

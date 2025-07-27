@@ -3,6 +3,7 @@ export {
   addThingToDb,
   deleteLogEntryFromDb,
   deleteThingFromDb,
+  setDbSettingsChartCurveType,
   setDbSettingsChartScale,
   setDbSettingsChartSize,
   setDbSettingsChartThingId
@@ -10,6 +11,7 @@ export {
 export { buildStartOfWeekDate, buildWeekOffsetsArray, getWeekLabel } from './dateUtils';
 export { fetchAndSetTotals } from './fetchAndSetTotals';
 export {
+  fetchDbSettingsChartCurveType,
   fetchDbSettingsChartSize,
   fetchDbSettingsChartScale,
   fetchDbChartThingId,

@@ -5,7 +5,13 @@ import { useSQLiteContext } from 'expo-sqlite';
 import { useState } from 'react';
 import { Area, CartesianChart } from 'victory-native';
 import { buildStartOfWeekDate, setDbSettingsChartScale } from '@/utils';
-import { ChartDataItem, ChartScale, ChartSize, ThingWithLogEntriesCount } from '@/types';
+import {
+  ChartCurveType,
+  ChartDataItem,
+  ChartScale,
+  ChartSize,
+  ThingWithLogEntriesCount
+} from '@/types';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useColours, useFetchAndSetChartData, useFetchAndSetChartSettings } from '@/hooks';
 
@@ -61,9 +67,10 @@ export const Chart = ({
   } = useColours();
   const [chartData, setChartData] = useState<ChartDataItem[] | null>(null);
   const [chartSize, setChartSize] = useState<ChartSize>();
+  const [curveType, setCurveType] = useState<ChartCurveType>();
   const font = useFont(require('../assets/fonts/inter-medium.ttf'), 12);
   const [selectedScale, setSelectedScale] = useState<ChartScale | null>(null);
-  useFetchAndSetChartSettings({ setChartSize, setSelectedScale });
+  useFetchAndSetChartSettings({ setChartSize, setCurveType, setSelectedScale });
   useFetchAndSetChartData({
     selectedScale,
     setChartData,
@@ -71,7 +78,8 @@ export const Chart = ({
     totals
   });
 
-  if (!chartData || !chartSize || !selectedScale || chartData.length === 0) return null;
+  if (!chartData || !chartSize || !curveType || !selectedScale || chartData.length === 0)
+    return null;
 
   const height =
     chartSize === ChartSize.SMALL
@@ -119,7 +127,7 @@ export const Chart = ({
           <Area
             animate={{ duration: 300, type: 'timing' }}
             color={areaColour}
-            curveType='linear'
+            curveType={curveType}
             opacity={0.5}
             points={points.total}
             y0={chartBounds.bottom}

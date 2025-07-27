@@ -1,6 +1,8 @@
 export { ListItemProps } from './indexTypes';
 export { ThingWithLogEntriesCount } from './totalsTypes';
 export {
+  ChartCurveType,
+  ChartCurveTypeSetting,
   ChartDataItem,
   ChartScale,
   ChartScaleSetting,
