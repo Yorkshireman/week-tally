@@ -89,10 +89,7 @@ export default function TotalsScreen() {
   }, [db, isFocused, showChart, totals]);
 
   useEffect(() => {
-    // delete if isFocused?
-    if (isFocused) {
-      fetchAndSetTotals(db, setTotals, weekOffset);
-    }
+    fetchAndSetTotals(db, setTotals, weekOffset);
     // Listen for app coming to the foreground
     const subscription = AppState.addEventListener('change', nextAppState => {
       if (appState.current.match(/inactive|background/) && nextAppState === 'active' && isFocused) {
