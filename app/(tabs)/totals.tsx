@@ -106,7 +106,7 @@ export default function TotalsScreen() {
     return () => {
       subscription.remove();
     };
-  }, [db, isFocused, showChart, weekOffset]);
+  }, [db, isFocused, weekOffset]);
 
   const addLogEntry = async (id: string) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
