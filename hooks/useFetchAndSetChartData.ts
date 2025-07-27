@@ -25,9 +25,10 @@ export const useFetchAndSetChartData = ({
 
       if (selectedScale === ChartScale.MAX) {
         let earliestEntry: LogEntry | null = null;
+
         try {
           earliestEntry = await db.getFirstAsync(
-            'SELECT * FROM entries WHERE thingId = ? ORDER BY timestamp ASC LIMIT 1',
+            'SELECT * FROM entries WHERE thingId = ? ORDER BY timestamp ASC',
             thingId
           );
         } catch (error) {
@@ -36,8 +37,8 @@ export const useFetchAndSetChartData = ({
         }
 
         if (earliestEntry) {
-          const earliestDate = new Date(earliestEntry.timestamp);
-          const diffMs = now.getTime() - earliestDate.getTime();
+          const earliestWeekStart = buildStartOfWeekDate(new Date(earliestEntry.timestamp), 0);
+          const diffMs = now.getTime() - earliestWeekStart.getTime();
           const diffWeeks = Math.ceil(diffMs / (7 * 24 * 60 * 60 * 1000));
           numWeeks = Math.max(diffWeeks, 1);
           // when chart only has one week of log entries, and is set to Max, tell it to
