@@ -91,12 +91,12 @@ export default function TotalsScreen() {
   useEffect(() => {
     // delete if isFocused?
     if (isFocused) {
-      fetchAndSetTotals(db, logDbContents, setTotals, weekOffset);
+      fetchAndSetTotals(db, setTotals, weekOffset);
     }
     // Listen for app coming to the foreground
     const subscription = AppState.addEventListener('change', nextAppState => {
       if (appState.current.match(/inactive|background/) && nextAppState === 'active' && isFocused) {
-        fetchAndSetTotals(db, logDbContents, setTotals, weekOffset);
+        fetchAndSetTotals(db, setTotals, weekOffset);
         setWeekOffset(0);
       }
 
@@ -106,7 +106,7 @@ export default function TotalsScreen() {
     return () => {
       subscription.remove();
     };
-  }, [db, isFocused, logDbContents, showChart, weekOffset]);
+  }, [db, isFocused, showChart, weekOffset]);
 
   const addLogEntry = async (id: string) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
