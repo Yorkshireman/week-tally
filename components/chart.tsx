@@ -1,10 +1,17 @@
 import * as Haptics from 'expo-haptics';
 import { format } from 'date-fns';
 import { useFont } from '@shopify/react-native-skia';
+import { useIsFocused } from '@react-navigation/native';
 import { useSQLiteContext } from 'expo-sqlite';
 import { Area, CartesianChart } from 'victory-native';
-import { buildStartOfWeekDate, fetchDbSettingsChartScale, setDbSettingsChartScale } from '@/utils';
-import { ChartDataItem, ChartScale, ThingWithLogEntriesCount } from '@/types';
+import {
+  buildStartOfWeekDate,
+  fetchDbSettingsChartScale,
+  fetchDbSettingsChartSize,
+  setDbSettingsChartScale,
+  setDbSettingsChartSize
+} from '@/utils';
+import { ChartDataItem, ChartScale, ChartSize, ThingWithLogEntriesCount } from '@/types';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useColours, useFetchAndSetChartData } from '@/hooks';
 import { useEffect, useState } from 'react';
@@ -60,8 +67,10 @@ export const Chart = ({
     text: { color }
   } = useColours();
   const [chartData, setChartData] = useState<ChartDataItem[] | null>(null);
+  const [chartSize, setChartSize] = useState<ChartSize>();
   const db = useSQLiteContext();
   const font = useFont(require('../assets/fonts/inter-medium.ttf'), 12);
+  const isFocused = useIsFocused();
   const [selectedScale, setSelectedScale] = useState<ChartScale | null>(null);
   useFetchAndSetChartData({
     selectedScale,
@@ -81,10 +90,32 @@ export const Chart = ({
       }
     };
 
-    fetchChartScale();
-  }, [db]);
+    const fetchChartSize = async () => {
+      const size = await fetchDbSettingsChartSize(db);
+      if (size) {
+        setChartSize(size);
+      } else {
+        setDbSettingsChartSize(db, ChartSize.MEDIUM);
+        setChartSize(ChartSize.MEDIUM);
+      }
+    };
 
-  if (!chartData || !selectedScale || chartData.length === 0) return null;
+    if (isFocused) {
+      fetchChartScale();
+      fetchChartSize();
+    }
+  }, [db, isFocused]);
+
+  if (!chartData || !chartSize || !selectedScale || chartData.length === 0) return null;
+
+  const height =
+    chartSize === ChartSize.SMALL
+      ? 170
+      : chartSize === ChartSize.MEDIUM
+      ? 200
+      : chartSize === ChartSize.LARGE
+      ? 280
+      : 200;
 
   const now = new Date();
   const weekOffset = -chartData[chartData.length - 1].week;
@@ -104,7 +135,7 @@ export const Chart = ({
   const nowLabel = format(now, "EE do MMM ''yy");
 
   return (
-    <View style={{ height: 190 }}>
+    <View style={{ height }}>
       <CartesianChart
         data={chartData}
         domain={{ y: [0, maxTotal + 0.1] }}

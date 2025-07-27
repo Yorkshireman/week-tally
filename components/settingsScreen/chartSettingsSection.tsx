@@ -1,8 +1,13 @@
-import { normaliseFontSize } from '@/utils';
+import { ChartSize } from '@/types';
 import { setDbSettingsShowChart } from '@/utils/dbManipulations';
-import { ShowChartSetting } from '@/types';
 import { useSQLiteContext } from 'expo-sqlite';
-import { StyleSheet, Switch, Text, View } from 'react-native';
+import {
+  fetchDbSettingsChartSize,
+  fetchDbSettingsShowChart,
+  normaliseFontSize,
+  setDbSettingsChartSize
+} from '@/utils';
+import { StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
 import { useColours, useGlobalStyles } from '@/hooks';
 import { useEffect, useState } from 'react';
 
@@ -10,6 +15,7 @@ export const ChartSettingsSection = () => {
   const db = useSQLiteContext();
   const globalStyles = useGlobalStyles();
   const [isEnabled, setIsEnabled] = useState(true);
+  const [selectedSize, setSelectedSize] = useState<ChartSize>();
   const {
     primitiveNeutral,
     primitivePrimary,
@@ -20,19 +26,18 @@ export const ChartSettingsSection = () => {
   useEffect(() => {
     const fetchDbSettings = async () => {
       try {
-        const result: ShowChartSetting | null = await db.getFirstAsync(
-          'SELECT value FROM settings WHERE key = ?',
-          'showChart'
-        );
+        const showChartQueryResult = await fetchDbSettingsShowChart(db);
+        setIsEnabled(!!showChartQueryResult);
 
-        if (!result || !result.value) {
-          return;
+        const chartSizeQueryResult = await fetchDbSettingsChartSize(db);
+        if (chartSizeQueryResult) {
+          setSelectedSize(chartSizeQueryResult);
+        } else {
+          await setDbSettingsChartSize(db, ChartSize.MEDIUM);
+          setSelectedSize(ChartSize.MEDIUM);
         }
-
-        const isEnabled = result.value === 'true';
-        setIsEnabled(isEnabled);
       } catch (error) {
-        console.error('Error fetching Chart Visible setting: ', error);
+        console.error('Error fetching DB Chart settings: ', error);
       }
     };
 
@@ -52,35 +57,62 @@ export const ChartSettingsSection = () => {
     }
   };
 
+  const sizeOptions = [ChartSize.SMALL, ChartSize.MEDIUM, ChartSize.LARGE];
+
   return (
     <>
       <Text style={{ ...styles.heading, color }}>Chart</Text>
-      <View
-        style={{
-          ...globalStyles.settingsScreenSection,
-          ...sectionColours,
-          alignItems: 'center'
-        }}
-      >
-        <Text numberOfLines={1} style={{ ...styles.toggleText, color }}>
-          Visible
-        </Text>
-        <Switch
-          ios_backgroundColor={primitiveNeutral[600]}
-          onValueChange={toggleSwitch}
-          thumbColor={isEnabled ? '#fff' : primitiveNeutral[200]}
-          trackColor={{ true: primitivePrimary[400] }}
-          value={isEnabled}
-        />
+      <View style={sectionColours}>
+        <View
+          style={{
+            ...globalStyles.settingsScreenSection,
+            alignItems: 'center'
+          }}
+        >
+          <Text numberOfLines={1} style={{ ...styles.toggleText, color }}>
+            Visible
+          </Text>
+          <Switch
+            ios_backgroundColor={primitiveNeutral[600]}
+            onValueChange={toggleSwitch}
+            thumbColor={isEnabled ? '#fff' : primitiveNeutral[200]}
+            trackColor={{ true: primitivePrimary[400] }}
+            value={isEnabled}
+          />
+        </View>
+        <View style={globalStyles.settingsScreenSection}>
+          {sizeOptions.map(size => (
+            <TouchableOpacity
+              key={size}
+              style={{
+                alignItems: 'center',
+                flexDirection: 'row'
+              }}
+              onPress={async () => {
+                await setDbSettingsChartSize(db, size);
+                setSelectedSize(size);
+              }}
+            >
+              <View
+                style={{
+                  backgroundColor: selectedSize === size ? color : 'transparent',
+                  borderColor: color,
+                  borderRadius: 10,
+                  borderWidth: 1.5,
+                  height: 20,
+                  width: 20
+                }}
+              />
+              <Text style={{ color, marginLeft: 8 }}>{size}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
       </View>
     </>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'column'
-  },
   heading: {
     fontSize: normaliseFontSize(16),
     fontWeight: 'bold',

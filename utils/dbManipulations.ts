@@ -1,7 +1,7 @@
 import { buildStartOfWeekDate } from './dateUtils';
 import { SQLiteDatabase } from 'expo-sqlite';
 import uuid from 'react-native-uuid';
-import { ChartScale, LogEntry } from '@/types';
+import { ChartScale, ChartSize, LogEntry } from '@/types';
 
 export const addLogEntryToDb = async (db: SQLiteDatabase, thingId: string, weekOffset: number) => {
   let dateIso: string;
@@ -107,6 +107,19 @@ export const setDbSettingsChartScale = async (db: SQLiteDatabase, scale: ChartSc
     );
   } catch (e) {
     console.error('Error setting DB Chart Scale: ', e);
+  }
+};
+
+export const setDbSettingsChartSize = async (db: SQLiteDatabase, size: ChartSize) => {
+  try {
+    console.log('Setting DB Chart Size to: ', size);
+    await db.runAsync(
+      'INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)',
+      'chartSize',
+      size
+    );
+  } catch (e) {
+    console.error('Error setting DB Chart Size: ', e);
   }
 };
 

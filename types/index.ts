@@ -4,6 +4,8 @@ export {
   ChartDataItem,
   ChartScale,
   ChartScaleSetting,
+  ChartSize,
+  ChartSizeSetting,
   LogEntry,
   NotificationDataType,
   Setting,

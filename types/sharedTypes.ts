@@ -16,6 +16,17 @@ export type ChartScaleSetting = {
   value: ChartScale;
 };
 
+export enum ChartSize {
+  SMALL = 'Small',
+  MEDIUM = 'Medium',
+  LARGE = 'Large'
+}
+
+export type ChartSizeSetting = {
+  key: 'chartSize';
+  value: ChartSize;
+};
+
 export type LogEntry = {
   id: string;
   thingId: string;

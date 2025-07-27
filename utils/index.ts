@@ -4,15 +4,17 @@ export {
   deleteLogEntryFromDb,
   deleteThingFromDb,
   setDbSettingsChartScale,
+  setDbSettingsChartSize,
   setDbSettingsChartThingId
 } from './dbManipulations';
 export { buildStartOfWeekDate, buildWeekOffsetsArray, getWeekLabel } from './dateUtils';
 export { fetchAndSetTotals } from './fetchAndSetTotals';
 export {
+  fetchDbSettingsChartSize,
   fetchDbSettingsChartScale,
   fetchDbChartThingId,
   fetchDbFirstCurrentlyTrackedThing,
-  fetchDbShowChartSetting,
+  fetchDbSettingsShowChart,
   fetchDbThingById
 } from './dbQueries';
 export { getAddLogEntryCount } from './getAddLogEntryCount';

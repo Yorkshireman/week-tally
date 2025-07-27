@@ -12,7 +12,7 @@ import {
   fetchAndSetTotals,
   fetchDbChartThingId,
   fetchDbFirstCurrentlyTrackedThing,
-  fetchDbShowChartSetting,
+  fetchDbSettingsShowChart,
   fetchDbThingById,
   getAddLogEntryCount,
   getWeekLabel,
@@ -57,7 +57,7 @@ export default function TotalsScreen() {
 
   useEffect(() => {
     if (isFocused) {
-      fetchDbShowChartSetting(db).then(isEnabled => {
+      fetchDbSettingsShowChart(db).then(isEnabled => {
         if (isEnabled) {
           setShowChart(true);
           fetchDbChartThingId(db).then(thingId => {

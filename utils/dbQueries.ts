@@ -1,6 +1,7 @@
 import { SQLiteDatabase } from 'expo-sqlite';
 import type {
   ChartScaleSetting,
+  ChartSizeSetting,
   Setting,
   ShowChartSetting,
   ThingWithLogEntriesCount
@@ -42,7 +43,25 @@ export const fetchDbSettingsChartScale = async (db: SQLiteDatabase) => {
   }
 };
 
-export const fetchDbShowChartSetting = async (db: SQLiteDatabase) => {
+export const fetchDbSettingsChartSize = async (db: SQLiteDatabase) => {
+  try {
+    const result = await db.getFirstAsync<ChartSizeSetting | null>(
+      'SELECT value FROM settings WHERE key = ?',
+      'chartSize'
+    );
+
+    if (!result || !result.value) {
+      return null;
+    }
+
+    return result.value;
+  } catch (error) {
+    console.error('Error fetching DB Chart Size: ', error);
+    return null;
+  }
+};
+
+export const fetchDbSettingsShowChart = async (db: SQLiteDatabase) => {
   console.log('Fetching DB Chart Visible setting');
   try {
     const result = await db.getFirstAsync<ShowChartSetting>(
