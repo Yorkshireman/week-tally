@@ -11,9 +11,7 @@ import {
   deleteLogEntryFromDb,
   fetchAndSetTotals,
   fetchDbChartThingId,
-  fetchDbFirstCurrentlyTrackedThing,
   fetchDbSettingsShowChart,
-  fetchDbThingById,
   getAddLogEntryCount,
   getWeekLabel,
   incrementAddLogEntryCount,
@@ -45,6 +43,7 @@ export default function TotalsScreen() {
       selectedThing: selectedThingColours
     }
   } = useColours();
+  const [chartThingId, setChartThingId] = useState<string | null>(null);
   const db = useSQLiteContext();
   const globalStyles = useGlobalStyles();
   const isFocused = useIsFocused();
@@ -52,50 +51,33 @@ export default function TotalsScreen() {
   const router = useRouter();
   const [showChart, setShowChart] = useState<boolean>(true);
   const [totals, setTotals] = useState<ThingWithLogEntriesCount[]>();
-  const [selectedThing, setSelectedThing] = useState<ThingWithLogEntriesCount>();
   const [weekOffset, setWeekOffset] = useState<number>(0);
 
   useEffect(() => {
+    const fetchAndSetShowChart = async () => {
+      const isEnabled = await fetchDbSettingsShowChart(db);
+      setShowChart(!!isEnabled);
+    };
+
+    fetchAndSetShowChart();
+  }, [db, isFocused]);
+
+  useEffect(() => {
+    if (!showChart) {
+      return;
+    }
+
+    const fetchAndSetChartThingId = async () => {
+      const chartThingId = await fetchDbChartThingId(db);
+      setChartThingId(chartThingId);
+    };
+
+    fetchAndSetChartThingId();
+  }, [db, isFocused, showChart]);
+
+  useEffect(() => {
+    // delete if isFocused?
     if (isFocused) {
-      fetchDbSettingsShowChart(db).then(isEnabled => {
-        if (isEnabled) {
-          setShowChart(true);
-          fetchDbChartThingId(db).then(thingId => {
-            if (thingId) {
-              fetchDbThingById(db, thingId).then(thing => {
-                if (thing) {
-                  setSelectedThing(thing);
-                } else {
-                  fetchDbFirstCurrentlyTrackedThing(db).then(thing => {
-                    if (!thing) {
-                      setSelectedThing(undefined);
-                      return;
-                    }
-
-                    setDbSettingsChartThingId(db, thing.id);
-                    setSelectedThing(thing);
-                  });
-                }
-              });
-            } else {
-              fetchDbFirstCurrentlyTrackedThing(db).then(thing => {
-                if (!thing) {
-                  setSelectedThing(undefined);
-                  return;
-                }
-
-                setDbSettingsChartThingId(db, thing.id);
-                setSelectedThing(thing);
-              });
-            }
-          });
-        } else {
-          setShowChart(false);
-          setSelectedThing(undefined);
-          setDbSettingsChartThingId(db, '');
-        }
-      });
-
       fetchAndSetTotals(db, logDbContents, setTotals, weekOffset);
     }
     // Listen for app coming to the foreground
@@ -111,7 +93,7 @@ export default function TotalsScreen() {
     return () => {
       subscription.remove();
     };
-  }, [db, isFocused, logDbContents, weekOffset]);
+  }, [db, isFocused, logDbContents, showChart, weekOffset]);
 
   const addLogEntry = async (id: string) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
@@ -150,11 +132,12 @@ export default function TotalsScreen() {
     setWeekOffset(prev => Math.min(prev + 1, 0));
   };
 
-  const renderChart = showChart && selectedThing;
+  console.log({ showChart });
+  const renderChart = showChart && chartThingId;
 
   return (
     <SafeAreaView style={{ ...globalStyles.screenWrapper, backgroundColor }}>
-      {renderChart && <Chart selectedThingId={selectedThing.id} totals={totals} />}
+      {renderChart && <Chart thingId={chartThingId} totals={totals} />}
       <View style={{ ...styles.listHeader, width: '100%' }}>
         <Pressable onPress={goBackOneWeek} style={styles.weekButton}>
           <Ionicons
@@ -180,7 +163,7 @@ export default function TotalsScreen() {
         data={totals}
         renderItem={({ item: thing }) => {
           const { count, title, id } = thing;
-          const isSelected = selectedThing?.id === id;
+          const isSelected = chartThingId === id;
           const wrapperStyles = isSelected
             ? {
                 ...styles.thing,
@@ -217,8 +200,9 @@ export default function TotalsScreen() {
               >
                 <Pressable
                   onPress={() => {
+                    if (!showChart) return;
                     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                    setSelectedThing(thing);
+                    setChartThingId(thing.id);
                     setDbSettingsChartThingId(db, id);
                   }}
                   style={{ flex: 1, paddingHorizontal: 10 }}

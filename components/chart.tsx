@@ -49,10 +49,10 @@ const ScaleSelector = ({
 };
 
 export const Chart = ({
-  selectedThingId,
+  thingId,
   totals
 }: {
-  selectedThingId: string;
+  thingId: string;
   totals?: ThingWithLogEntriesCount[];
 }) => {
   const {
@@ -66,8 +66,8 @@ export const Chart = ({
   useFetchAndSetChartSettings({ setChartSize, setSelectedScale });
   useFetchAndSetChartData({
     selectedScale,
-    selectedThingId,
     setChartData,
+    thingId,
     totals
   });
 

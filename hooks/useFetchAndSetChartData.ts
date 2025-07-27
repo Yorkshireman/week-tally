@@ -5,12 +5,12 @@ import { ChartDataItem, ChartScale, LogEntry, ThingWithLogEntriesCount } from '@
 
 export const useFetchAndSetChartData = ({
   selectedScale,
-  selectedThingId,
+  thingId,
   setChartData,
   totals
 }: {
   selectedScale: ChartScale | null;
-  selectedThingId: string;
+  thingId: string;
   setChartData: React.Dispatch<React.SetStateAction<ChartDataItem[] | null>>;
   totals?: ThingWithLogEntriesCount[];
 }) => {
@@ -28,7 +28,7 @@ export const useFetchAndSetChartData = ({
         try {
           earliestEntry = await db.getFirstAsync(
             'SELECT * FROM entries WHERE thingId = ? ORDER BY timestamp ASC LIMIT 1',
-            selectedThingId
+            thingId
           );
         } catch (error) {
           console.error('Error fetching earliest entry:', error);
@@ -77,12 +77,12 @@ export const useFetchAndSetChartData = ({
 
       try {
         console.log(
-          `Fetching LogEntries with thingId ${selectedThingId} for week starting ${earliestWeekStart.toISOString()} and ending ${currentWeekEnd.toISOString()}`
+          `Fetching LogEntries with thingId ${thingId} for week starting ${earliestWeekStart.toISOString()} and ending ${currentWeekEnd.toISOString()}`
         );
 
         const logEntries = await db.getAllAsync<LogEntry>(
           'SELECT * FROM entries WHERE thingId = ? AND timestamp >= ? AND timestamp < ?',
-          selectedThingId,
+          thingId,
           earliestWeekStart.toISOString(),
           currentWeekEnd.toISOString()
         );
@@ -90,7 +90,7 @@ export const useFetchAndSetChartData = ({
         console.log(
           `Found ${
             logEntries.length
-          } LogEntries for the period with thingId ${selectedThingId}: ${JSON.stringify(
+          } LogEntries for the period with thingId ${thingId}: ${JSON.stringify(
             logEntries,
             null,
             2
@@ -119,5 +119,5 @@ export const useFetchAndSetChartData = ({
     };
 
     run();
-  }, [db, selectedThingId, totals, selectedScale, setChartData]);
+  }, [db, thingId, totals, selectedScale, setChartData]);
 };

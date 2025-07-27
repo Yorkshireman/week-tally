@@ -14,8 +14,7 @@ export {
   fetchDbSettingsChartScale,
   fetchDbChartThingId,
   fetchDbFirstCurrentlyTrackedThing,
-  fetchDbSettingsShowChart,
-  fetchDbThingById
+  fetchDbSettingsShowChart
 } from './dbQueries';
 export { getAddLogEntryCount } from './getAddLogEntryCount';
 export { incrementAddLogEntryCount } from './incrementAddLogEntryCount';

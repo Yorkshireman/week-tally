@@ -1,12 +1,13 @@
 import { ChartSize } from '@/types';
-import { setDbSettingsShowChart } from '@/utils/dbManipulations';
 import { useSQLiteContext } from 'expo-sqlite';
 import {
+  fetchDbFirstCurrentlyTrackedThing,
   fetchDbSettingsChartSize,
   fetchDbSettingsShowChart,
   normaliseFontSize,
   setDbSettingsChartSize
 } from '@/utils';
+import { setDbSettingsChartThingId, setDbSettingsShowChart } from '@/utils/dbManipulations';
 import { StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
 import { useColours, useGlobalStyles } from '@/hooks';
 import { useEffect, useState } from 'react';
@@ -49,8 +50,12 @@ export const ChartSettingsSection = () => {
     try {
       if (isEnabled) {
         await setDbSettingsShowChart(db, 'false');
+        await setDbSettingsChartThingId(db, '');
       } else {
         await setDbSettingsShowChart(db, 'true');
+        fetchDbFirstCurrentlyTrackedThing(db).then(thing =>
+          setDbSettingsChartThingId(db, thing?.id || '')
+        );
       }
     } catch (error) {
       console.error('Error updating Chart Visible setting: ', error);

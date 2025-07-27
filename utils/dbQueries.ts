@@ -100,21 +100,3 @@ export const fetchDbFirstCurrentlyTrackedThing = async (db: SQLiteDatabase) => {
     return null;
   }
 };
-
-export const fetchDbThingById = async (db: SQLiteDatabase, id: string) => {
-  try {
-    const result = await db.getFirstAsync<ThingWithLogEntriesCount>(
-      'SELECT * FROM things WHERE id = ?',
-      id
-    );
-
-    if (!result) {
-      return null;
-    }
-
-    return result;
-  } catch (error) {
-    console.error('Error fetching Thing by ID: ', error);
-    return null;
-  }
-};
