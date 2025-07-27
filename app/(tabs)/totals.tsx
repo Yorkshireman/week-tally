@@ -64,16 +64,29 @@ export default function TotalsScreen() {
 
   useEffect(() => {
     if (!showChart) {
+      setDbSettingsChartThingId(db, '').then(() => setChartThingId(null));
       return;
     }
 
     const fetchAndSetChartThingId = async () => {
       const chartThingId = await fetchDbChartThingId(db);
-      setChartThingId(chartThingId);
+
+      if (totals?.find(t => t.id === chartThingId)) {
+        setChartThingId(chartThingId);
+      } else {
+        const firstTrackedThing = totals?.[0];
+
+        if (firstTrackedThing) {
+          setChartThingId(firstTrackedThing.id);
+          await setDbSettingsChartThingId(db, firstTrackedThing.id);
+        } else {
+          setChartThingId(null);
+        }
+      }
     };
 
     fetchAndSetChartThingId();
-  }, [db, isFocused, showChart]);
+  }, [db, isFocused, showChart, totals]);
 
   useEffect(() => {
     // delete if isFocused?
@@ -132,7 +145,6 @@ export default function TotalsScreen() {
     setWeekOffset(prev => Math.min(prev + 1, 0));
   };
 
-  console.log({ showChart });
   const renderChart = showChart && chartThingId;
 
   return (
