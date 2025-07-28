@@ -40,7 +40,7 @@ export const useFetchAndSetChartData = ({
           const earliestWeekStart = buildStartOfWeekDate(new Date(earliestEntry.timestamp), 0);
           const diffMs = now.getTime() - earliestWeekStart.getTime();
           const diffWeeks = Math.ceil(diffMs / (7 * 24 * 60 * 60 * 1000));
-          numWeeks = Math.max(diffWeeks, 1) + 2;
+          numWeeks = Math.max(diffWeeks, 1) + 1;
           // when chart only has one week of log entries, and is set to Max, tell it to
           // chart the last two weeks, otherwise it visually looks like a bug to the user
           numWeeks = numWeeks === 1 ? 2 : numWeeks;
