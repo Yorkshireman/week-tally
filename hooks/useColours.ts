@@ -112,6 +112,9 @@ const styles = {
     primitiveNeutral,
     primitivePrimary,
     settingsScreen: {
+      radioButton: {
+        color: primitiveNeutral[200]
+      },
       resetApp: { color: primitiveError[200] },
       section: {
         backgroundColor: primitiveNeutral[700]
@@ -210,6 +213,9 @@ const styles = {
     primitiveNeutral,
     primitivePrimary,
     settingsScreen: {
+      radioButton: {
+        color: primitivePrimary[600]
+      },
       resetApp: { color: primitiveError[500] },
       section: {
         backgroundColor: '#fff'

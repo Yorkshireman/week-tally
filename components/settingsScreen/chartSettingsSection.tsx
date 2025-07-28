@@ -1,4 +1,6 @@
+import * as Haptics from 'expo-haptics';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import MaterialDesignIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { useSQLiteContext } from 'expo-sqlite';
 import { ChartCurveType, ChartSize } from '@/types';
 import {
@@ -10,8 +12,8 @@ import {
   setDbSettingsChartCurveType,
   setDbSettingsChartSize
 } from '@/utils';
+import { Pressable, StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
 import { setDbSettingsChartThingId, setDbSettingsShowChart } from '@/utils/dbManipulations';
-import { StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
 import { useColours, useGlobalStyles } from '@/hooks';
 import { useEffect, useState } from 'react';
 
@@ -24,7 +26,7 @@ export const ChartSettingsSection = () => {
   const {
     primitiveNeutral,
     primitivePrimary,
-    settingsScreen: { section: sectionColours },
+    settingsScreen: { radioButton, section: sectionColours },
     text: { color }
   } = useColours();
 
@@ -107,6 +109,7 @@ export const ChartSettingsSection = () => {
                 flexDirection: 'row'
               }}
               onPress={async () => {
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
                 await setDbSettingsChartSize(db, size);
                 setSelectedSize(size);
               }}
@@ -114,31 +117,38 @@ export const ChartSettingsSection = () => {
               <Ionicons
                 name={selectedSize === size ? 'radio-button-on' : 'radio-button-off'}
                 size={24}
-                color={color}
+                color={radioButton.color}
               />
               <Text style={{ color, marginLeft: 8 }}>{size}</Text>
             </TouchableOpacity>
           ))}
         </View>
-        <View style={globalStyles.settingsScreenSection}>
+        <View style={{ ...globalStyles.settingsScreenSection, flexDirection: 'column', gap: 16 }}>
           {curveTypeOptions.map(type => (
             <TouchableOpacity
               key={type}
-              style={{
-                alignItems: 'center',
-                flexDirection: 'row'
-              }}
               onPress={async () => {
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
                 await setDbSettingsChartCurveType(db, type);
                 setSelectedCurveType(type);
               }}
+              style={{
+                alignItems: 'center',
+                flexDirection: 'row',
+                gap: 8,
+                justifyContent: 'space-between'
+              }}
             >
+              <MaterialDesignIcons
+                name={type === ChartCurveType.LINEAR ? 'triangle-wave' : 'sine-wave'}
+                size={24}
+                color={primitivePrimary[400]}
+              />
               <Ionicons
                 name={selectedCurveType === type ? 'radio-button-on' : 'radio-button-off'}
                 size={24}
-                color={color}
+                color={radioButton.color}
               />
-              <Text style={{ color, marginLeft: 8 }}>{type}</Text>
             </TouchableOpacity>
           ))}
         </View>
