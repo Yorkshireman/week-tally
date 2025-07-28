@@ -116,7 +116,7 @@ export const ChartSettingsSection = () => {
                 size={24}
                 color={radioButton.color}
               />
-              <Text style={{ color, marginLeft: 8 }}>{size}</Text>
+              <Text style={{ color, ...styles.sizeText }}>{size}</Text>
             </TouchableOpacity>
           ))}
         </View>
@@ -165,6 +165,10 @@ const styles = StyleSheet.create({
   sizeOption: {
     alignItems: 'center',
     flexDirection: 'row'
+  },
+  sizeText: {
+    fontSize: normaliseFontSize(16),
+    marginLeft: 8
   },
   text: {
     fontSize: normaliseFontSize(18),
