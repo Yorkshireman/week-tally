@@ -1,3 +1,4 @@
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useSQLiteContext } from 'expo-sqlite';
 import { ChartCurveType, ChartSize } from '@/types';
 import {
@@ -110,15 +111,10 @@ export const ChartSettingsSection = () => {
                 setSelectedSize(size);
               }}
             >
-              <View
-                style={{
-                  backgroundColor: selectedSize === size ? color : 'transparent',
-                  borderColor: color,
-                  borderRadius: 10,
-                  borderWidth: 1.5,
-                  height: 20,
-                  width: 20
-                }}
+              <Ionicons
+                name={selectedSize === size ? 'radio-button-on' : 'radio-button-off'}
+                size={24}
+                color={color}
               />
               <Text style={{ color, marginLeft: 8 }}>{size}</Text>
             </TouchableOpacity>
@@ -137,15 +133,10 @@ export const ChartSettingsSection = () => {
                 setSelectedCurveType(type);
               }}
             >
-              <View
-                style={{
-                  backgroundColor: selectedCurveType === type ? color : 'transparent',
-                  borderColor: color,
-                  borderRadius: 10,
-                  borderWidth: 1.5,
-                  height: 20,
-                  width: 20
-                }}
+              <Ionicons
+                name={selectedCurveType === type ? 'radio-button-on' : 'radio-button-off'}
+                size={24}
+                color={color}
               />
               <Text style={{ color, marginLeft: 8 }}>{type}</Text>
             </TouchableOpacity>
