@@ -113,7 +113,7 @@ const styles = {
     primitivePrimary,
     settingsScreen: {
       radioButton: {
-        color: primitiveNeutral[200]
+        color: primitiveInfo[300]
       },
       resetApp: { color: primitiveError[200] },
       section: {
