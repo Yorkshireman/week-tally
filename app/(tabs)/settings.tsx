@@ -17,9 +17,8 @@ export default function Settings() {
   return (
     <SafeAreaView style={{ ...globalStyles.screenWrapper, backgroundColor }}>
       <View style={{ paddingTop: 16 }}>
-        <View style={{ marginBottom: 16 }}>
-          <ChartSettingsSection />
-        </View>
+        <ChartSettingsSection />
+        <Divider />
         <ChangeNotificationTimeSection />
         <Divider />
         <SelectThingsSection />

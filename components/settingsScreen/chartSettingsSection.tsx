@@ -12,8 +12,8 @@ import {
   setDbSettingsChartCurveType,
   setDbSettingsChartSize
 } from '@/utils';
-import { Pressable, StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
 import { setDbSettingsChartThingId, setDbSettingsShowChart } from '@/utils/dbManipulations';
+import { StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
 import { useColours, useGlobalStyles } from '@/hooks';
 import { useEffect, useState } from 'react';
 
@@ -104,10 +104,7 @@ export const ChartSettingsSection = () => {
           {sizeOptions.map(size => (
             <TouchableOpacity
               key={size}
-              style={{
-                alignItems: 'center',
-                flexDirection: 'row'
-              }}
+              style={styles.sizeOption}
               onPress={async () => {
                 Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
                 await setDbSettingsChartSize(db, size);
@@ -132,12 +129,7 @@ export const ChartSettingsSection = () => {
                 await setDbSettingsChartCurveType(db, type);
                 setSelectedCurveType(type);
               }}
-              style={{
-                alignItems: 'center',
-                flexDirection: 'row',
-                gap: 8,
-                justifyContent: 'space-between'
-              }}
+              style={styles.curveTypeOption}
             >
               <MaterialDesignIcons
                 name={type === ChartCurveType.LINEAR ? 'triangle-wave' : 'sine-wave'}
@@ -158,11 +150,21 @@ export const ChartSettingsSection = () => {
 };
 
 const styles = StyleSheet.create({
+  curveTypeOption: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 8,
+    justifyContent: 'space-between'
+  },
   heading: {
     fontSize: normaliseFontSize(16),
     fontWeight: 'bold',
     marginBottom: 8,
     paddingLeft: 25
+  },
+  sizeOption: {
+    alignItems: 'center',
+    flexDirection: 'row'
   },
   text: {
     fontSize: normaliseFontSize(18),
