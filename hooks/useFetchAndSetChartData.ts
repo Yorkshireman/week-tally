@@ -88,15 +88,7 @@ export const useFetchAndSetChartData = ({
           currentWeekEnd.toISOString()
         );
 
-        console.log(
-          `Found ${
-            logEntries.length
-          } LogEntries for the period with thingId ${thingId}: ${JSON.stringify(
-            logEntries,
-            null,
-            2
-          )}`
-        );
+        console.log(`Found ${logEntries.length} LogEntries for the period with thingId ${thingId}`);
 
         const weekCounts: Record<number, number> = {};
         for (const entry of logEntries) {
