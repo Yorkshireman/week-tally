@@ -32,27 +32,23 @@ export const ChartSettingsSection = () => {
 
   useEffect(() => {
     const fetchDbSettings = async () => {
-      try {
-        const showChartQueryResult = await fetchDbSettingsShowChart(db);
-        setIsEnabled(!!showChartQueryResult);
+      const showChartQueryResult = await fetchDbSettingsShowChart(db);
+      setIsEnabled(!!showChartQueryResult);
 
-        const dbSettingsChartCurveType = await fetchDbSettingsChartCurveType(db);
-        if (dbSettingsChartCurveType) {
-          setSelectedCurveType(dbSettingsChartCurveType);
-        } else {
-          setDbSettingsChartCurveType(db, ChartCurveType.NATURAL);
-          setSelectedCurveType(ChartCurveType.NATURAL);
-        }
+      const dbSettingsChartCurveType = await fetchDbSettingsChartCurveType(db);
+      if (dbSettingsChartCurveType) {
+        setSelectedCurveType(dbSettingsChartCurveType);
+      } else {
+        setDbSettingsChartCurveType(db, ChartCurveType.NATURAL);
+        setSelectedCurveType(ChartCurveType.NATURAL);
+      }
 
-        const chartSizeQueryResult = await fetchDbSettingsChartSize(db);
-        if (chartSizeQueryResult) {
-          setSelectedSize(chartSizeQueryResult);
-        } else {
-          await setDbSettingsChartSize(db, ChartSize.MEDIUM);
-          setSelectedSize(ChartSize.MEDIUM);
-        }
-      } catch (error) {
-        console.error('Error fetching DB Chart settings: ', error);
+      const chartSizeQueryResult = await fetchDbSettingsChartSize(db);
+      if (chartSizeQueryResult) {
+        setSelectedSize(chartSizeQueryResult);
+      } else {
+        await setDbSettingsChartSize(db, ChartSize.MEDIUM);
+        setSelectedSize(ChartSize.MEDIUM);
       }
     };
 
@@ -61,18 +57,15 @@ export const ChartSettingsSection = () => {
 
   const toggleSwitch = async () => {
     setIsEnabled(previousState => !previousState);
-    try {
-      if (isEnabled) {
-        await setDbSettingsShowChart(db, 'false');
-        await setDbSettingsChartThingId(db, '');
-      } else {
-        await setDbSettingsShowChart(db, 'true');
-        fetchDbFirstCurrentlyTrackedThing(db).then(thing =>
-          setDbSettingsChartThingId(db, thing?.id || '')
-        );
-      }
-    } catch (error) {
-      console.error('Error updating Chart Visible setting: ', error);
+
+    if (isEnabled) {
+      await setDbSettingsShowChart(db, 'false');
+      await setDbSettingsChartThingId(db, '');
+    } else {
+      await setDbSettingsShowChart(db, 'true');
+      fetchDbFirstCurrentlyTrackedThing(db).then(thing =>
+        setDbSettingsChartThingId(db, thing?.id || '')
+      );
     }
   };
 

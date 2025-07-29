@@ -93,7 +93,7 @@ export const setDbSettingsShowChart = async (db: SQLiteDatabase, value: 'true' |
       value
     );
   } catch (e) {
-    console.error('Error setting db showChard value: ', e);
+    console.error('Error setting db showChart value: ', e);
   }
 };
 
