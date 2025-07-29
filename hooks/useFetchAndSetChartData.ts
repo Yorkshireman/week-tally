@@ -10,7 +10,7 @@ export const useFetchAndSetChartData = ({
 }: {
   selectedScale: ChartScale | undefined;
   thingId: string;
-  totals?: ThingWithLogEntriesCount[];
+  totals: ThingWithLogEntriesCount[] | undefined;
 }) => {
   const [chartData, setChartData] = useState<ChartDataItem[]>();
   const db = useSQLiteContext();

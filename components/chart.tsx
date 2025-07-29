@@ -4,14 +4,8 @@ import { useFont } from '@shopify/react-native-skia';
 import { useSQLiteContext } from 'expo-sqlite';
 import { Area, CartesianChart } from 'victory-native';
 import { buildStartOfWeekDate, setDbSettingsChartScale } from '@/utils';
-import {
-  ChartCurveType,
-  ChartDataItem,
-  ChartScale,
-  ChartSize,
-  ThingWithLogEntriesCount
-} from '@/types';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { ChartScale, ChartSize, ThingWithLogEntriesCount } from '@/types';
+import { Dispatch, SetStateAction } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useColours, useFetchAndSetChartData, useFetchAndSetChartSettings } from '@/hooks';
 
@@ -65,11 +59,8 @@ export const Chart = ({
     chart: { areaColour, lineColor, xAxisTickLabel },
     text: { color }
   } = useColours();
-  const [chartSize, setChartSize] = useState<ChartSize>();
-  const [curveType, setCurveType] = useState<ChartCurveType>();
   const font = useFont(require('../assets/fonts/inter-medium.ttf'), 12);
-  const [selectedScale, setSelectedScale] = useState<ChartScale>();
-  useFetchAndSetChartSettings({ setChartSize, setCurveType, setSelectedScale });
+  const { chartSize, curveType, selectedScale, setSelectedScale } = useFetchAndSetChartSettings();
   const chartData = useFetchAndSetChartData({
     selectedScale,
     thingId,

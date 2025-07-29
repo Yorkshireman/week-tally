@@ -1,7 +1,6 @@
 import { useIsFocused } from '@react-navigation/native';
 import { useSQLiteContext } from 'expo-sqlite';
 import { ChartCurveType, ChartScale, ChartSize } from '@/types';
-import { Dispatch, SetStateAction, useEffect } from 'react';
 import {
   fetchDbSettingsChartCurveType,
   fetchDbSettingsChartScale,
@@ -10,20 +9,14 @@ import {
   setDbSettingsChartScale,
   setDbSettingsChartSize
 } from '@/utils';
+import { useEffect, useState } from 'react';
 
-type Params = {
-  setChartSize: Dispatch<SetStateAction<ChartSize | undefined>>;
-  setCurveType: Dispatch<SetStateAction<ChartCurveType | undefined>>;
-  setSelectedScale: Dispatch<SetStateAction<ChartScale | undefined>>;
-};
-
-export const useFetchAndSetChartSettings = ({
-  setChartSize,
-  setCurveType,
-  setSelectedScale
-}: Params) => {
+export const useFetchAndSetChartSettings = () => {
+  const [chartSize, setChartSize] = useState<ChartSize>();
+  const [curveType, setCurveType] = useState<ChartCurveType>();
   const db = useSQLiteContext();
   const isFocused = useIsFocused();
+  const [selectedScale, setSelectedScale] = useState<ChartScale>();
 
   useEffect(() => {
     const fetchChartScale = async () => {
@@ -62,4 +55,6 @@ export const useFetchAndSetChartSettings = ({
       fetchCurveType();
     }
   }, [db, isFocused, setChartSize, setCurveType, setSelectedScale]);
+
+  return { chartSize, curveType, selectedScale, setSelectedScale };
 };
