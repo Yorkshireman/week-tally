@@ -35,7 +35,7 @@ export default function TotalsScreen() {
       selectedThing: selectedThingColours
     }
   } = useColours();
-  const [chartThingId, setChartThingId] = useState<string | null>(null);
+  const [chartThingId, setChartThingId] = useState<string>();
   const db = useSQLiteContext();
   const globalStyles = useGlobalStyles();
   const router = useRouter();

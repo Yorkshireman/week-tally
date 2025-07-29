@@ -16,13 +16,13 @@ export const fetchDbChartThingId = async (db: SQLiteDatabase) => {
     );
 
     if (!result || !result.value) {
-      return null;
+      return;
     }
 
     return result.value;
   } catch (error) {
     console.error('Error fetching DB Chart Thing ID: ', error);
-    return null;
+    return;
   }
 };
 

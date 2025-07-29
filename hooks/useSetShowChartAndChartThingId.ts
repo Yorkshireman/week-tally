@@ -5,7 +5,7 @@ import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { fetchDbChartThingId, fetchDbSettingsShowChart, setDbSettingsChartThingId } from '@/utils';
 
 interface Params {
-  setChartThingId: Dispatch<SetStateAction<string | null>>;
+  setChartThingId: Dispatch<SetStateAction<string | undefined>>;
   totals: ThingWithLogEntriesCount[] | undefined;
 }
 
@@ -25,7 +25,7 @@ export const useSetShowChartAndChartThingId = ({ setChartThingId, totals }: Para
 
   useEffect(() => {
     if (!showChart) {
-      setDbSettingsChartThingId(db, '').then(() => setChartThingId(null));
+      setDbSettingsChartThingId(db, '').then(() => setChartThingId(undefined));
       return;
     }
 
@@ -41,7 +41,7 @@ export const useSetShowChartAndChartThingId = ({ setChartThingId, totals }: Para
           setChartThingId(firstTrackedThing.id);
           await setDbSettingsChartThingId(db, firstTrackedThing.id);
         } else {
-          setChartThingId(null);
+          setChartThingId(undefined);
         }
       }
     };
