@@ -79,11 +79,6 @@ export default function TotalsScreen() {
 
   const renderChart = showChart && chartThingId;
 
-  // prevent layout shift
-  if (showChart === undefined) {
-    return null;
-  }
-
   return (
     <SafeAreaView style={{ ...globalStyles.screenWrapper, backgroundColor }}>
       {renderChart && <Chart thingId={chartThingId} totals={totals} />}
