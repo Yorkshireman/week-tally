@@ -1,24 +1,18 @@
 import { ThingWithLogEntriesCount } from '@/types';
 import { useIsFocused } from '@react-navigation/native';
 import { useSQLiteContext } from 'expo-sqlite';
-import { Dispatch, SetStateAction, useEffect } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { fetchDbChartThingId, fetchDbSettingsShowChart, setDbSettingsChartThingId } from '@/utils';
 
 interface Params {
   setChartThingId: Dispatch<SetStateAction<string | null>>;
-  setShowChart: Dispatch<SetStateAction<boolean>>;
-  showChart: boolean;
   totals: ThingWithLogEntriesCount[] | undefined;
 }
 
-export const useSetShowChartAndChartThingId = ({
-  setChartThingId,
-  setShowChart,
-  showChart,
-  totals
-}: Params) => {
-  const isFocused = useIsFocused();
+export const useSetShowChartAndChartThingId = ({ setChartThingId, totals }: Params) => {
   const db = useSQLiteContext();
+  const isFocused = useIsFocused();
+  const [showChart, setShowChart] = useState<boolean>();
 
   useEffect(() => {
     const fetchAndSetShowChart = async () => {
@@ -54,4 +48,6 @@ export const useSetShowChartAndChartThingId = ({
 
     fetchAndSetChartThingId();
   }, [db, isFocused, setChartThingId, showChart, totals]);
+
+  return showChart;
 };

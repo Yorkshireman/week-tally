@@ -39,16 +39,10 @@ export default function TotalsScreen() {
   const db = useSQLiteContext();
   const globalStyles = useGlobalStyles();
   const router = useRouter();
-  const [showChart, setShowChart] = useState<boolean>(true);
   const [totals, setTotals] = useState<ThingWithLogEntriesCount[]>();
-  const [weekOffset, setWeekOffset] = useState<number>(0);
+  const showChart = useSetShowChartAndChartThingId({ setChartThingId, totals });
+  const [weekOffset, setWeekOffset] = useState(0);
   useFetchAndSetTotals({ setTotals, setWeekOffset, weekOffset });
-  useSetShowChartAndChartThingId({
-    setChartThingId,
-    setShowChart,
-    showChart,
-    totals
-  });
 
   const addLogEntry = async (id: string) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
@@ -84,6 +78,11 @@ export default function TotalsScreen() {
   };
 
   const renderChart = showChart && chartThingId;
+
+  // prevent layout shift
+  if (showChart === undefined) {
+    return null;
+  }
 
   return (
     <SafeAreaView style={{ ...globalStyles.screenWrapper, backgroundColor }}>
