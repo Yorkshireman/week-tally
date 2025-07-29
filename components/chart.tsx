@@ -31,7 +31,7 @@ const ScaleSelector = ({
     text: { color }
   } = useColours();
 
-  const _styles =
+  const scaleOptionStyles =
     scale === selectedScale
       ? {
           ...styles.scaleSelector,
@@ -47,7 +47,7 @@ const ScaleSelector = ({
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
         await setDbSettingsChartScale(db, scale);
       }}
-      style={_styles}
+      style={scaleOptionStyles}
     >
       <Text style={{ color }}>{scale}</Text>
     </TouchableOpacity>
@@ -65,15 +65,13 @@ export const Chart = ({
     chart: { areaColour, lineColor, xAxisTickLabel },
     text: { color }
   } = useColours();
-  const [chartData, setChartData] = useState<ChartDataItem[]>();
   const [chartSize, setChartSize] = useState<ChartSize>();
   const [curveType, setCurveType] = useState<ChartCurveType>();
   const font = useFont(require('../assets/fonts/inter-medium.ttf'), 12);
   const [selectedScale, setSelectedScale] = useState<ChartScale>();
   useFetchAndSetChartSettings({ setChartSize, setCurveType, setSelectedScale });
-  useFetchAndSetChartData({
+  const chartData = useFetchAndSetChartData({
     selectedScale,
-    setChartData,
     thingId,
     totals
   });
@@ -95,8 +93,8 @@ export const Chart = ({
   const firstWeekMonday = buildStartOfWeekDate(now, weekOffset);
   const firstWeekLabel = format(firstWeekMonday, "EE do MMM ''yy");
 
-  const maxTotal = Math.max(...chartData.map(({ total }) => total), 0);
-  const tickValues = Array.from({ length: maxTotal + 1 }, (_, i) => i);
+  const highestTotal = Math.max(...chartData.map(({ total }) => total), 0);
+  const tickValues = Array.from({ length: highestTotal + 1 }, (_, i) => i);
 
   const middleIndex = Math.floor(chartData.length / 2);
   const middleWeek = chartData[middleIndex]?.week;
@@ -111,7 +109,7 @@ export const Chart = ({
     <View style={{ height }}>
       <CartesianChart
         data={chartData}
-        domain={{ y: [0, maxTotal + 0.1] }}
+        domain={{ y: [0, highestTotal + 0.1] }}
         yAxis={[
           {
             font,

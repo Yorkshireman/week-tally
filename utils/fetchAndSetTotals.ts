@@ -24,9 +24,7 @@ export const fetchAndSetTotals = async (
       weekEnd.toISOString()
     );
 
-    console.log(
-      `Found ${logEntries.length} LogEntries for the week: ${JSON.stringify(logEntries, null, 2)}`
-    );
+    console.log(`Found ${logEntries.length} LogEntries for the week.`);
 
     const thingIds = Array.from(new Set(logEntries.map(({ thingId }) => thingId)));
 
