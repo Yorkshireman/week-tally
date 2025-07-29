@@ -51,8 +51,8 @@ export const useFetchAndSetChartSettings = ({
       if (dbSettingsChartCurveType) {
         setCurveType(dbSettingsChartCurveType);
       } else {
-        setDbSettingsChartCurveType(db, ChartCurveType.LINEAR);
-        setCurveType(ChartCurveType.LINEAR);
+        setDbSettingsChartCurveType(db, ChartCurveType.NATURAL);
+        setCurveType(ChartCurveType.NATURAL);
       }
     };
 

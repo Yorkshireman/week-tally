@@ -40,8 +40,8 @@ export const ChartSettingsSection = () => {
         if (dbSettingsChartCurveType) {
           setSelectedCurveType(dbSettingsChartCurveType);
         } else {
-          setDbSettingsChartCurveType(db, ChartCurveType.LINEAR);
-          setSelectedCurveType(ChartCurveType.LINEAR);
+          setDbSettingsChartCurveType(db, ChartCurveType.NATURAL);
+          setSelectedCurveType(ChartCurveType.NATURAL);
         }
 
         const chartSizeQueryResult = await fetchDbSettingsChartSize(db);
