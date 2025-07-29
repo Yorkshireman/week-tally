@@ -14,7 +14,7 @@ import {
 type Params = {
   setChartSize: Dispatch<SetStateAction<ChartSize | undefined>>;
   setCurveType: Dispatch<SetStateAction<ChartCurveType | undefined>>;
-  setSelectedScale: Dispatch<SetStateAction<ChartScale | null>>;
+  setSelectedScale: Dispatch<SetStateAction<ChartScale | undefined>>;
 };
 
 export const useFetchAndSetChartSettings = ({

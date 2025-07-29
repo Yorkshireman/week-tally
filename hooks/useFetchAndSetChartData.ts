@@ -1,7 +1,7 @@
-import { useEffect } from 'react';
 import { useSQLiteContext } from 'expo-sqlite';
 import { buildStartOfWeekDate, buildWeekOffsetsArray } from '@/utils';
 import { ChartDataItem, ChartScale, LogEntry, ThingWithLogEntriesCount } from '@/types';
+import { Dispatch, SetStateAction, useEffect } from 'react';
 
 export const useFetchAndSetChartData = ({
   selectedScale,
@@ -9,9 +9,9 @@ export const useFetchAndSetChartData = ({
   setChartData,
   totals
 }: {
-  selectedScale: ChartScale | null;
+  selectedScale: ChartScale | undefined;
   thingId: string;
-  setChartData: React.Dispatch<React.SetStateAction<ChartDataItem[] | null>>;
+  setChartData: Dispatch<SetStateAction<ChartDataItem[] | undefined>>;
   totals?: ThingWithLogEntriesCount[];
 }) => {
   const db = useSQLiteContext();

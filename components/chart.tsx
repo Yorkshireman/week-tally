@@ -22,7 +22,7 @@ const ScaleSelector = ({
 }: {
   scale: ChartScale;
   selectedScale: ChartScale;
-  setSelectedScale: Dispatch<SetStateAction<ChartScale | null>>;
+  setSelectedScale: Dispatch<SetStateAction<ChartScale | undefined>>;
 }) => {
   const db = useSQLiteContext();
   const {
@@ -65,11 +65,11 @@ export const Chart = ({
     chart: { areaColour, lineColor, xAxisTickLabel },
     text: { color }
   } = useColours();
-  const [chartData, setChartData] = useState<ChartDataItem[] | null>(null);
+  const [chartData, setChartData] = useState<ChartDataItem[]>();
   const [chartSize, setChartSize] = useState<ChartSize>();
   const [curveType, setCurveType] = useState<ChartCurveType>();
   const font = useFont(require('../assets/fonts/inter-medium.ttf'), 12);
-  const [selectedScale, setSelectedScale] = useState<ChartScale | null>(null);
+  const [selectedScale, setSelectedScale] = useState<ChartScale>();
   useFetchAndSetChartSettings({ setChartSize, setCurveType, setSelectedScale });
   useFetchAndSetChartData({
     selectedScale,

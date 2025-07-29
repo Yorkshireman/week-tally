@@ -7,7 +7,6 @@ import { Thing as ThingType } from '@/types';
 import { updateCurrentlyTracking } from '@/utils/dbManipulations';
 import { useRouter } from 'expo-router';
 import { useSQLiteContext } from 'expo-sqlite';
-import { useState } from 'react';
 import {
   Alert,
   StyleSheet,
@@ -17,9 +16,10 @@ import {
   useColorScheme,
   View
 } from 'react-native';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { useColours, useGlobalStyles } from '@/hooks';
 
-type SetThings = React.Dispatch<React.SetStateAction<ThingType[]>>;
+type SetThings = Dispatch<SetStateAction<ThingType[]>>;
 
 export const Thing = ({ setThings, thing }: { setThings: SetThings; thing: ThingType }) => {
   const colourScheme = useColorScheme();
