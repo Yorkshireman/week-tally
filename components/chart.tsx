@@ -2,7 +2,6 @@ import * as Haptics from 'expo-haptics';
 import { format } from 'date-fns';
 import { useFont } from '@shopify/react-native-skia';
 import { useSQLiteContext } from 'expo-sqlite';
-import { useState } from 'react';
 import { Area, CartesianChart } from 'victory-native';
 import { buildStartOfWeekDate, setDbSettingsChartScale } from '@/utils';
 import {
@@ -12,6 +11,7 @@ import {
   ChartSize,
   ThingWithLogEntriesCount
 } from '@/types';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useColours, useFetchAndSetChartData, useFetchAndSetChartSettings } from '@/hooks';
 
@@ -22,7 +22,7 @@ const ScaleSelector = ({
 }: {
   scale: ChartScale;
   selectedScale: ChartScale;
-  setSelectedScale: React.Dispatch<React.SetStateAction<ChartScale | null>>;
+  setSelectedScale: Dispatch<SetStateAction<ChartScale | null>>;
 }) => {
   const db = useSQLiteContext();
   const {
