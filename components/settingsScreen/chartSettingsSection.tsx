@@ -5,24 +5,19 @@ import { useSQLiteContext } from 'expo-sqlite';
 import { ChartCurveType, ChartSize } from '@/types';
 import {
   fetchDbFirstCurrentlyTrackedThing,
-  fetchDbSettingsChartCurveType,
-  fetchDbSettingsChartSize,
-  fetchDbSettingsShowChart,
   normaliseFontSize,
   setDbSettingsChartCurveType,
   setDbSettingsChartSize
 } from '@/utils';
 import { setDbSettingsChartThingId, setDbSettingsShowChart } from '@/utils/dbManipulations';
 import { StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
-import { useColours, useGlobalStyles } from '@/hooks';
-import { useEffect, useState } from 'react';
+import { useColours, useFetchAndSetChartSettings, useGlobalStyles } from '@/hooks';
 
 export const ChartSettingsSection = () => {
+  const { chartSize, curveType, setChartSize, setCurveType, setShowChart, showChart } =
+    useFetchAndSetChartSettings();
   const db = useSQLiteContext();
   const globalStyles = useGlobalStyles();
-  const [isEnabled, setIsEnabled] = useState(true);
-  const [selectedCurveType, setSelectedCurveType] = useState<ChartCurveType>();
-  const [selectedSize, setSelectedSize] = useState<ChartSize>();
   const {
     primitiveNeutral,
     primitivePrimary,
@@ -30,35 +25,10 @@ export const ChartSettingsSection = () => {
     text: { color }
   } = useColours();
 
-  useEffect(() => {
-    const fetchDbSettings = async () => {
-      const showChartQueryResult = await fetchDbSettingsShowChart(db);
-      setIsEnabled(!!showChartQueryResult);
-
-      const dbSettingsChartCurveType = await fetchDbSettingsChartCurveType(db);
-      if (dbSettingsChartCurveType) {
-        setSelectedCurveType(dbSettingsChartCurveType);
-      } else {
-        setDbSettingsChartCurveType(db, ChartCurveType.NATURAL);
-        setSelectedCurveType(ChartCurveType.NATURAL);
-      }
-
-      const chartSizeQueryResult = await fetchDbSettingsChartSize(db);
-      if (chartSizeQueryResult) {
-        setSelectedSize(chartSizeQueryResult);
-      } else {
-        await setDbSettingsChartSize(db, ChartSize.MEDIUM);
-        setSelectedSize(ChartSize.MEDIUM);
-      }
-    };
-
-    fetchDbSettings();
-  }, [db]);
-
   const toggleSwitch = async () => {
-    setIsEnabled(previousState => !previousState);
+    setShowChart(previousState => !previousState);
 
-    if (isEnabled) {
+    if (showChart) {
       await setDbSettingsShowChart(db, 'false');
       await setDbSettingsChartThingId(db, '');
     } else {
@@ -88,9 +58,9 @@ export const ChartSettingsSection = () => {
           <Switch
             ios_backgroundColor={primitiveNeutral[600]}
             onValueChange={toggleSwitch}
-            thumbColor={isEnabled ? '#fff' : primitiveNeutral[200]}
+            thumbColor={showChart ? '#fff' : primitiveNeutral[200]}
             trackColor={{ true: primitivePrimary[400] }}
-            value={isEnabled}
+            value={showChart}
           />
         </View>
         <View style={globalStyles.settingsScreenSection}>
@@ -101,11 +71,11 @@ export const ChartSettingsSection = () => {
               onPress={async () => {
                 Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
                 await setDbSettingsChartSize(db, size);
-                setSelectedSize(size);
+                setChartSize(size);
               }}
             >
               <Ionicons
-                name={selectedSize === size ? 'radio-button-on' : 'radio-button-off'}
+                name={chartSize === size ? 'radio-button-on' : 'radio-button-off'}
                 size={24}
                 color={radioButton.color}
               />
@@ -120,7 +90,7 @@ export const ChartSettingsSection = () => {
               onPress={async () => {
                 Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
                 await setDbSettingsChartCurveType(db, type);
-                setSelectedCurveType(type);
+                setCurveType(type);
               }}
               style={styles.curveTypeOption}
             >
@@ -130,7 +100,7 @@ export const ChartSettingsSection = () => {
                 color={primitivePrimary[400]}
               />
               <Ionicons
-                name={selectedCurveType === type ? 'radio-button-on' : 'radio-button-off'}
+                name={curveType === type ? 'radio-button-on' : 'radio-button-off'}
                 size={24}
                 color={radioButton.color}
               />

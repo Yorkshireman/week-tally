@@ -5,6 +5,7 @@ import {
   fetchDbSettingsChartCurveType,
   fetchDbSettingsChartScale,
   fetchDbSettingsChartSize,
+  fetchDbSettingsShowChart,
   setDbSettingsChartCurveType,
   setDbSettingsChartScale,
   setDbSettingsChartSize
@@ -17,6 +18,7 @@ export const useFetchAndSetChartSettings = () => {
   const db = useSQLiteContext();
   const isFocused = useIsFocused();
   const [selectedScale, setSelectedScale] = useState<ChartScale>();
+  const [showChart, setShowChart] = useState<boolean>();
 
   useEffect(() => {
     const fetchChartScale = async () => {
@@ -49,12 +51,27 @@ export const useFetchAndSetChartSettings = () => {
       }
     };
 
+    const fetchShowChart = async () => {
+      const showChartQueryResult = await fetchDbSettingsShowChart(db);
+      setShowChart(!!showChartQueryResult);
+    };
+
     if (isFocused) {
       fetchChartScale();
       fetchChartSize();
       fetchCurveType();
+      fetchShowChart();
     }
   }, [db, isFocused, setChartSize, setCurveType, setSelectedScale]);
 
-  return { chartSize, curveType, selectedScale, setSelectedScale };
+  return {
+    chartSize,
+    curveType,
+    selectedScale,
+    setChartSize,
+    setCurveType,
+    setSelectedScale,
+    setShowChart,
+    showChart
+  };
 };
