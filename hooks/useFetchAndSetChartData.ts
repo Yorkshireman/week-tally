@@ -16,7 +16,7 @@ export const useFetchAndSetChartData = ({
   const db = useSQLiteContext();
 
   useEffect(() => {
-    const run = async () => {
+    const fetchAndSetChartData = async () => {
       if (!selectedScale) return;
 
       const now = new Date();
@@ -110,7 +110,7 @@ export const useFetchAndSetChartData = ({
       }
     };
 
-    run();
+    fetchAndSetChartData();
   }, [db, thingId, totals, selectedScale, setChartData]);
 
   return chartData;
