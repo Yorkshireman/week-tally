@@ -1,6 +1,7 @@
 import { Divider } from '@/components';
 import {
   ChangeNotificationTimeSection,
+  ChartSettingsSection,
   ResetAppSection,
   SelectThingsSection
 } from '@/components/settingsScreen';
@@ -15,7 +16,9 @@ export default function Settings() {
 
   return (
     <SafeAreaView style={{ ...globalStyles.screenWrapper, backgroundColor }}>
-      <View>
+      <View style={{ paddingTop: 16 }}>
+        <ChartSettingsSection />
+        <Divider />
         <ChangeNotificationTimeSection />
         <Divider />
         <SelectThingsSection />

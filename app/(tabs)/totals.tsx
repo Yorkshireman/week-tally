@@ -1,82 +1,59 @@
 import * as Haptics from 'expo-haptics';
+import { Chart } from '@/components';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ThingWithLogEntriesCount } from '@/types';
-import { useIsFocused } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
 import { useSQLiteContext } from 'expo-sqlite';
+import { useState } from 'react';
 import {
   addLogEntryToDb,
   deleteLogEntryFromDb,
-  fetchAndSetTotals,
   getAddLogEntryCount,
   getWeekLabel,
   incrementAddLogEntryCount,
   normaliseFontSize,
-  promptForRatingIfAppropriate
+  promptForRatingIfAppropriate,
+  setDbSettingsChartThingId
 } from '@/utils';
+import { FlatList, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import {
-  AppState,
-  FlatList,
-  Pressable,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View
-} from 'react-native';
-import { useColours, useDbLogger, useGlobalStyles } from '@/hooks';
-import { useEffect, useRef, useState } from 'react';
+  useColours,
+  useFetchAndSetTotals,
+  useGlobalStyles,
+  useSetShowChartAndChartThingId
+} from '@/hooks';
 
 export default function TotalsScreen() {
-  const appState = useRef(AppState.currentState);
   const {
     iconButton,
     page: { backgroundColor },
     text: { color },
     thingSection: thingSectionColours,
     totalsScreen: {
-      addButton: { color: addButtonColor }
+      addButton: { color: addButtonColor },
+      selectedThing: selectedThingColours
     }
   } = useColours();
+  const [chartThingId, setChartThingId] = useState<string>();
   const db = useSQLiteContext();
   const globalStyles = useGlobalStyles();
-  const isFocused = useIsFocused();
-  const logDbContents = useDbLogger();
   const router = useRouter();
   const [totals, setTotals] = useState<ThingWithLogEntriesCount[]>();
-  const [weekOffset, setWeekOffset] = useState<number>(0);
-
-  useEffect(() => {
-    if (isFocused) {
-      fetchAndSetTotals(db, logDbContents, setTotals, weekOffset);
-    }
-    // Listen for app coming to the foreground
-    const subscription = AppState.addEventListener('change', nextAppState => {
-      if (appState.current.match(/inactive|background/) && nextAppState === 'active' && isFocused) {
-        fetchAndSetTotals(db, logDbContents, setTotals, weekOffset);
-        setWeekOffset(0);
-      }
-
-      appState.current = nextAppState;
-    });
-
-    return () => {
-      subscription.remove();
-    };
-  }, [db, isFocused, logDbContents, weekOffset]);
+  const showChart = useSetShowChartAndChartThingId({ setChartThingId, totals });
+  const [weekOffset, setWeekOffset] = useState(0);
+  useFetchAndSetTotals({ setTotals, setWeekOffset, weekOffset });
 
   const addLogEntry = async (id: string) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     try {
       await addLogEntryToDb(db, id, weekOffset);
-      logDbContents();
       setTotals(prev => prev?.map(t => (t.id === id ? { ...t, count: t.count + 1 } : t)));
       const currentAddLogEntryCount = await getAddLogEntryCount();
       await promptForRatingIfAppropriate(currentAddLogEntryCount);
       await incrementAddLogEntryCount(currentAddLogEntryCount);
     } catch (e) {
       console.error('DB error: ', e);
-      logDbContents();
     }
   };
 
@@ -88,8 +65,6 @@ export default function TotalsScreen() {
     } catch (e) {
       console.error('DB error: ', e);
     }
-
-    logDbContents();
   };
 
   const goBackOneWeek = () => {
@@ -102,8 +77,11 @@ export default function TotalsScreen() {
     setWeekOffset(prev => Math.min(prev + 1, 0));
   };
 
+  const renderChart = showChart && chartThingId;
+
   return (
     <SafeAreaView style={{ ...globalStyles.screenWrapper, backgroundColor }}>
+      {renderChart && <Chart thingId={chartThingId} totals={totals} />}
       <View style={{ ...styles.listHeader, width: '100%' }}>
         <Pressable onPress={goBackOneWeek} style={styles.weekButton}>
           <Ionicons
@@ -127,48 +105,69 @@ export default function TotalsScreen() {
       </View>
       <FlatList
         data={totals}
-        renderItem={({ item: { count, title, id } }) => (
-          <View style={{ ...styles.thing, ...thingSectionColours }}>
-            <Pressable
-              onPress={() => {
-                if (count === 0) return;
-                deleteLogEntry(id);
-              }}
-              disabled={count === 0}
-              style={styles.countButtonWrapper}
-            >
-              <Ionicons
-                color={iconButton.color}
-                name='remove-circle'
-                size={normaliseFontSize(32)}
-                style={{ ...styles.countButton, opacity: count === 0 ? 0.5 : 1 }}
-              />
-            </Pressable>
-            <View
-              style={{
-                alignItems: 'center',
-                flex: 1,
-                flexDirection: 'row',
-                paddingHorizontal: 10
-              }}
-            >
-              <View style={{ flex: 1, paddingHorizontal: 10 }}>
-                <Text style={{ ...styles.text, color, textAlign: 'left' }}>{title}</Text>
+        renderItem={({ item: thing }) => {
+          const { count, title, id } = thing;
+          const isSelected = chartThingId === id;
+          const wrapperStyles = isSelected
+            ? {
+                ...styles.thing,
+                ...thingSectionColours,
+                ...styles.selectedThing,
+                ...selectedThingColours
+              }
+            : { ...styles.thing, ...thingSectionColours, borderColor: backgroundColor };
+
+          return (
+            <View style={wrapperStyles}>
+              <Pressable
+                onPress={() => {
+                  if (count === 0) return;
+                  deleteLogEntry(id);
+                }}
+                disabled={count === 0}
+                style={styles.countButtonWrapper}
+              >
+                <Ionicons
+                  color={iconButton.color}
+                  name='remove-circle'
+                  size={normaliseFontSize(32)}
+                  style={{ ...styles.countButton, opacity: count === 0 ? 0.5 : 1 }}
+                />
+              </Pressable>
+              <View
+                style={{
+                  alignItems: 'center',
+                  flex: 1,
+                  flexDirection: 'row',
+                  paddingHorizontal: 10
+                }}
+              >
+                <Pressable
+                  onPress={() => {
+                    if (!showChart) return;
+                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                    setChartThingId(thing.id);
+                    setDbSettingsChartThingId(db, id);
+                  }}
+                  style={{ flex: 1, paddingHorizontal: 10 }}
+                >
+                  <Text style={{ ...styles.text, color, textAlign: 'left' }}>{title}</Text>
+                </Pressable>
+                <View style={{ minWidth: 10 }}>
+                  <Text style={{ ...styles.text, color }}>{count}</Text>
+                </View>
               </View>
-              <View style={{ minWidth: 10 }}>
-                <Text style={{ ...styles.text, color }}>{count}</Text>
-              </View>
+              <Pressable onPress={() => addLogEntry(id)} style={styles.countButtonWrapper}>
+                <Ionicons
+                  color={iconButton.color}
+                  name='add-circle'
+                  size={normaliseFontSize(32)}
+                  style={styles.countButton}
+                />
+              </Pressable>
             </View>
-            <Pressable onPress={() => addLogEntry(id)} style={styles.countButtonWrapper}>
-              <Ionicons
-                color={iconButton.color}
-                name='add-circle'
-                size={normaliseFontSize(32)}
-                style={styles.countButton}
-              />
-            </Pressable>
-          </View>
-        )}
+          );
+        }}
         ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
         ListFooterComponent={
           weekOffset ? null : (
@@ -209,6 +208,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: 20
   },
+  selectedThing: {
+    borderWidth: 2
+  },
   text: {
     fontSize: normaliseFontSize(24),
     fontWeight: 'bold',
@@ -217,6 +219,7 @@ const styles = StyleSheet.create({
   thing: {
     alignItems: 'center',
     borderRadius: 8,
+    borderWidth: 2,
     flexDirection: 'row',
     padding: 8
   },

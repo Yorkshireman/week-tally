@@ -65,6 +65,18 @@ const styles = {
         color: '#fff'
       }
     },
+    chart: {
+      areaColour: primitiveInfo[300],
+      lineColor: primitiveNeutral[400],
+      scaleSelectorSelected: {
+        backgroundColor: primitiveNeutral[600],
+        borderColor: primitiveNeutral[100],
+        color: primitiveNeutral[700]
+      },
+      xAxisTickLabel: {
+        color: primitiveNeutral[400]
+      }
+    },
     divider: {
       backgroundColor: primitiveNeutral[500]
     },
@@ -100,6 +112,9 @@ const styles = {
     primitiveNeutral,
     primitivePrimary,
     settingsScreen: {
+      radioButton: {
+        color: primitiveInfo[300]
+      },
       resetApp: { color: primitiveError[200] },
       section: {
         backgroundColor: primitiveNeutral[700]
@@ -131,6 +146,9 @@ const styles = {
     totalsScreen: {
       addButton: {
         color: primitiveNeutral[200]
+      },
+      selectedThing: {
+        borderColor: primitiveInfo[300]
       }
     }
   },
@@ -149,6 +167,18 @@ const styles = {
       warning: {
         backgroundColor: primitiveError[500],
         color: '#fff'
+      }
+    },
+    chart: {
+      areaColour: primitiveInfo[300],
+      lineColor: primitiveNeutral[400],
+      scaleSelectorSelected: {
+        backgroundColor: primitiveInfo[100],
+        borderColor: primitivePrimary[600],
+        color: primitiveNeutral[700]
+      },
+      xAxisTickLabel: {
+        color: primitiveNeutral[700]
       }
     },
     divider: {
@@ -183,6 +213,9 @@ const styles = {
     primitiveNeutral,
     primitivePrimary,
     settingsScreen: {
+      radioButton: {
+        color: primitivePrimary[600]
+      },
       resetApp: { color: primitiveError[500] },
       section: {
         backgroundColor: '#fff'
@@ -214,6 +247,9 @@ const styles = {
     totalsScreen: {
       addButton: {
         color: primitivePrimary[600]
+      },
+      selectedThing: {
+        borderColor: primitiveInfo[300]
       }
     }
   }

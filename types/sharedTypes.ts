@@ -1,3 +1,42 @@
+export enum ChartCurveType {
+  LINEAR = 'linear',
+  NATURAL = 'natural'
+}
+
+export type ChartDataItem = {
+  total: number;
+  week: number;
+};
+
+export enum ChartScale {
+  FOUR_WEEKS = '4W',
+  TWELVE_WEEKS = '12W',
+  TWENTY_FOUR_WEEKS = '24W',
+  FIFTY_TWO_WEEKS = '52W',
+  MAX = 'Max'
+}
+
+export type ChartCurveTypeSetting = {
+  key: 'chartCurveType';
+  value: ChartCurveType;
+};
+
+export type ChartScaleSetting = {
+  key: 'chartScale';
+  value: ChartScale;
+};
+
+export enum ChartSize {
+  SMALL = 'Small',
+  MEDIUM = 'Medium',
+  LARGE = 'Large'
+}
+
+export type ChartSizeSetting = {
+  key: 'chartSize';
+  value: ChartSize;
+};
+
 export type LogEntry = {
   id: string;
   thingId: string;
@@ -11,6 +50,11 @@ export type NotificationDataType = {
 export type Setting = {
   key: string;
   value: string;
+};
+
+export type ShowChartSetting = {
+  key: 'showChart';
+  value: 'true' | 'false';
 };
 
 export type Thing = {

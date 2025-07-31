@@ -5,7 +5,6 @@ import { LogEntry, Thing, ThingWithLogEntriesCount } from '@/types';
 
 export const fetchAndSetTotals = async (
   db: SQLiteDatabase,
-  logDbContents: Function,
   setTotals: Dispatch<SetStateAction<ThingWithLogEntriesCount[] | undefined>>,
   weekOffset: number
 ) => {
@@ -25,9 +24,7 @@ export const fetchAndSetTotals = async (
       weekEnd.toISOString()
     );
 
-    console.log(
-      `Found ${logEntries.length} LogEntries for the week: ${JSON.stringify(logEntries, null, 2)}`
-    );
+    console.log(`Found ${logEntries.length} LogEntries for the week.`);
 
     const thingIds = Array.from(new Set(logEntries.map(({ thingId }) => thingId)));
 
@@ -63,6 +60,5 @@ export const fetchAndSetTotals = async (
     setTotals(totals);
   } catch (e) {
     console.error('DB error: ', e);
-    logDbContents();
   }
 };

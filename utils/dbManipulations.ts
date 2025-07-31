@@ -1,7 +1,7 @@
 import { buildStartOfWeekDate } from './dateUtils';
-import { LogEntry } from '@/types';
 import { SQLiteDatabase } from 'expo-sqlite';
 import uuid from 'react-native-uuid';
+import { ChartCurveType, ChartScale, ChartSize, LogEntry } from '@/types';
 
 export const addLogEntryToDb = async (db: SQLiteDatabase, thingId: string, weekOffset: number) => {
   let dateIso: string;
@@ -82,6 +82,74 @@ export const deleteLogEntryFromDb = async (
 export const deleteThingFromDb = async (db: SQLiteDatabase, id: string) => {
   console.log(`Deleting Thing from DB, id: ${id}`);
   await db.runAsync('DELETE FROM things WHERE id = ?', id);
+};
+
+export const setDbSettingsShowChart = async (db: SQLiteDatabase, value: 'true' | 'false') => {
+  try {
+    console.log('Setting DB showChart value to: ', value);
+    await db.runAsync(
+      'INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)',
+      'showChart',
+      value
+    );
+  } catch (e) {
+    console.error('Error setting db showChart value: ', e);
+  }
+};
+
+export const setDbSettingsChartScale = async (db: SQLiteDatabase, scale: ChartScale) => {
+  try {
+    console.log('Setting DB Chart Scale to: ', scale);
+    await db.runAsync(
+      'INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)',
+      'chartScale',
+      scale
+    );
+  } catch (e) {
+    console.error('Error setting DB Chart Scale: ', e);
+  }
+};
+
+export const setDbSettingsChartCurveType = async (
+  db: SQLiteDatabase,
+  curveType: ChartCurveType
+) => {
+  try {
+    console.log('Setting DB Chart Curve Type to: ', curveType);
+    await db.runAsync(
+      'INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)',
+      'chartCurveType',
+      curveType
+    );
+  } catch (e) {
+    console.error('Error setting DB Chart Curve Type: ', e);
+  }
+};
+
+export const setDbSettingsChartSize = async (db: SQLiteDatabase, size: ChartSize) => {
+  try {
+    console.log('Setting DB Chart Size to: ', size);
+    await db.runAsync(
+      'INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)',
+      'chartSize',
+      size
+    );
+  } catch (e) {
+    console.error('Error setting DB Chart Size: ', e);
+  }
+};
+
+export const setDbSettingsChartThingId = async (db: SQLiteDatabase, thingId: string) => {
+  try {
+    console.log('Setting DB Chart Thing ID to: ', thingId);
+    await db.runAsync(
+      'INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)',
+      'chartThingId',
+      thingId
+    );
+  } catch (e) {
+    console.error('Error setting DB Chart Thing ID: ', e);
+  }
 };
 
 export const updateCurrentlyTracking = async (
