@@ -1,7 +1,7 @@
 {
   "name": "times-this-week",
   "main": "expo-router/entry",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "scripts": {
     "start": "expo start",
     "reset-project": "node ./scripts/reset-project.js",
@@ -33,7 +33,6 @@
     "expo-router": "~6.0.23",
     "expo-splash-screen": "~31.0.13",
     "expo-sqlite": "~16.0.10",
-    "expo-status-bar": "~3.0.9",
     "expo-store-review": "~9.0.9",
     "expo-symbols": "~1.0.8",
     "expo-system-ui": "~6.0.9",
