@@ -4,7 +4,6 @@ import { PaperProvider } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { SQLiteProvider } from 'expo-sqlite';
 import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
 import { Suspense } from 'react';
 import { useColours, useGlobalStyles } from '@/hooks';
 
@@ -82,7 +81,6 @@ export default function RootLayout() {
                   options={{ headerShown: false, presentation: 'fullScreenModal' }}
                 />
               </Stack>
-              <StatusBar style='dark' />
             </SafeAreaProvider>
           </NotificationsListener>
         </SQLiteProvider>
