@@ -24,6 +24,5 @@ export { mapMinsAfterMidnightToTimeString } from './mapMinsAfterMidnightToTimeSt
 export { migrateDbIfNeeded } from './migrateDbIfNeeded';
 export { minutesAfterMidnightToTimeString } from './minutesAfterMidnightToTimeString';
 export { normaliseFontSize } from './stylingUtils';
-export { promptForRating } from './promptForRating';
 export { promptForRatingIfAppropriate } from './promptForRatingIfAppropriate';
 export { scheduleDailyNotifications } from './scheduleDailyNotifications';
