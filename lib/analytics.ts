@@ -8,6 +8,7 @@ export const initializeAnalytics = () => {
   }
 
   init(apiKey, undefined, {
+    serverZone: 'EU',
     trackingSessionEvents: true
   });
 };
