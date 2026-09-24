@@ -1,10 +1,11 @@
+import { initializeAnalytics } from '@/lib/analytics';
 import { migrateDbIfNeeded } from '@/utils';
 import { NotificationsListener } from '@/components';
 import { PaperProvider } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { SQLiteProvider } from 'expo-sqlite';
 import { Stack } from 'expo-router';
-import { Suspense } from 'react';
+import { Suspense, useEffect } from 'react';
 import { useColours, useGlobalStyles } from '@/hooks';
 
 const Fallback = () => {
@@ -15,6 +16,11 @@ const Fallback = () => {
 export default function RootLayout() {
   const { headerTitleStyle } = useGlobalStyles();
   const { header } = useColours();
+
+  useEffect(() => {
+    initializeAnalytics();
+  }, []);
+
   const headerStyles = {
     ...header,
     headerTitleStyle

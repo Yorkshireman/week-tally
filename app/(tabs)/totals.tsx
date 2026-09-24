@@ -3,6 +3,7 @@ import { Chart } from '@/components';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ThingWithLogEntriesCount } from '@/types';
+import { track } from '@/lib/analytics';
 import { useRouter } from 'expo-router';
 import { useSQLiteContext } from 'expo-sqlite';
 import { useState } from 'react';
@@ -48,6 +49,7 @@ export default function TotalsScreen() {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     try {
       await addLogEntryToDb(db, id, weekOffset);
+      track('Tally Incremented');
       setTotals(prev => prev?.map(t => (t.id === id ? { ...t, count: t.count + 1 } : t)));
       const currentAddLogEntryCount = await getAddLogEntryCount();
       await promptForRatingIfAppropriate(currentAddLogEntryCount);
@@ -61,6 +63,7 @@ export default function TotalsScreen() {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     try {
       await deleteLogEntryFromDb(db, id, weekOffset);
+      track('Tally Decremented');
       setTotals(prev => prev?.map(t => (t.id === id ? { ...t, count: t.count - 1 } : t)));
     } catch (e) {
       console.error('DB error: ', e);
